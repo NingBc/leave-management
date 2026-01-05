@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "axios": "^1.13.2",
+    "dingtalk-jsapi": "^3.2.2",
+    "element-plus": "^2.11.8",
+    "pinia": "^3.0.4",
+    "sass": "^1.94.2",
+    "vue-router": "^4.6.3"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.2",
+    "vite": "^7.2.4"
+  }
+}

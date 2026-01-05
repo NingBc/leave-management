@@ -1,0 +1,1365 @@
+2025-12-12 00:06:39.267 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s774ms).
+2025-12-12 00:22:45.416 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m36s97ms).
+2025-12-12 00:56:48.527 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=33m33s105ms).
+2025-12-12 01:13:14.221 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s715ms).
+2025-12-12 01:29:39.194 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m54s963ms).
+2025-12-12 02:03:15.225 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=33m36s31ms).
+2025-12-12 02:19:41.090 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s855ms).
+2025-12-12 02:35:36.779 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s690ms).
+2025-12-12 02:52:22.075 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m45s296ms).
+2025-12-12 03:09:09.554 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m47s478ms).
+2025-12-12 03:11:55.930 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m46s377ms).
+2025-12-12 03:27:51.086 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s156ms).
+2025-12-12 03:43:46.923 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s837ms).
+2025-12-12 04:00:51.611 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m34s676ms).
+2025-12-12 04:16:47.430 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s819ms).
+2025-12-12 04:32:42.457 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s27ms).
+2025-12-12 04:49:03.571 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m51s102ms).
+2025-12-12 05:01:29.445 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=12m25s874ms).
+2025-12-12 05:17:24.453 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m24s998ms).
+2025-12-12 05:33:20.078 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s625ms).
+2025-12-12 05:49:45.802 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s713ms).
+2025-12-12 06:05:40.837 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s35ms).
+2025-12-12 06:22:06.766 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s919ms).
+2025-12-12 06:38:31.681 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m54s905ms).
+2025-12-12 06:54:27.444 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s763ms).
+2025-12-12 07:02:18.333 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m50s889ms).
+2025-12-12 07:18:14.217 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s884ms).
+2025-12-12 07:34:09.137 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m54s920ms).
+2025-12-12 07:50:34.980 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s835ms).
+2025-12-12 08:03:23.627 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=12m48s647ms).
+2025-12-12 08:19:49.489 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s855ms).
+2025-12-12 08:35:31.127 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m41s638ms).
+2025-12-12 08:51:56.874 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s743ms).
+2025-12-12 09:04:38.743 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=12m11s857ms).
+2025-12-12 09:20:07.718 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m28s975ms).
+2025-12-12 09:36:33.440 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s713ms).
+2025-12-12 09:59:27.544 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=22m24s98ms).
+2025-12-12 10:21:11.100 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=21m43s556ms).
+2025-12-12 10:34:16.156 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=13m5s56ms).
+2025-12-12 10:37:07.916 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 10:37:07.916 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/user-menus?userId=106
+2025-12-12 10:37:07.962 [http-nio-0.0.0.0-8080-exec-1] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@71efac68 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-12-12 10:37:07.962 [http-nio-0.0.0.0-8080-exec-2] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@3105a457 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-12-12 10:37:07.966 [http-nio-0.0.0.0-8080-exec-2] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@796136e7 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-12-12 10:37:07.966 [http-nio-0.0.0.0-8080-exec-1] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7a359fc8 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-12-12 10:37:07.970 [http-nio-0.0.0.0-8080-exec-2] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@29673765 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-12-12 10:37:07.970 [http-nio-0.0.0.0-8080-exec-1] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@53bd78a3 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-12-12 10:37:07.973 [http-nio-0.0.0.0-8080-exec-1] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@5f3d0250 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-12-12 10:37:07.982 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 42 ms
+
+2025-12-12 10:37:07.982 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 43 ms
+
+2025-12-12 10:37:07.984 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 10:37:07.984 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/user-menus?userId=106
+2025-12-12 10:37:07.985 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 10:37:07.985 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/user-menus
+2025-12-12 10:37:07.985 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 10:37:07.985 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.getUserMenus
+2025-12-12 10:37:07.985 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:37:07.985 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:37:07.985 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 10:37:07.985 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 10:37:07.986 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.service.impl.MenuServiceImpl - getUserMenus called for userId: 106
+2025-12-12 10:37:07.990 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 10:37:07.990 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.service.impl.MenuServiceImpl - User found: admin, RoleId: 1
+2025-12-12 10:37:08.007 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 21 ms
+
+2025-12-12 10:37:08.013 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.RoleMenuMapper.selectList
+SQL         : SELECT role_id,menu_id FROM role_menu WHERE (role_id = 1)
+Time Taken  : 7 ms
+
+2025-12-12 10:37:08.013 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.service.impl.MenuServiceImpl - getMenuIdsByRoleId roleId=1, found 10 entries.
+2025-12-12 10:37:08.013 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.service.impl.MenuServiceImpl - MenuIds for role 1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+2025-12-12 10:37:08.016 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 9 ms
+
+2025-12-12 10:37:08.018 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectBatchIds
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE id IN ( 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ) AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 10:37:08.018 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.service.impl.MenuServiceImpl - Retrieved 10 menu items.
+2025-12-12 10:37:08.018 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=null), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=null), SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=null), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=null), SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=null), SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=null)])
+2025-12-12 10:37:08.018 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 33 ms
+2025-12-12 10:37:08.024 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 8 ms
+
+2025-12-12 10:37:08.024 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 10:37:08.025 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 39 ms
+2025-12-12 10:37:08.031 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 10:37:08.038 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 5 ms
+
+2025-12-12 10:37:08.039 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 10:37:08.040 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 10:37:08.040 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 10:37:08.040 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:37:08.040 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 10:37:08.044 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 4 ms
+
+2025-12-12 10:37:08.044 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 10:37:08.044 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 4 ms
+2025-12-12 10:58:28.354 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /job/list
+2025-12-12 10:58:28.391 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 25 ms
+
+2025-12-12 10:58:28.395 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /job/list
+2025-12-12 10:58:28.400 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/job/list
+2025-12-12 10:58:28.400 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.JobController.listJobs
+2025-12-12 10:58:28.400 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:28.400 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 10:58:28.411 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysJobMapper.selectList
+SQL         : SELECT id,job_name,job_group,invoke_target,cron_expression,status,remark,create_time,update_time,deleted FROM sys_job WHERE deleted=0
+Time Taken  : 9 ms
+
+2025-12-12 10:58:28.411 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysJob(id=2, jobName=钉钉数据同步, jobGroup=DEFAULT, invokeTarget=dingTalkService.syncLeaveData(), cronExpression=0 0 10 ? * MON, status=0, remark=每周一上午10点自动从钉钉同步年假数据, createTime=2025-12-04T08:16:02, updateTime=2025-12-04T08:16:02, deleted=0), SysJob(id=3, jobName=年假过期清理, jobGroup=LEAVE, invokeTarget=scheduledTasks.cleanupExpiredLeaveBalances(), cronExpression=0 0 3 1 1 ?, status=0, remark=每年1月1日凌晨3点自动清理已过期的年假余额, createTime=2025-12-09T08:59:46, updateTime=2025-12-09T08:59:46, deleted=0), SysJob(id=4, jobName=年假账户批量初始化, jobGroup=LEAVE, invokeTarget=scheduledTasks.initAllAccounts(2027), cronExpression=0 0 1 1 1 ?, status=0, remark=每年1月1日凌晨1点批量初始化所有员工的新年度账户（含结转计算）。注意：需手动更新年份参数！默认暂停状态。, createTime=2025-12-09T08:59:46, updateTime=2025-12-09T09:29:12, deleted=0)])
+2025-12-12 10:58:28.414 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 11 ms
+2025-12-12 10:58:29.365 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/available-years
+2025-12-12 10:58:29.365 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/list?year=2025&current=1&size=10
+2025-12-12 10:58:29.378 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 11 ms
+
+2025-12-12 10:58:29.378 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 11 ms
+
+2025-12-12 10:58:29.381 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/list?year=2025&current=1&size=10
+2025-12-12 10:58:29.381 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/available-years
+2025-12-12 10:58:29.381 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/available-years
+2025-12-12 10:58:29.381 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAvailableYears
+2025-12-12 10:58:29.381 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:29.381 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 10:58:29.382 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/list
+2025-12-12 10:58:29.382 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.list
+2025-12-12 10:58:29.382 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:29.382 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [2025, 1, 10]
+2025-12-12 10:58:29.387 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT DISTINCT year FROM leave_account WHERE deleted=0 ORDER BY year DESC
+Time Taken  : 5 ms
+
+2025-12-12 10:58:29.388 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[2027, 2026, 2025])
+2025-12-12 10:58:29.388 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 7 ms
+2025-12-12 10:58:29.394 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList_mpCount
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 4 ms
+
+2025-12-12 10:58:29.400 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 6 ms
+
+2025-12-12 10:58:29.406 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 10:58:29.421 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 15 ms
+
+2025-12-12 10:58:29.428 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 6 ms
+
+2025-12-12 10:58:29.433 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=107 AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 10:58:29.438 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 107 AND year = 2025)
+Time Taken  : 5 ms
+
+2025-12-12 10:58:29.445 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 107 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 7 ms
+
+2025-12-12 10:58:29.445 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@bf729bd)
+2025-12-12 10:58:29.445 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 63 ms
+2025-12-12 10:58:31.247 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 10:58:31.263 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 13 ms
+
+2025-12-12 10:58:31.265 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 10:58:31.266 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 10:58:31.266 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 10:58:31.266 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:31.266 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 10:58:31.271 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 10:58:31.277 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 5 ms
+
+2025-12-12 10:58:31.284 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 6 ms
+
+2025-12-12 10:58:31.284 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 10:58:31.284 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 18 ms
+2025-12-12 10:58:31.291 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 10:58:31.298 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 5 ms
+
+2025-12-12 10:58:31.300 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 10:58:31.301 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 10:58:31.301 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 10:58:31.301 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:31.301 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 10:58:31.307 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 4 ms
+
+2025-12-12 10:58:31.307 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 10:58:31.307 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 6 ms
+2025-12-12 10:58:32.488 [http-nio-0.0.0.0-8080-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/available-years
+2025-12-12 10:58:32.488 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/list?year=2025&current=1&size=10
+2025-12-12 10:58:32.505 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 15 ms
+
+2025-12-12 10:58:32.506 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 16 ms
+
+2025-12-12 10:58:32.510 [http-nio-0.0.0.0-8080-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/available-years
+2025-12-12 10:58:32.510 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/list?year=2025&current=1&size=10
+2025-12-12 10:58:32.510 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/available-years
+2025-12-12 10:58:32.510 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAvailableYears
+2025-12-12 10:58:32.511 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:32.511 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 10:58:32.511 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/list
+2025-12-12 10:58:32.511 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.list
+2025-12-12 10:58:32.511 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:32.511 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [2025, 1, 10]
+2025-12-12 10:58:32.518 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT DISTINCT year FROM leave_account WHERE deleted=0 ORDER BY year DESC
+Time Taken  : 6 ms
+
+2025-12-12 10:58:32.518 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[2027, 2026, 2025])
+2025-12-12 10:58:32.518 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 8 ms
+2025-12-12 10:58:32.521 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList_mpCount
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 6 ms
+
+2025-12-12 10:58:32.526 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 5 ms
+
+2025-12-12 10:58:32.531 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 10:58:32.537 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 5 ms
+
+2025-12-12 10:58:32.541 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 4 ms
+
+2025-12-12 10:58:32.546 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=107 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 10:58:32.551 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 107 AND year = 2025)
+Time Taken  : 4 ms
+
+2025-12-12 10:58:32.557 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 107 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 6 ms
+
+2025-12-12 10:58:32.557 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@1479b2f8)
+2025-12-12 10:58:32.557 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 46 ms
+2025-12-12 10:58:33.263 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/user/106
+2025-12-12 10:58:33.275 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 8 ms
+
+2025-12-12 10:58:33.284 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/user/106
+2025-12-12 10:58:33.288 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/user/106
+2025-12-12 10:58:33.288 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.UserController.getById
+2025-12-12 10:58:33.288 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:33.288 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 10:58:33.293 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 10:58:33.294 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=SysUser(id=106, username=admin, password=null, realName=Administrator, employeeNumber=null, firstWorkDate=null, entryDate=2020-01-01, socialSeniority=0, roleId=1, dingtalkUserId=null, status=ACTIVE, resignationDate=null, createTime=2025-12-09T02:34:57, updateTime=2025-12-09T02:34:57, deleted=0))
+2025-12-12 10:58:33.304 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 6 ms
+2025-12-12 10:58:34.295 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/role/list
+2025-12-12 10:58:34.295 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/user/list?current=1&size=10
+2025-12-12 10:58:34.311 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 11 ms
+
+2025-12-12 10:58:34.311 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 11 ms
+
+2025-12-12 10:58:34.314 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/user/list?current=1&size=10
+2025-12-12 10:58:34.314 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/role/list
+2025-12-12 10:58:34.315 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/role/list
+2025-12-12 10:58:34.315 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.RoleController.list
+2025-12-12 10:58:34.315 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:34.315 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 10:58:34.315 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/user/list
+2025-12-12 10:58:34.315 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.UserController.list
+2025-12-12 10:58:34.315 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:34.315 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [1, 10]
+2025-12-12 10:58:34.324 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysRoleMapper.selectList
+SQL         : SELECT id,role_name,role_key,description,create_time,update_time,deleted FROM sys_role WHERE deleted=0
+Time Taken  : 8 ms
+
+2025-12-12 10:58:34.324 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList_mpCount
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 10:58:34.324 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysRole(id=1, roleName=Administrator, roleKey=ROLE_ADMIN, description=系统管理员, createTime=2025-12-03T03:37:33, updateTime=2025-12-03T16:22:12, deleted=0, menuIds=null), SysRole(id=2, roleName=Employee, roleKey=ROLE_USER, description=普通员工, createTime=2025-12-03T03:37:33, updateTime=2025-12-03T03:37:33, deleted=0, menuIds=null)])
+2025-12-12 10:58:34.328 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 9 ms
+2025-12-12 10:58:34.329 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 10:58:34.330 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@40bd5fd3)
+2025-12-12 10:58:34.331 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 15 ms
+2025-12-12 10:58:35.040 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/role/list
+2025-12-12 10:58:35.040 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/list
+2025-12-12 10:58:35.053 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 10 ms
+
+2025-12-12 10:58:35.053 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 10 ms
+
+2025-12-12 10:58:35.059 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/list
+2025-12-12 10:58:35.059 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/role/list
+2025-12-12 10:58:35.060 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/list
+2025-12-12 10:58:35.060 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/role/list
+2025-12-12 10:58:35.060 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.list
+2025-12-12 10:58:35.060 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.RoleController.list
+2025-12-12 10:58:35.060 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:35.060 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:35.060 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 10:58:35.060 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 10:58:35.065 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysRoleMapper.selectList
+SQL         : SELECT id,role_name,role_key,description,create_time,update_time,deleted FROM sys_role WHERE deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 10:58:35.066 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysRole(id=1, roleName=Administrator, roleKey=ROLE_ADMIN, description=系统管理员, createTime=2025-12-03T03:37:33, updateTime=2025-12-03T16:22:12, deleted=0, menuIds=null), SysRole(id=2, roleName=Employee, roleKey=ROLE_USER, description=普通员工, createTime=2025-12-03T03:37:33, updateTime=2025-12-03T03:37:33, deleted=0, menuIds=null)])
+2025-12-12 10:58:35.066 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 6 ms
+2025-12-12 10:58:35.066 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectList
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE deleted=0
+Time Taken  : 6 ms
+
+2025-12-12 10:58:35.066 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=[]), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=[SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=[]), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=[]), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=[])]), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=[SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=[]), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=[])]), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=[SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=[])])])
+2025-12-12 10:58:35.067 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 6 ms
+2025-12-12 10:58:35.688 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/list
+2025-12-12 10:58:35.707 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 15 ms
+
+2025-12-12 10:58:35.710 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/list
+2025-12-12 10:58:35.710 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/list
+2025-12-12 10:58:35.710 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.list
+2025-12-12 10:58:35.710 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:35.710 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 10:58:35.720 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectList
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE deleted=0
+Time Taken  : 10 ms
+
+2025-12-12 10:58:35.720 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=[]), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=[SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=[]), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=[]), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=[])]), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=[SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=[]), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=[])]), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=[SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=[])])])
+2025-12-12 10:58:35.720 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 10 ms
+2025-12-12 10:58:36.773 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/user/106
+2025-12-12 10:58:36.785 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 9 ms
+
+2025-12-12 10:58:36.788 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/user/106
+2025-12-12 10:58:36.789 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/user/106
+2025-12-12 10:58:36.789 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.UserController.getById
+2025-12-12 10:58:36.789 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 10:58:36.789 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 10:58:36.795 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 6 ms
+
+2025-12-12 10:58:36.795 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=SysUser(id=106, username=admin, password=null, realName=Administrator, employeeNumber=null, firstWorkDate=null, entryDate=2020-01-01, socialSeniority=0, roleId=1, dingtalkUserId=null, status=ACTIVE, resignationDate=null, createTime=2025-12-09T02:34:57, updateTime=2025-12-09T02:34:57, deleted=0))
+2025-12-12 10:58:36.796 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 6 ms
+2025-12-12 11:48:48.653 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/user-menus?userId=106
+2025-12-12 11:48:48.653 [http-nio-0.0.0.0-8080-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/user/106
+2025-12-12 11:48:48.687 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 14 ms
+
+2025-12-12 11:48:48.687 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 14 ms
+
+2025-12-12 11:48:48.693 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/user-menus?userId=106
+2025-12-12 11:48:48.693 [http-nio-0.0.0.0-8080-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/user/106
+2025-12-12 11:48:48.694 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/user-menus
+2025-12-12 11:48:48.694 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.getUserMenus
+2025-12-12 11:48:48.694 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 11:48:48.694 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 11:48:48.694 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/user/106
+2025-12-12 11:48:48.695 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.UserController.getById
+2025-12-12 11:48:48.695 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 11:48:48.695 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 11:48:48.695 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.service.impl.MenuServiceImpl - getUserMenus called for userId: 106
+2025-12-12 11:48:48.703 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 8 ms
+
+2025-12-12 11:48:48.703 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=SysUser(id=106, username=admin, password=null, realName=Administrator, employeeNumber=null, firstWorkDate=null, entryDate=2020-01-01, socialSeniority=0, roleId=1, dingtalkUserId=null, status=ACTIVE, resignationDate=null, createTime=2025-12-09T02:34:57, updateTime=2025-12-09T02:34:57, deleted=0))
+2025-12-12 11:48:48.704 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 9 ms
+2025-12-12 11:48:48.705 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 11:48:48.705 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.service.impl.MenuServiceImpl - User found: admin, RoleId: 1
+2025-12-12 11:48:48.713 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.RoleMenuMapper.selectList
+SQL         : SELECT role_id,menu_id FROM role_menu WHERE (role_id = 1)
+Time Taken  : 7 ms
+
+2025-12-12 11:48:48.713 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.service.impl.MenuServiceImpl - getMenuIdsByRoleId roleId=1, found 10 entries.
+2025-12-12 11:48:48.713 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.service.impl.MenuServiceImpl - MenuIds for role 1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+2025-12-12 11:48:48.720 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectBatchIds
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE id IN ( 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ) AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 11:48:48.720 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.service.impl.MenuServiceImpl - Retrieved 10 menu items.
+2025-12-12 11:48:48.720 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=null), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=null), SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=null), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=null), SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=null), SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=null)])
+2025-12-12 11:48:48.721 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 26 ms
+2025-12-12 11:48:48.724 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/user-menus?userId=106
+2025-12-12 11:48:48.731 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 5 ms
+
+2025-12-12 11:48:48.737 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/user-menus?userId=106
+2025-12-12 11:48:48.738 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/user-menus
+2025-12-12 11:48:48.738 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.getUserMenus
+2025-12-12 11:48:48.738 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 11:48:48.738 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 11:48:48.738 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.service.impl.MenuServiceImpl - getUserMenus called for userId: 106
+2025-12-12 11:48:48.744 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 6 ms
+
+2025-12-12 11:48:48.744 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.service.impl.MenuServiceImpl - User found: admin, RoleId: 1
+2025-12-12 11:48:48.748 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.RoleMenuMapper.selectList
+SQL         : SELECT role_id,menu_id FROM role_menu WHERE (role_id = 1)
+Time Taken  : 4 ms
+
+2025-12-12 11:48:48.748 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.service.impl.MenuServiceImpl - getMenuIdsByRoleId roleId=1, found 10 entries.
+2025-12-12 11:48:48.748 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.service.impl.MenuServiceImpl - MenuIds for role 1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+2025-12-12 11:48:48.754 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectBatchIds
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE id IN ( 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ) AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 11:48:48.754 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.service.impl.MenuServiceImpl - Retrieved 10 menu items.
+2025-12-12 11:48:48.754 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=null), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=null), SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=null), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=null), SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=null), SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=null)])
+2025-12-12 11:48:48.754 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 16 ms
+2025-12-12 12:17:51.717 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=29m5s6ms).
+2025-12-12 12:32:20.523 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=14m28s806ms).
+2025-12-12 12:42:07.282 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=9m46s759ms).
+2025-12-12 12:49:18.938 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=7m11s655ms).
+2025-12-12 13:12:12.543 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/user/106
+2025-12-12 13:12:12.544 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/user-menus?userId=106
+2025-12-12 13:12:12.611 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 46 ms
+
+2025-12-12 13:12:12.611 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 46 ms
+
+2025-12-12 13:12:12.618 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/user-menus?userId=106
+2025-12-12 13:12:12.618 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/user/106
+2025-12-12 13:12:12.619 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/user/106
+2025-12-12 13:12:12.619 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/user-menus
+2025-12-12 13:12:12.620 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.UserController.getById
+2025-12-12 13:12:12.620 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.getUserMenus
+2025-12-12 13:12:12.620 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 13:12:12.620 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 13:12:12.620 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 13:12:12.620 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 13:12:12.620 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - getUserMenus called for userId: 106
+2025-12-12 13:12:12.625 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 13:12:12.625 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 13:12:12.625 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - User found: admin, RoleId: 1
+2025-12-12 13:12:12.625 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=SysUser(id=106, username=admin, password=null, realName=Administrator, employeeNumber=null, firstWorkDate=null, entryDate=2020-01-01, socialSeniority=0, roleId=1, dingtalkUserId=null, status=ACTIVE, resignationDate=null, createTime=2025-12-09T02:34:57, updateTime=2025-12-09T02:34:57, deleted=0))
+2025-12-12 13:12:12.626 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 6 ms
+2025-12-12 13:12:12.632 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.RoleMenuMapper.selectList
+SQL         : SELECT role_id,menu_id FROM role_menu WHERE (role_id = 1)
+Time Taken  : 6 ms
+
+2025-12-12 13:12:12.632 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - getMenuIdsByRoleId roleId=1, found 10 entries.
+2025-12-12 13:12:12.633 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - MenuIds for role 1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+2025-12-12 13:12:12.639 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectBatchIds
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE id IN ( 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ) AND deleted=0
+Time Taken  : 6 ms
+
+2025-12-12 13:12:12.639 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - Retrieved 10 menu items.
+2025-12-12 13:12:12.639 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=null), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=null), SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=null), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=null), SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=null), SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=null)])
+2025-12-12 13:12:12.639 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 20 ms
+2025-12-12 13:12:12.642 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/user-menus?userId=106
+2025-12-12 13:12:12.738 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 92 ms
+
+2025-12-12 13:12:12.742 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/user-menus?userId=106
+2025-12-12 13:12:12.743 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/user-menus
+2025-12-12 13:12:12.743 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.getUserMenus
+2025-12-12 13:12:12.743 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 13:12:12.743 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 13:12:12.753 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - getUserMenus called for userId: 106
+2025-12-12 13:12:12.757 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 13:12:12.757 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - User found: admin, RoleId: 1
+2025-12-12 13:12:12.765 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.RoleMenuMapper.selectList
+SQL         : SELECT role_id,menu_id FROM role_menu WHERE (role_id = 1)
+Time Taken  : 6 ms
+
+2025-12-12 13:12:12.765 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - getMenuIdsByRoleId roleId=1, found 10 entries.
+2025-12-12 13:12:12.765 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - MenuIds for role 1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+2025-12-12 13:12:12.772 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectBatchIds
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE id IN ( 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ) AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 13:12:12.772 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - Retrieved 10 menu items.
+2025-12-12 13:12:12.772 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=null), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=null), SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=null), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=null), SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=null), SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=null)])
+2025-12-12 13:12:12.773 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 29 ms
+2025-12-12 13:27:44.111 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m54s926ms).
+2025-12-12 13:44:01.201 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m47s51ms).
+2025-12-12 14:06:10.179 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=21m38s967ms).
+2025-12-12 14:12:07.052 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m56s873ms).
+2025-12-12 16:29:47.877 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 16:29:47.943 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 21 ms
+
+2025-12-12 16:29:47.954 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 16:29:47.962 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 16:29:47.962 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 16:29:47.962 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:29:47.962 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 16:29:47.968 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 16:29:47.986 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 17 ms
+
+2025-12-12 16:29:47.994 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 6 ms
+
+2025-12-12 16:29:47.994 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 16:29:47.995 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 32 ms
+2025-12-12 16:29:48.012 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 16:29:48.019 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 5 ms
+
+2025-12-12 16:29:48.023 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 16:29:48.023 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 16:29:48.023 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 16:29:48.023 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:29:48.024 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 16:29:48.029 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:29:48.029 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 16:29:48.029 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 6 ms
+2025-12-12 16:29:49.316 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:29:49.318 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/available-years
+2025-12-12 16:29:49.335 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 13 ms
+
+2025-12-12 16:29:49.336 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 14 ms
+
+2025-12-12 16:29:49.338 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:29:49.339 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/list
+2025-12-12 16:29:49.339 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.list
+2025-12-12 16:29:49.339 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/available-years
+2025-12-12 16:29:49.340 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:29:49.340 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [2025, 1, 10]
+2025-12-12 16:29:49.340 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/available-years
+2025-12-12 16:29:49.340 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAvailableYears
+2025-12-12 16:29:49.340 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:29:49.340 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 16:29:49.348 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT DISTINCT year FROM leave_account WHERE deleted=0 ORDER BY year DESC
+Time Taken  : 8 ms
+
+2025-12-12 16:29:49.348 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[2027, 2026, 2025])
+2025-12-12 16:29:49.348 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 8 ms
+2025-12-12 16:29:49.354 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList_mpCount
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 6 ms
+
+2025-12-12 16:29:49.359 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 4 ms
+
+2025-12-12 16:29:49.363 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 16:29:49.368 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 5 ms
+
+2025-12-12 16:29:49.374 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:29:49.378 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=107 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 16:29:49.382 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 107 AND year = 2025)
+Time Taken  : 4 ms
+
+2025-12-12 16:29:49.387 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 107 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 4 ms
+
+2025-12-12 16:29:49.387 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@3368959a)
+2025-12-12 16:29:49.387 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 48 ms
+2025-12-12 16:29:53.813 [http-nio-0.0.0.0-8080-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 16:29:53.832 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 13 ms
+
+2025-12-12 16:29:53.836 [http-nio-0.0.0.0-8080-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 16:29:53.837 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 16:29:53.837 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 16:29:53.837 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:29:53.837 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 16:29:53.845 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 7 ms
+
+2025-12-12 16:29:53.851 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 5 ms
+
+2025-12-12 16:29:53.857 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:29:53.857 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 16:29:53.857 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 20 ms
+2025-12-12 16:29:53.864 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 16:29:53.874 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 7 ms
+
+2025-12-12 16:29:53.878 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 16:29:53.878 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 16:29:53.878 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 16:29:53.878 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:29:53.878 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 16:29:53.884 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 4 ms
+
+2025-12-12 16:29:53.884 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 16:29:53.884 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 6 ms
+2025-12-12 16:29:54.402 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/available-years
+2025-12-12 16:29:54.402 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:29:54.415 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 10 ms
+
+2025-12-12 16:29:54.415 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 9 ms
+
+2025-12-12 16:29:54.421 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/available-years
+2025-12-12 16:29:54.421 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/available-years
+2025-12-12 16:29:54.421 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAvailableYears
+2025-12-12 16:29:54.421 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:29:54.421 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 16:29:54.422 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:29:54.423 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/list
+2025-12-12 16:29:54.424 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.list
+2025-12-12 16:29:54.424 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:29:54.424 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [2025, 1, 10]
+2025-12-12 16:29:54.429 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT DISTINCT year FROM leave_account WHERE deleted=0 ORDER BY year DESC
+Time Taken  : 6 ms
+
+2025-12-12 16:29:54.430 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[2027, 2026, 2025])
+2025-12-12 16:29:54.430 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 9 ms
+2025-12-12 16:29:54.434 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList_mpCount
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 4 ms
+
+2025-12-12 16:29:54.440 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 6 ms
+
+2025-12-12 16:29:54.447 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 7 ms
+
+2025-12-12 16:29:54.466 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 17 ms
+
+2025-12-12 16:29:54.474 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 6 ms
+
+2025-12-12 16:29:54.499 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=107 AND deleted=0
+Time Taken  : 25 ms
+
+2025-12-12 16:29:54.513 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 107 AND year = 2025)
+Time Taken  : 13 ms
+
+2025-12-12 16:29:54.522 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 107 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 7 ms
+
+2025-12-12 16:29:54.522 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@6a5d8b0d)
+2025-12-12 16:29:54.522 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 99 ms
+2025-12-12 16:31:41.905 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 16:31:41.936 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 15 ms
+
+2025-12-12 16:31:41.946 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 16:31:41.951 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 16:31:41.951 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 16:31:41.951 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:31:41.952 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 16:31:41.958 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 16:31:41.981 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 19 ms
+
+2025-12-12 16:31:41.990 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 8 ms
+
+2025-12-12 16:31:41.990 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 16:31:41.991 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 39 ms
+2025-12-12 16:31:42.000 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 16:31:42.007 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 5 ms
+
+2025-12-12 16:31:42.009 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 16:31:42.009 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 16:31:42.009 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 16:31:42.009 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:31:42.009 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 16:31:42.014 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 4 ms
+
+2025-12-12 16:31:42.014 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 16:31:42.014 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 5 ms
+2025-12-12 16:32:10.923 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/available-years
+2025-12-12 16:32:10.923 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:32:10.945 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 10 ms
+
+2025-12-12 16:32:10.946 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 10 ms
+
+2025-12-12 16:32:10.970 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:32:10.970 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/available-years
+2025-12-12 16:32:10.971 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/available-years
+2025-12-12 16:32:10.971 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAvailableYears
+2025-12-12 16:32:10.971 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:10.971 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 16:32:10.971 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/list
+2025-12-12 16:32:10.971 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.list
+2025-12-12 16:32:10.971 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:10.971 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [2025, 1, 10]
+2025-12-12 16:32:10.975 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT DISTINCT year FROM leave_account WHERE deleted=0 ORDER BY year DESC
+Time Taken  : 4 ms
+
+2025-12-12 16:32:10.975 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[2027, 2026, 2025])
+2025-12-12 16:32:10.975 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 4 ms
+2025-12-12 16:32:10.978 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList_mpCount
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 5 ms
+
+2025-12-12 16:32:10.984 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 6 ms
+
+2025-12-12 16:32:10.988 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 16:32:10.993 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 5 ms
+
+2025-12-12 16:32:10.998 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:32:11.003 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=107 AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 16:32:11.008 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 107 AND year = 2025)
+Time Taken  : 4 ms
+
+2025-12-12 16:32:11.014 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 107 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:32:11.014 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@421c40c8)
+2025-12-12 16:32:11.014 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 43 ms
+2025-12-12 16:32:11.741 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 16:32:11.753 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 10 ms
+
+2025-12-12 16:32:11.759 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 16:32:11.759 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 16:32:11.759 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 16:32:11.759 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:11.759 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 16:32:11.764 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 5 ms
+
+2025-12-12 16:32:11.771 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 6 ms
+
+2025-12-12 16:32:11.778 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:32:11.778 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 16:32:11.778 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 19 ms
+2025-12-12 16:32:11.784 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 16:32:11.791 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 5 ms
+
+2025-12-12 16:32:11.796 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 16:32:11.796 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 16:32:11.797 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 16:32:11.797 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:11.797 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 16:32:11.804 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 6 ms
+
+2025-12-12 16:32:11.804 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 16:32:11.804 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 8 ms
+2025-12-12 16:32:13.146 [http-nio-0.0.0.0-8080-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:32:13.146 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/available-years
+2025-12-12 16:32:13.164 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 15 ms
+
+2025-12-12 16:32:13.164 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 14 ms
+
+2025-12-12 16:32:13.167 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/available-years
+2025-12-12 16:32:13.167 [http-nio-0.0.0.0-8080-exec-10] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:32:13.167 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/available-years
+2025-12-12 16:32:13.177 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAvailableYears
+2025-12-12 16:32:13.177 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:13.177 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 16:32:13.178 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/list
+2025-12-12 16:32:13.178 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.list
+2025-12-12 16:32:13.178 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:13.178 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [2025, 1, 10]
+2025-12-12 16:32:13.183 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT DISTINCT year FROM leave_account WHERE deleted=0 ORDER BY year DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:32:13.183 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[2027, 2026, 2025])
+2025-12-12 16:32:13.183 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 16 ms
+2025-12-12 16:32:13.189 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList_mpCount
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 5 ms
+
+2025-12-12 16:32:13.193 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 4 ms
+
+2025-12-12 16:32:13.198 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 16:32:13.205 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 6 ms
+
+2025-12-12 16:32:13.214 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 8 ms
+
+2025-12-12 16:32:13.220 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=107 AND deleted=0
+Time Taken  : 6 ms
+
+2025-12-12 16:32:13.228 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 107 AND year = 2025)
+Time Taken  : 6 ms
+
+2025-12-12 16:32:13.233 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 107 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:32:13.233 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@38eec51e)
+2025-12-12 16:32:13.234 [http-nio-0.0.0.0-8080-exec-10] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 55 ms
+2025-12-12 16:32:14.446 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /job/list
+2025-12-12 16:32:14.459 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 9 ms
+
+2025-12-12 16:32:14.464 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /job/list
+2025-12-12 16:32:14.464 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/job/list
+2025-12-12 16:32:14.464 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.JobController.listJobs
+2025-12-12 16:32:14.464 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:14.465 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 16:32:14.472 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysJobMapper.selectList
+SQL         : SELECT id,job_name,job_group,invoke_target,cron_expression,status,remark,create_time,update_time,deleted FROM sys_job WHERE deleted=0
+Time Taken  : 7 ms
+
+2025-12-12 16:32:14.472 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysJob(id=2, jobName=钉钉数据同步, jobGroup=DEFAULT, invokeTarget=dingTalkService.syncLeaveData(), cronExpression=0 0 10 ? * MON, status=0, remark=每周一上午10点自动从钉钉同步年假数据, createTime=2025-12-04T08:16:02, updateTime=2025-12-04T08:16:02, deleted=0), SysJob(id=3, jobName=年假过期清理, jobGroup=LEAVE, invokeTarget=scheduledTasks.cleanupExpiredLeaveBalances(), cronExpression=0 0 3 1 1 ?, status=0, remark=每年1月1日凌晨3点自动清理已过期的年假余额, createTime=2025-12-09T08:59:46, updateTime=2025-12-09T08:59:46, deleted=0), SysJob(id=4, jobName=年假账户批量初始化, jobGroup=LEAVE, invokeTarget=scheduledTasks.initAllAccounts(2027), cronExpression=0 0 1 1 1 ?, status=0, remark=每年1月1日凌晨1点批量初始化所有员工的新年度账户（含结转计算）。注意：需手动更新年份参数！默认暂停状态。, createTime=2025-12-09T08:59:46, updateTime=2025-12-09T09:29:12, deleted=0)])
+2025-12-12 16:32:14.472 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 8 ms
+2025-12-12 16:32:15.793 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:32:15.793 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/available-years
+2025-12-12 16:32:15.814 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 16 ms
+
+2025-12-12 16:32:15.814 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 16 ms
+
+2025-12-12 16:32:15.820 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/list?year=2025&current=1&size=10
+2025-12-12 16:32:15.822 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/available-years
+2025-12-12 16:32:15.825 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/list
+2025-12-12 16:32:15.825 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.list
+2025-12-12 16:32:15.825 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:15.825 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [2025, 1, 10]
+2025-12-12 16:32:15.827 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/available-years
+2025-12-12 16:32:15.827 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAvailableYears
+2025-12-12 16:32:15.827 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:15.827 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Request Args : []
+2025-12-12 16:32:15.836 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT DISTINCT year FROM leave_account WHERE deleted=0 ORDER BY year DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:32:15.836 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[2027, 2026, 2025])
+2025-12-12 16:32:15.836 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 9 ms
+2025-12-12 16:32:15.840 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList_mpCount
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 7 ms
+
+2025-12-12 16:32:15.847 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (status <> 'RESIGNED')
+Time Taken  : 5 ms
+
+2025-12-12 16:32:15.851 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 3 ms
+
+2025-12-12 16:32:15.858 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 6 ms
+
+2025-12-12 16:32:15.863 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 4 ms
+
+2025-12-12 16:32:15.868 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=107 AND deleted=0
+Time Taken  : 4 ms
+
+2025-12-12 16:32:15.875 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 107 AND year = 2025)
+Time Taken  : 5 ms
+
+2025-12-12 16:32:15.880 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 107 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 5 ms
+
+2025-12-12 16:32:15.881 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=com.baomidou.mybatisplus.extension.plugins.pagination.Page@7f622386)
+2025-12-12 16:32:15.881 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 56 ms
+2025-12-12 16:32:16.236 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 16:32:16.245 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 4 ms
+
+2025-12-12 16:32:16.247 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 16:32:16.247 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 16:32:16.248 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 16:32:16.248 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:16.248 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 16:32:16.255 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 6 ms
+
+2025-12-12 16:32:16.260 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 5 ms
+
+2025-12-12 16:32:16.268 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 7 ms
+
+2025-12-12 16:32:16.269 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 16:32:16.269 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 22 ms
+2025-12-12 16:32:16.275 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 16:32:16.283 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 6 ms
+
+2025-12-12 16:32:16.285 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 16:32:16.286 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 16:32:16.286 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 16:32:16.286 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 16:32:16.286 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 16:32:16.294 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 7 ms
+
+2025-12-12 16:32:16.294 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 16:32:16.294 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 8 ms
+2025-12-12 17:05:22.241 [main] INFO  com.leave.system.LeaveSystemApplication - Starting LeaveSystemApplication using Java 17.0.6 with PID 86422 (/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes started by cccc in /Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend)
+2025-12-12 17:05:22.242 [main] DEBUG com.leave.system.LeaveSystemApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-12-12 17:05:22.242 [main] INFO  com.leave.system.LeaveSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-12 17:05:22.792 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-12-12 17:05:22.795 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8080"]
+2025-12-12 17:05:22.796 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-12 17:05:22.796 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-12-12 17:05:22.812 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-12 17:05:22.812 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 553 ms
+2025-12-12 17:05:22.873 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Registered plugin: 'com.leave.system.config.SqlLogInterceptor@23310248'
+2025-12-12 17:05:22.873 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Registered plugin: 'com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor@71560f51'
+2025-12-12 17:05:22.873 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Property 'mapperLocations' was not specified.
+2025-12-12 17:05:22.886 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-12 17:05:22.982 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@77aea
+2025-12-12 17:05:22.982 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-12 17:05:23.088 [main] DEBUG com.leave.system.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-12-12 17:05:23.223 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Initializing scheduled tasks...
+2025-12-12 17:05:23.264 [main] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysJobMapper.selectList
+SQL         : SELECT id,job_name,job_group,invoke_target,cron_expression,status,remark,create_time,update_time,deleted FROM sys_job WHERE deleted=0 AND (status = 0)
+Time Taken  : 19 ms
+
+2025-12-12 17:05:23.265 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 钉钉数据同步 with cron: 0 0 10 ? * MON
+2025-12-12 17:05:23.265 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 年假过期清理 with cron: 0 0 3 1 1 ?
+2025-12-12 17:05:23.265 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 年假账户批量初始化 with cron: 0 0 1 1 1 ?
+2025-12-12 17:05:23.265 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Initialized 3 scheduled tasks.
+2025-12-12 17:05:23.613 [main] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@64ed18ec, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@1dfcf85a, org.springframework.security.web.context.SecurityContextHolderFilter@6a543e09, org.springframework.security.web.header.HeaderWriterFilter@416c8bb5, org.springframework.web.filter.CorsFilter@590dea35, org.springframework.security.web.authentication.logout.LogoutFilter@474ce6b8, com.leave.system.security.JwtAuthenticationFilter@4fe8f2ae, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1fc3df43, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@15130002, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6550ce46, org.springframework.security.web.session.SessionManagementFilter@6cc56b32, org.springframework.security.web.access.ExceptionTranslationFilter@77204651, org.springframework.security.web.access.intercept.AuthorizationFilter@70169464]
+2025-12-12 17:05:23.747 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8080"]
+2025-12-12 17:05:23.755 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-12-12 17:05:23.760 [main] INFO  com.leave.system.LeaveSystemApplication - Started LeaveSystemApplication in 1.724 seconds (process running for 1.92)
+2025-12-12 17:05:23.760 [main] DEBUG c.b.mybatisplus.autoconfigure.DdlApplicationRunner -   ...  DDL start create  ...  
+2025-12-12 17:05:23.760 [main] DEBUG c.b.mybatisplus.autoconfigure.DdlApplicationRunner -   ...  DDL end create  ...  
+2025-12-12 17:14:41.129 [main] INFO  com.leave.system.LeaveSystemApplication - Starting LeaveSystemApplication using Java 17.0.6 with PID 86661 (/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes started by cccc in /Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend)
+2025-12-12 17:14:41.130 [main] DEBUG com.leave.system.LeaveSystemApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-12-12 17:14:41.131 [main] INFO  com.leave.system.LeaveSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2025-12-12 17:14:41.653 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-12-12 17:14:41.656 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8080"]
+2025-12-12 17:14:41.656 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-12-12 17:14:41.656 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-12-12 17:14:41.673 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-12-12 17:14:41.673 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 525 ms
+2025-12-12 17:14:41.732 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Registered plugin: 'com.leave.system.config.SqlLogInterceptor@23310248'
+2025-12-12 17:14:41.733 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Registered plugin: 'com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor@71560f51'
+2025-12-12 17:14:41.733 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Property 'mapperLocations' was not specified.
+2025-12-12 17:14:41.745 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-12-12 17:14:41.894 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@77aea
+2025-12-12 17:14:41.895 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-12-12 17:14:41.992 [main] DEBUG com.leave.system.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-12-12 17:14:42.117 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Initializing scheduled tasks...
+2025-12-12 17:14:42.155 [main] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysJobMapper.selectList
+SQL         : SELECT id,job_name,job_group,invoke_target,cron_expression,status,remark,create_time,update_time,deleted FROM sys_job WHERE deleted=0 AND (status = 0)
+Time Taken  : 19 ms
+
+2025-12-12 17:14:42.156 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 钉钉数据同步 with cron: 0 0 10 ? * MON
+2025-12-12 17:14:42.156 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 年假过期清理 with cron: 0 0 3 1 1 ?
+2025-12-12 17:14:42.156 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 年假账户批量初始化 with cron: 0 0 1 1 1 ?
+2025-12-12 17:14:42.156 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Initialized 3 scheduled tasks.
+2025-12-12 17:14:42.374 [main] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4ab9d160, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5599dc60, org.springframework.security.web.context.SecurityContextHolderFilter@347b370c, org.springframework.security.web.header.HeaderWriterFilter@75d539b9, org.springframework.web.filter.CorsFilter@35554635, org.springframework.security.web.authentication.logout.LogoutFilter@6a543e09, com.leave.system.security.JwtAuthenticationFilter@4fe8f2ae, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@20184ade, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@35fb3209, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@70f5f59d, org.springframework.security.web.session.SessionManagementFilter@22361e23, org.springframework.security.web.access.ExceptionTranslationFilter@4e5364a3, org.springframework.security.web.access.intercept.AuthorizationFilter@37caecda]
+2025-12-12 17:14:42.505 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8080"]
+2025-12-12 17:14:42.516 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-12-12 17:14:42.521 [main] INFO  com.leave.system.LeaveSystemApplication - Started LeaveSystemApplication in 1.582 seconds (process running for 1.769)
+2025-12-12 17:14:42.521 [main] DEBUG c.b.mybatisplus.autoconfigure.DdlApplicationRunner -   ...  DDL start create  ...  
+2025-12-12 17:14:42.521 [main] DEBUG c.b.mybatisplus.autoconfigure.DdlApplicationRunner -   ...  DDL end create  ...  
+2025-12-12 17:14:46.706 [http-nio-0.0.0.0-8080-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-12-12 17:14:46.707 [http-nio-0.0.0.0-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-12-12 17:14:46.710 [http-nio-0.0.0.0-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2025-12-12 17:14:46.715 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 17:14:46.715 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/user-menus?userId=106
+2025-12-12 17:14:46.761 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 12 ms
+
+2025-12-12 17:14:46.765 [http-nio-0.0.0.0-8080-exec-1] WARN  o.s.web.servlet.handler.HandlerMappingIntrospector - Cache miss for REQUEST dispatch to '/leave/account' (previous null). Performing MatchableHandlerMapping lookup. This is logged once only at WARN level, and every time at TRACE.
+2025-12-12 17:14:46.767 [http-nio-0.0.0.0-8080-exec-1] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 17:14:46.768 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 18 ms
+
+2025-12-12 17:14:46.769 [http-nio-0.0.0.0-8080-exec-2] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/user-menus?userId=106
+2025-12-12 17:14:46.776 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/user-menus
+2025-12-12 17:14:46.776 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 17:14:46.777 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.getUserMenus
+2025-12-12 17:14:46.777 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 17:14:46.777 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 17:14:46.777 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 17:14:46.777 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 17:14:46.777 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 17:14:46.777 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - getUserMenus called for userId: 106
+2025-12-12 17:14:46.784 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 7 ms
+
+2025-12-12 17:14:46.784 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 7 ms
+
+2025-12-12 17:14:46.784 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - User found: admin, RoleId: 1
+2025-12-12 17:14:46.798 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 13 ms
+
+2025-12-12 17:14:46.805 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 6 ms
+
+2025-12-12 17:14:46.806 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.RoleMenuMapper.selectList
+SQL         : SELECT role_id,menu_id FROM role_menu WHERE (role_id = 1)
+Time Taken  : 20 ms
+
+2025-12-12 17:14:46.806 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - getMenuIdsByRoleId roleId=1, found 10 entries.
+2025-12-12 17:14:46.806 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - MenuIds for role 1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+2025-12-12 17:14:46.806 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 17:14:46.808 [http-nio-0.0.0.0-8080-exec-1] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 30 ms
+2025-12-12 17:14:46.814 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectBatchIds
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE id IN ( 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ) AND deleted=0
+Time Taken  : 7 ms
+
+2025-12-12 17:14:46.814 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.service.impl.MenuServiceImpl - Retrieved 10 menu items.
+2025-12-12 17:14:46.814 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=null), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=null), SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=null), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=null), SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=null), SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=null)])
+2025-12-12 17:14:46.815 [http-nio-0.0.0.0-8080-exec-2] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 38 ms
+2025-12-12 17:14:46.846 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 17:14:46.854 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 6 ms
+
+2025-12-12 17:14:46.856 [http-nio-0.0.0.0-8080-exec-3] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 17:14:46.857 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 17:14:46.857 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 17:14:46.857 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 17:14:46.857 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 17:14:46.866 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 9 ms
+
+2025-12-12 17:14:46.867 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 17:14:46.867 [http-nio-0.0.0.0-8080-exec-3] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 10 ms
+2025-12-12 19:23:10.505 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/user-menus?userId=106
+2025-12-12 19:23:10.505 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 19:23:10.554 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 13 ms
+
+2025-12-12 19:23:10.554 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 13 ms
+
+2025-12-12 19:23:10.558 [http-nio-0.0.0.0-8080-exec-5] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 19:23:10.558 [http-nio-0.0.0.0-8080-exec-4] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/user-menus?userId=106
+2025-12-12 19:23:10.561 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/user-menus
+2025-12-12 19:23:10.561 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 19:23:10.561 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.getUserMenus
+2025-12-12 19:23:10.561 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 19:23:10.561 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 19:23:10.561 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 19:23:10.561 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 19:23:10.561 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 19:23:10.561 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - getUserMenus called for userId: 106
+2025-12-12 19:23:10.569 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 6 ms
+
+2025-12-12 19:23:10.569 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - User found: admin, RoleId: 1
+2025-12-12 19:23:10.568 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 6 ms
+
+2025-12-12 19:23:10.575 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 6 ms
+
+2025-12-12 19:23:10.576 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.RoleMenuMapper.selectList
+SQL         : SELECT role_id,menu_id FROM role_menu WHERE (role_id = 1)
+Time Taken  : 7 ms
+
+2025-12-12 19:23:10.576 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - getMenuIdsByRoleId roleId=1, found 10 entries.
+2025-12-12 19:23:10.576 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - MenuIds for role 1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+2025-12-12 19:23:10.580 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 4 ms
+
+2025-12-12 19:23:10.580 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 19:23:10.581 [http-nio-0.0.0.0-8080-exec-5] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 19 ms
+2025-12-12 19:23:10.582 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectBatchIds
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE id IN ( 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ) AND deleted=0
+Time Taken  : 6 ms
+
+2025-12-12 19:23:10.582 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.service.impl.MenuServiceImpl - Retrieved 10 menu items.
+2025-12-12 19:23:10.582 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=null), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=null), SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=null), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=null), SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=null), SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=null)])
+2025-12-12 19:23:10.583 [http-nio-0.0.0.0-8080-exec-4] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 21 ms
+2025-12-12 19:23:10.595 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 19:23:10.602 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 5 ms
+
+2025-12-12 19:23:10.605 [http-nio-0.0.0.0-8080-exec-6] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 19:23:10.605 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 19:23:10.605 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 19:23:10.605 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 19:23:10.605 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 19:23:10.610 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 5 ms
+
+2025-12-12 19:23:10.610 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 19:23:10.610 [http-nio-0.0.0.0-8080-exec-6] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 5 ms
+2025-12-12 19:24:05.475 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/account?userId=106&year=2025
+2025-12-12 19:24:05.475 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /system/menu/user-menus?userId=106
+2025-12-12 19:24:05.586 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 91 ms
+
+2025-12-12 19:24:05.586 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 89 ms
+
+2025-12-12 19:24:05.593 [http-nio-0.0.0.0-8080-exec-8] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /system/menu/user-menus?userId=106
+2025-12-12 19:24:05.593 [http-nio-0.0.0.0-8080-exec-7] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/account?userId=106&year=2025
+2025-12-12 19:24:05.595 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/account
+2025-12-12 19:24:05.595 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/system/menu/user-menus
+2025-12-12 19:24:05.596 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getAccount
+2025-12-12 19:24:05.596 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 19:24:05.596 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.MenuController.getUserMenus
+2025-12-12 19:24:05.596 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 19:24:05.596 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106, 2025]
+2025-12-12 19:24:05.596 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 19:24:05.596 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.service.impl.MenuServiceImpl - getUserMenus called for userId: 106
+2025-12-12 19:24:05.606 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 9 ms
+
+2025-12-12 19:24:05.606 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectById
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE id=106 AND deleted=0
+Time Taken  : 9 ms
+
+2025-12-12 19:24:05.606 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.service.impl.MenuServiceImpl - User found: admin, RoleId: 1
+2025-12-12 19:24:05.655 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveAccountMapper.selectList
+SQL         : SELECT id,user_id,year,social_seniority,standard_quota,days_employed,actual_quota,last_year_balance,last_year_used,current_year_used,deleted,total_balance FROM leave_account WHERE deleted=0 AND (user_id = 106 AND year = 2025)
+Time Taken  : 48 ms
+
+2025-12-12 19:24:05.655 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.RoleMenuMapper.selectList
+SQL         : SELECT role_id,menu_id FROM role_menu WHERE (role_id = 1)
+Time Taken  : 48 ms
+
+2025-12-12 19:24:05.657 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.service.impl.MenuServiceImpl - getMenuIdsByRoleId roleId=1, found 10 entries.
+2025-12-12 19:24:05.657 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.service.impl.MenuServiceImpl - MenuIds for role 1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+2025-12-12 19:24:05.759 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 100 ms
+
+2025-12-12 19:24:05.760 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysMenuMapper.selectBatchIds
+SQL         : SELECT id,parent_id,menu_name,path,component,perms,icon,order_num,deleted FROM sys_menu WHERE id IN ( 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 ) AND deleted=0
+Time Taken  : 102 ms
+
+2025-12-12 19:24:05.760 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.service.impl.MenuServiceImpl - Retrieved 10 menu items.
+2025-12-12 19:24:05.760 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=LeaveAccountDTO(username=admin, realName=Administrator, employeeNumber=null, entryDate=2020-01-01, records=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)]))
+2025-12-12 19:24:05.761 [http-nio-0.0.0.0-8080-exec-7] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 165 ms
+2025-12-12 19:24:05.761 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[SysMenu(id=1, parentId=0, menuName=首页, path=/dashboard, component=Dashboard, perms=dashboard:view, icon=Menu, orderNum=1, deleted=0, children=null), SysMenu(id=2, parentId=0, menuName=系统管理, path=/system, component=null, perms=null, icon=Setting, orderNum=2, deleted=0, children=null), SysMenu(id=3, parentId=2, menuName=用户管理, path=/system/user, component=system/User, perms=system:user:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=4, parentId=2, menuName=角色管理, path=/system/role, component=system/Role, perms=system:role:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=5, parentId=2, menuName=菜单管理, path=/system/menu, component=system/Menu, perms=system:menu:view, icon=null, orderNum=3, deleted=0, children=null), SysMenu(id=6, parentId=0, menuName=年假管理, path=/leave, component=null, perms=null, icon=Calendar, orderNum=3, deleted=0, children=null), SysMenu(id=7, parentId=6, menuName=我的休假, path=/leave/my, component=leave/MyLeave, perms=leave:my:view, icon=null, orderNum=1, deleted=0, children=null), SysMenu(id=8, parentId=6, menuName=年假管理(HR), path=/leave/manage, component=leave/LeaveManagement, perms=leave:manage:view, icon=null, orderNum=2, deleted=0, children=null), SysMenu(id=9, parentId=0, menuName=系统监控, path=/monitor, component=null, perms=null, icon=Monitor, orderNum=4, deleted=0, children=null), SysMenu(id=10, parentId=9, menuName=定时任务, path=/monitor/job, component=monitor/job/index, perms=monitor:job:view, icon=null, orderNum=1, deleted=0, children=null)])
+2025-12-12 19:24:05.761 [http-nio-0.0.0.0-8080-exec-8] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 166 ms
+2025-12-12 19:24:05.786 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Securing GET /leave/history?userId=106
+2025-12-12 19:24:05.794 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysUserMapper.selectList
+SQL         : SELECT id,username,password,real_name,employee_number,first_work_date,entry_date,social_seniority,role_id,dingtalk_userid,status,resignation_date,create_time,update_time,deleted FROM sys_user WHERE deleted=0 AND (username = 'admin')
+Time Taken  : 5 ms
+
+2025-12-12 19:24:05.796 [http-nio-0.0.0.0-8080-exec-9] DEBUG org.springframework.security.web.FilterChainProxy - Secured GET /leave/history?userId=106
+2025-12-12 19:24:05.797 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - URL          : http://localhost:8080/leave/history
+2025-12-12 19:24:05.797 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Class Method : com.leave.system.controller.LeaveController.getHistory
+2025-12-12 19:24:05.797 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - IP           : 0:0:0:0:0:0:0:1
+2025-12-12 19:24:05.797 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Request Args : [106]
+2025-12-12 19:24:05.897 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.LeaveRecordMapper.selectList
+SQL         : SELECT id,user_id,start_date,end_date,days,type,remarks,expiry_date,create_time,deleted FROM leave_record WHERE deleted=0 AND (user_id = 106 AND YEAR(start_date) = 2025) ORDER BY start_date DESC
+Time Taken  : 99 ms
+
+2025-12-12 19:24:05.898 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Response     : Result(code=200, message=操作成功, data=[LeaveRecord(id=1, userId=106, startDate=2025-12-09, endDate=2025-12-10, days=-1.0, type=ANNUAL, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:09:01, deleted=0), LeaveRecord(id=6, userId=106, startDate=2025-12-01, endDate=2025-12-02, days=3.5, type=ADJUSTMENT_ADD, remarks=, expiryDate=2026-12-31, createTime=2025-12-09T17:48:54, deleted=0)])
+2025-12-12 19:24:05.898 [http-nio-0.0.0.0-8080-exec-9] INFO  com.leave.system.aspect.WebLogAspect - Time Taken   : 101 ms
+2025-12-12 19:26:50.858 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3m7s687ms).
+2025-12-12 19:31:18.842 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m27s985ms).
+2025-12-12 20:06:27.102 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=35m8s260ms).
+2025-12-12 20:36:50.138 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=30m23s36ms).
+2025-12-12 20:53:20.385 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m145ms).
+2025-12-12 21:09:46.321 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=15m55s921ms).
+2025-12-12 21:25:05.720 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=14m49s395ms).
+2025-12-12 21:43:37.254 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m31s517ms).
+2025-12-12 22:00:08.870 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m31s616ms).
+2025-12-12 22:16:39.239 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m302ms).
+2025-12-12 22:26:12.776 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=9m33s538ms).
+2025-12-12 22:44:22.937 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=17m40s153ms).
+2025-12-12 23:17:34.758 [HikariPool-1 housekeeper] WARN  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=33m11s821ms).

@@ -1,0 +1,27 @@
+# --- 后端 (Spring Boot) ---
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/*.class
+backend/.idea/
+backend/*.iml
+
+# --- 前端 (Vue + Vite) ---
+frontend/node_modules/
+frontend/dist/
+frontend/.vscode/
+frontend/.DS_Store
+frontend/src/assets/logo.png
+frontend/public/favicon_base.jpg
+
+# --- 敏感信息与配置 ---
+**/application.local.yml
+**/.env
+**/config/secrets.properties
+**/secrets/
+
+# --- 系统文件 ---
+.DS_Store
+Thumbs.db
+.vscode/
