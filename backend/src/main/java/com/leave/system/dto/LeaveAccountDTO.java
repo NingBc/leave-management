@@ -1,15 +1,19 @@
 package com.leave.system.dto;
 
 import com.leave.system.entity.LeaveAccount;
+import com.leave.system.entity.LeaveRecord;
 import lombok.Data;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class LeaveAccountDTO extends LeaveAccount {
     private String username;
     private String realName;
     private String employeeNumber;
-    private java.time.LocalDate entryDate;
-    private java.util.List<com.leave.system.entity.LeaveRecord> records;
+    private LocalDate entryDate;
+    private List<LeaveRecord> records;
 
     public String getUsername() {
         return username;
@@ -35,19 +39,19 @@ public class LeaveAccountDTO extends LeaveAccount {
         this.employeeNumber = employeeNumber;
     }
 
-    public java.time.LocalDate getEntryDate() {
+    public LocalDate getEntryDate() {
         return entryDate;
     }
 
-    public void setEntryDate(java.time.LocalDate entryDate) {
+    public void setEntryDate(LocalDate entryDate) {
         this.entryDate = entryDate;
     }
 
-    public java.util.List<com.leave.system.entity.LeaveRecord> getRecords() {
+    public List<LeaveRecord> getRecords() {
         return records;
     }
 
-    public void setRecords(java.util.List<com.leave.system.entity.LeaveRecord> records) {
+    public void setRecords(List<LeaveRecord> records) {
         this.records = records;
     }
 }

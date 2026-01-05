@@ -1,10 +1,9 @@
 package com.leave.system.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.leave.system.entity.SysMenu;
 import java.util.List;
 
-public interface MenuService extends IService<SysMenu> {
+public interface MenuService {
     /**
      * 获取用户可见的菜单树
      */
@@ -30,4 +29,6 @@ public interface MenuService extends IService<SysMenu> {
     void updateMenu(SysMenu menu);
 
     void deleteMenu(Long id);
+
+    SysMenu getById(Long id);
 }

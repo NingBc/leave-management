@@ -180,6 +180,13 @@ public class LeaveServiceImpl implements LeaveService {
         if (user == null) {
             throw new RuntimeException("User not found");
         }
+        return refreshAccount(user, year);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public LeaveAccount refreshAccount(SysUser user, Integer year) {
+        Long userId = user.getId();
 
         // Calculate seniority as of today
         int seniority = 0;
@@ -256,11 +263,8 @@ public class LeaveServiceImpl implements LeaveService {
             }
         }
 
-        // Check if account exists
-        LeaveAccount account = accountMapper.selectOne(
-                new QueryWrapper<LeaveAccount>()
-                        .eq("user_id", userId)
-                        .eq("year", year));
+        // Check if account exists (INCLUDING deleted ones)
+        LeaveAccount account = accountMapper.selectAccountByUserIdAndYearIncludeDeleted(userId, year);
 
         if (account == null) {
             // Create new account
@@ -273,14 +277,34 @@ public class LeaveServiceImpl implements LeaveService {
             account.setLastYearBalance(carryOver);
             account.setCurrentYearUsed(BigDecimal.ZERO);
             account.setDaysEmployed(daysEmployed);
+            account.setDeleted(0); // Ensure active
             accountMapper.insert(account);
             log.info("Created new account for user {} year {}", userId, year);
         } else {
-            // Update existing account
+            // Update existing account (and restore if deleted)
+            if (account.getDeleted() != null && account.getDeleted() == 1) {
+                log.info("Restoring logically deleted account for user {} year {}", userId, year);
+                account.setDeleted(0);
+            }
             account.setSocialSeniority(seniority);
             account.setStandardQuota(standardQuota);
             account.setActualQuota(actualQuota);
             account.setDaysEmployed(daysEmployed);
+
+            // If we are restoring, we might need to be careful about carryOver overwriting?
+            // Current logic does not update lastYearBalance on update path, only on
+            // creation.
+            // But if it was deleted, maybe we should re-eval carryOver?
+            // For now, let's keep stick to original logic: only set carryOver on creation.
+            // Wait, if it was deleted, it's effectively "re-created".
+            // If I restore it, should I reset carryOver?
+            // Let's assume restoration implies "it's back", and we update Quotas.
+            // Use existing lastYearBalance?
+            // If the user was deleted/resigned then re-hired?
+            // If re-hired, maybe we should treat as new? But unique key constraints says
+            // NO.
+            // So we MUST reuse this row.
+
             accountMapper.updateById(account);
             log.info("Updated account for user {} year {}", userId, year);
         }
@@ -404,7 +428,7 @@ public class LeaveServiceImpl implements LeaveService {
         // Ensure quota is fresh for current year before deduction checks
         if (year == LocalDate.now().getYear()) {
             // We need user entity to calc days employed
-            SysUser user = userMapper.selectById(userId);
+            SysUser user = userMapper.selectUserById(userId);
             if (user != null) {
                 refreshCurrentYearAccount(account, user);
             }
@@ -634,10 +658,7 @@ public class LeaveServiceImpl implements LeaveService {
 
         // Only query existing account, DO NOT auto-initialize
         // Initialization should only happen through scheduled tasks or manual execution
-        LeaveAccount account = accountMapper.selectOne(
-                new QueryWrapper<LeaveAccount>()
-                        .eq("user_id", userId)
-                        .eq("year", year));
+        LeaveAccount account = accountMapper.selectAccountByUserIdAndYear(userId, year);
 
         // Dynamically refresh if it is current year
         if (account != null && year == LocalDate.now().getYear()) {

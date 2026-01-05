@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.leave.system.mapper.SysUserMapper">
+
+    <select id="selectByUsername" resultType="SysUser">
+        SELECT * FROM sys_user WHERE username = #{username} AND deleted = 0
+    </select>
+
+    <select id="selectByEmployeeNumber" resultType="SysUser">
+        SELECT * FROM sys_user WHERE employee_number = #{employeeNumber} AND deleted = 0
+    </select>
+
+    <select id="selectByDingtalkUserId" resultType="SysUser">
+        SELECT * FROM sys_user WHERE dingtalk_userid = #{dingtalkUserId} AND deleted = 0
+    </select>
+
+    <select id="selectAllUsers" resultType="SysUser">
+        SELECT * FROM sys_user WHERE deleted = 0
+    </select>
+
+    <select id="selectAllUsersPage" resultType="SysUser">
+        SELECT * FROM sys_user WHERE deleted = 0 ORDER BY id ASC
+    </select>
+
+    <select id="selectActiveUsers" resultType="SysUser">
+        SELECT * FROM sys_user WHERE status != 'RESIGNED' AND deleted = 0
+    </select>
+
+    <select id="selectActiveUsersPage" resultType="SysUser">
+        SELECT * FROM sys_user WHERE (status != 'RESIGNED' OR status IS NULL) AND deleted = 0 ORDER BY id ASC
+    </select>
+
+    <select id="selectUsersWithDingtalkId" resultType="SysUser">
+        SELECT * FROM sys_user WHERE dingtalk_userid IS NOT NULL AND dingtalk_userid != '' AND deleted = 0
+    </select>
+
+    <select id="selectUserById" resultType="SysUser">
+        SELECT * FROM sys_user WHERE id = #{id} AND deleted = 0
+    </select>
+
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_user (username, password, real_name, employee_number, first_work_date, entry_date, social_seniority, role_id, dingtalk_userid, status, resignation_date, create_time, deleted)
+        VALUES (#{username}, #{password}, #{realName}, #{employeeNumber}, #{firstWorkDate}, #{entryDate}, #{socialSeniority}, #{roleId}, #{dingtalkUserId}, #{status}, #{resignationDate}, #{createTime}, #{deleted})
+    </insert>
+
+    <update id="updateUser">
+        UPDATE sys_user
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="employeeNumber != null">employee_number = #{employeeNumber},</if>
+            <if test="firstWorkDate != null">first_work_date = #{firstWorkDate},</if>
+            <if test="entryDate != null">entry_date = #{entryDate},</if>
+            <if test="socialSeniority != null">social_seniority = #{socialSeniority},</if>
+            <if test="roleId != null">role_id = #{roleId},</if>
+            <if test="dingtalkUserId != null">dingtalk_userid = #{dingtalkUserId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="resignationDate != null">resignation_date = #{resignationDate},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="deleted != null">deleted = #{deleted}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteUserById">
+        UPDATE sys_user SET deleted = 1 WHERE id = #{id}
+    </delete>
+
+</mapper>

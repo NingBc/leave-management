@@ -11,4 +11,6 @@ public interface RoleMenuMapper extends BaseMapper<RoleMenu> {
     List<RoleMenu> selectByRoleId(Long roleId);
 
     void deleteByRoleId(Long roleId);
+
+    void insertRoleMenu(com.leave.system.entity.RoleMenu roleMenu);
 }

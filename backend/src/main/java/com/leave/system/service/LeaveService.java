@@ -6,6 +6,7 @@ import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
 import java.time.LocalDate;
 import java.util.List;
+import com.leave.system.entity.SysUser;
 
 public interface LeaveService {
     /**
@@ -13,6 +14,12 @@ public interface LeaveService {
      * Calculates quota based on seniority.
      */
     LeaveAccount initYearlyAccount(Long userId, Integer year);
+
+    /**
+     * Refresh account using provided user object (avoids DB fetch latency/cache
+     * issues)
+     */
+    LeaveAccount refreshAccount(SysUser user, Integer year);
 
     /**
      * Apply for annual leave.

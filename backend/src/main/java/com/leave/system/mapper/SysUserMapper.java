@@ -24,4 +24,12 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
     Page<SysUser> selectActiveUsersPage(Page<SysUser> page);
 
     List<SysUser> selectUsersWithDingtalkId();
+
+    int insertUser(SysUser user);
+
+    int updateUser(SysUser user);
+
+    int deleteUserById(Long id);
+
+    SysUser selectUserById(Long id);
 }

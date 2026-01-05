@@ -9,4 +9,14 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
     List<SysMenu> selectAllMenus();
+
+    int insertMenu(SysMenu menu);
+
+    int updateMenu(SysMenu menu);
+
+    int deleteMenuById(Long id);
+
+    SysMenu selectMenuById(Long id);
+
+    List<SysMenu> selectMenusByIds(List<Long> ids);
 }

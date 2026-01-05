@@ -1,6 +1,5 @@
 package com.leave.system.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.leave.system.entity.RoleMenu;
 import com.leave.system.entity.SysMenu;
 import com.leave.system.entity.SysUser;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements MenuService {
+public class MenuServiceImpl implements MenuService {
 
     private static final Logger log = LoggerFactory.getLogger(MenuServiceImpl.class);
 
@@ -45,7 +44,7 @@ public class MenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impleme
             return List.of();
         }
 
-        List<SysMenu> allMenus = menuMapper.selectBatchIds(menuIds);
+        List<SysMenu> allMenus = menuMapper.selectMenusByIds(menuIds);
         return buildTree(allMenus);
     }
 
@@ -94,23 +93,28 @@ public class MenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impleme
                 RoleMenu roleMenu = new RoleMenu();
                 roleMenu.setRoleId(roleId);
                 roleMenu.setMenuId(menuId);
-                roleMenuMapper.insert(roleMenu);
+                roleMenuMapper.insertRoleMenu(roleMenu);
             }
         }
     }
 
     @Override
     public void addMenu(SysMenu menu) {
-        this.save(menu);
+        menuMapper.insertMenu(menu);
     }
 
     @Override
     public void updateMenu(SysMenu menu) {
-        this.updateById(menu);
+        menuMapper.updateMenu(menu);
     }
 
     @Override
     public void deleteMenu(Long id) {
-        this.removeById(id);
+        menuMapper.deleteMenuById(id);
+    }
+
+    @Override
+    public SysMenu getById(Long id) {
+        return menuMapper.selectMenuById(id);
     }
 }

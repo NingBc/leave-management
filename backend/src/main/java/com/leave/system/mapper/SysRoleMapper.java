@@ -9,4 +9,12 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SysRoleMapper extends BaseMapper<SysRole> {
     List<SysRole> selectActiveRoles();
+
+    int insertRole(SysRole role);
+
+    int updateRole(SysRole role);
+
+    int deleteRoleById(Long id);
+
+    SysRole selectRoleById(Long id);
 }

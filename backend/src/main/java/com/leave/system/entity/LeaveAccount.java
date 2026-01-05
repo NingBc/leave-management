@@ -50,6 +50,14 @@ public class LeaveAccount {
         return socialSeniority;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
     public Long getId() {
         return id;
     }

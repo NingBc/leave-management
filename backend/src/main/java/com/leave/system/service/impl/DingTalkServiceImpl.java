@@ -16,9 +16,13 @@ import com.leave.system.mapper.LeaveRecordMapper;
 import com.leave.system.mapper.SysUserMapper;
 import com.leave.system.service.DingTalkService;
 import com.leave.system.config.DingTalkConfig;
+import com.leave.system.config.DingTalkAppConfig;
+import com.leave.system.mapper.LeaveAccountMapper;
+import com.leave.system.service.LeaveService;
 import com.taobao.api.ApiException;
 import com.taobao.api.internal.util.StringUtils;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -32,14 +36,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("dingTalkService")
-@Slf4j
 public class DingTalkServiceImpl implements DingTalkService {
+
+    private static final Logger log = LoggerFactory.getLogger(DingTalkServiceImpl.class);
 
     @Autowired
     private DingTalkConfig dingTalkConfig;
 
     @Autowired
-    private com.leave.system.config.DingTalkAppConfig dingTalkAppConfig;
+    private DingTalkAppConfig dingTalkAppConfig;
 
     @Autowired
     private SysUserMapper userMapper;
@@ -48,10 +53,10 @@ public class DingTalkServiceImpl implements DingTalkService {
     private LeaveRecordMapper leaveRecordMapper;
 
     @Autowired
-    private com.leave.system.mapper.LeaveAccountMapper leaveAccountMapper;
+    private LeaveAccountMapper leaveAccountMapper;
 
     @Autowired
-    private com.leave.system.service.LeaveService leaveService;
+    private LeaveService leaveService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
