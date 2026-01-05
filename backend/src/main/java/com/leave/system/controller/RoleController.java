@@ -2,57 +2,44 @@ package com.leave.system.controller;
 
 import com.leave.system.common.Result;
 import com.leave.system.entity.SysRole;
-import com.leave.system.mapper.SysRoleMapper;
+import com.leave.system.service.RoleService;
+import com.leave.system.service.MenuService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/system/role")
 public class RoleController {
 
-    private final SysRoleMapper roleMapper;
-    private final com.leave.system.service.MenuService menuService;
+    private final RoleService roleService;
+    private final MenuService menuService;
 
-    public RoleController(SysRoleMapper roleMapper, com.leave.system.service.MenuService menuService) {
-        this.roleMapper = roleMapper;
+    public RoleController(RoleService roleService, MenuService menuService) {
+        this.roleService = roleService;
         this.menuService = menuService;
     }
 
     @GetMapping("/list")
     public Result<List<SysRole>> list() {
-        return Result.success(roleMapper.selectList(null));
+        return Result.success(roleService.getAllRoles());
     }
 
     @PostMapping("/add")
     public Result<Void> add(@RequestBody SysRole role) {
-        role.setCreateTime(LocalDateTime.now());
-        role.setDeleted(0);
-        roleMapper.insert(role);
-
-        if (role.getMenuIds() != null) {
-            menuService.assignMenusToRole(role.getId(), role.getMenuIds());
-        }
-
+        roleService.addRole(role);
         return Result.success(null, "角色添加成功");
     }
 
     @PutMapping("/update")
     public Result<Void> update(@RequestBody SysRole role) {
-        role.setUpdateTime(LocalDateTime.now());
-        roleMapper.updateById(role);
-
-        if (role.getMenuIds() != null) {
-            menuService.assignMenusToRole(role.getId(), role.getMenuIds());
-        }
-
+        roleService.updateRole(role);
         return Result.success(null, "角色更新成功");
     }
 
     @DeleteMapping("/delete/{id}")
     public Result<Void> delete(@PathVariable Long id) {
-        roleMapper.deleteById(id);
+        roleService.deleteRole(id);
         return Result.success(null, "角色删除成功");
     }
 

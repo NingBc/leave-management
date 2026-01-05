@@ -72,8 +72,7 @@ public class DingTalkServiceImpl implements DingTalkService {
             log.info("Syncing data from {} to {}", fromDateStr, toDateStr);
 
             // Get users with dingtalkUserId
-            List<SysUser> users = userMapper
-                    .selectList(new QueryWrapper<SysUser>().isNotNull("dingtalk_userid").ne("dingtalk_userid", ""));
+            List<SysUser> users = userMapper.selectUsersWithDingtalkId();
             if (users.isEmpty()) {
                 log.info("No users with DingTalk ID found.");
                 return;

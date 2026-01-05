@@ -13,6 +13,9 @@ import com.leave.system.service.LeaveService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -24,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class LeaveServiceImpl implements LeaveService {
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LeaveServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(LeaveServiceImpl.class);
 
     private final LeaveAccountMapper accountMapper;
     private final LeaveRecordMapper recordMapper;
@@ -595,7 +598,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     public List<LeaveAccountDTO> getAllAccounts(Integer year) {
-        List<SysUser> users = userMapper.selectList(null);
+        List<SysUser> users = userMapper.selectActiveUsers();
         return users.stream()
                 .map(user -> fillAccountDTO(new LeaveAccountDTO(), user.getId(), year))
                 .collect(Collectors.toList());
@@ -603,11 +606,8 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     public Page<LeaveAccountDTO> getAllAccountsPage(Integer year, int current, int size) {
-        // Filter out resigned users by default
-        com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<SysUser> queryWrapper = new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<>();
-        queryWrapper.ne("status", "RESIGNED");
-
-        Page<SysUser> userPage = userMapper.selectPage(new Page<>(current, size), queryWrapper);
+        // Filter out resigned users by default (implemented in XML)
+        Page<SysUser> userPage = userMapper.selectActiveUsersPage(new Page<>(current, size));
         Page<LeaveAccountDTO> resultPage = new Page<>(current, size);
         resultPage.setTotal(userPage.getTotal());
 
@@ -845,8 +845,4 @@ public class LeaveServiceImpl implements LeaveService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<SysUser> getAllUsers() {
-        return userMapper.selectList(null);
-    }
 }

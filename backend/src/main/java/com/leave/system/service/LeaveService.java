@@ -23,12 +23,11 @@ public interface LeaveService {
     /**
      * Get leave account details for a user.
      */
-    com.leave.system.dto.LeaveAccountDTO getAccount(Long userId, Integer year);
+    LeaveAccountDTO getAccount(Long userId, Integer year);
 
-    List<com.leave.system.dto.LeaveAccountDTO> getAllAccounts(Integer year);
+    List<LeaveAccountDTO> getAllAccounts(Integer year);
 
-    com.baomidou.mybatisplus.extension.plugins.pagination.Page<LeaveAccountDTO> getAllAccountsPage(Integer year,
-            int current, int size);
+    Page<LeaveAccountDTO> getAllAccountsPage(Integer year, int current, int size);
 
     /**
      * Get leave history for a user, optionally filtered by year.
@@ -63,6 +62,4 @@ public interface LeaveService {
      * @return List of years with existing leave accounts
      */
     List<Integer> getAllAvailableYears();
-
-    List<com.leave.system.entity.SysUser> getAllUsers();
 }

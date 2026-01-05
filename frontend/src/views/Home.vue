@@ -148,13 +148,9 @@ const loadUserInfo = async () => {
 
 const loadUserMenus = async () => {
   // 直接从Store获取菜单数据，不再发起请求
-  // 如果Store中没有数据（例如直接访问首页且Layout还未加载完成），Layout会负责加载
   if (userStore.userMenus && userStore.userMenus.length > 0) {
-    userMenus.value = buildMenuTree(userStore.userMenus)
+    userMenus.value = userStore.userMenus
   } else {
-    // 如果Store为空，尝试等待Layout加载（或者也可以选择在这里加载，但通常Layout会先加载）
-    // 为了保险起见，如果Store真的为空，可以发起请求，但加上防抖或检查
-    // 这里简单处理：如果Store有数据就用，没有就发起请求并存入Store
     try {
       const userId = userStore.userId
       if (!userId) return
@@ -163,31 +159,13 @@ const loadUserMenus = async () => {
         params: { userId }
       })
       userStore.setUserMenus(menus)
-      userMenus.value = buildMenuTree(menus)
+      userMenus.value = menus
     } catch (e) {
       console.error('Failed to load user menus:', e)
     }
   }
 }
 
-const buildMenuTree = (menus) => {
-  const menuMap = {}
-  const tree = []
-  
-  menus.forEach(menu => {
-    menuMap[menu.id] = { ...menu, children: [] }
-  })
-  
-  menus.forEach(menu => {
-    if (menu.parentId === 0 || !menuMap[menu.parentId]) {
-      tree.push(menuMap[menu.id])
-    } else {
-      menuMap[menu.parentId].children.push(menuMap[menu.id])
-    }
-  })
-  
-  return tree
-}
 
 onMounted(() => {
   loadUserInfo()

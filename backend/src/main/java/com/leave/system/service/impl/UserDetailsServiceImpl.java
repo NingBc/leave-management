@@ -1,6 +1,5 @@
 package com.leave.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.leave.system.entity.SysUser;
 import com.leave.system.mapper.SysUserMapper;
 import org.springframework.security.core.userdetails.User;
@@ -22,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUser sysUser = userMapper.selectOne(new QueryWrapper<SysUser>().eq("username", username));
+        SysUser sysUser = userMapper.selectByUsername(username);
         if (sysUser == null) {
             throw new UsernameNotFoundException("User not found: " + username);
         }
