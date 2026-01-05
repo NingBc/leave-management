@@ -1,6 +1,5 @@
 package com.leave.system.scheduled;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
 import com.leave.system.entity.SysUser;
@@ -55,7 +54,7 @@ public class ScheduledTasks {
     /**
      * Manual trigger version of expiry cleanup
      * 
-     * @param year The year to cleanup balances for (e.g. "2024")
+     * @param year The year to clean balances for (e.g. "2024")
      */
     @Transactional(rollbackFor = Exception.class)
     public void cleanupExpiredLeaveBalances(String year) {
@@ -78,10 +77,7 @@ public class ScheduledTasks {
         log.info("🔄 Starting leave expiry cleanup for year: {} (Target Expiry: {})", cleanupYear, targetExpiryDate);
 
         // 1. Get all users who have an account for this year
-        List<LeaveAccount> yearAccounts = accountMapper.selectList(
-                new QueryWrapper<LeaveAccount>()
-                        .eq("year", cleanupYear)
-                        .eq("deleted", 0));
+        List<LeaveAccount> yearAccounts = accountMapper.selectAccountsByYear(cleanupYear);
 
         if (yearAccounts.isEmpty()) {
             log.info("No accounts found for year {}", cleanupYear);
@@ -95,12 +91,8 @@ public class ScheduledTasks {
             Long userId = account.getUserId();
 
             // Find records for this user that expire on the target date (Bucket credits)
-            List<LeaveRecord> userRecords = recordMapper.selectList(
-                    new QueryWrapper<LeaveRecord>()
-                            .eq("user_id", userId)
-                            .eq("expiry_date", targetExpiryDate)
-                            .in("type", Arrays.asList("ADJUSTMENT_ADD", "CARRY_OVER"))
-                            .eq("deleted", 0));
+            // Find records for this user that expire on the target date (Bucket credits)
+            List<LeaveRecord> userRecords = recordMapper.selectExpiringRecords(userId, targetExpiryDate);
 
             Optional<LeaveRecord> latestCarryOver = userRecords.stream()
                     .filter(r -> "CARRY_OVER".equals(r.getType()))
@@ -152,17 +144,8 @@ public class ScheduledTasks {
                 protectionBalance = account.getActualQuota();
             }
 
-            QueryWrapper<LeaveRecord> usageWrapper = new QueryWrapper<LeaveRecord>()
-                    .eq("user_id", userId)
-                    .in("type", Arrays.asList("ANNUAL", "ADJUSTMENT_DEDUCT"))
-                    .eq("expiry_date", targetExpiryDate)
-                    .eq("deleted", 0);
-
-            if (anchorTime != null) {
-                usageWrapper.gt("create_time", anchorTime);
-            }
-
-            List<LeaveRecord> usageRecords = recordMapper.selectList(usageWrapper);
+            List<LeaveRecord> usageRecords = recordMapper.selectUsageRecordsForExpiryCleanup(userId, targetExpiryDate,
+                    anchorTime);
             BigDecimal totalUsed = usageRecords.stream()
                     .map(LeaveRecord::getDays)
                     .map(BigDecimal::abs)
@@ -170,12 +153,7 @@ public class ScheduledTasks {
 
             BigDecimal remainingExpiring = finalExpiringBalance.subtract(totalUsed);
 
-            List<LeaveRecord> alreadyExpiredRecords = recordMapper.selectList(
-                    new QueryWrapper<LeaveRecord>()
-                            .eq("user_id", userId)
-                            .eq("type", "EXPIRED")
-                            .eq("start_date", targetExpiryDate)
-                            .eq("deleted", 0));
+            List<LeaveRecord> alreadyExpiredRecords = recordMapper.selectExpiredRecordsByDate(userId, targetExpiryDate);
 
             BigDecimal alreadyExpiredAmount = alreadyExpiredRecords.stream()
                     .map(LeaveRecord::getDays)
@@ -184,12 +162,7 @@ public class ScheduledTasks {
 
             remainingExpiring = remainingExpiring.subtract(alreadyExpiredAmount);
 
-            List<LeaveRecord> floatingRecords = recordMapper.selectList(
-                    new QueryWrapper<LeaveRecord>()
-                            .eq("user_id", userId)
-                            .isNull("expiry_date")
-                            .ne("type", "CARRY_OVER")
-                            .eq("deleted", 0));
+            List<LeaveRecord> floatingRecords = recordMapper.selectFloatingRecordsForCleanup(userId);
 
             BigDecimal currentNetDebt = floatingRecords.stream()
                     .map(LeaveRecord::getDays)
@@ -211,7 +184,7 @@ public class ScheduledTasks {
                     bucketDeduct.setType("ADJUSTMENT_DEDUCT");
                     bucketDeduct.setExpiryDate(targetExpiryDate);
                     bucketDeduct.setRemarks("系统自动清理透支: 消耗过期额度 (" + targetExpiryDate + ")");
-                    recordMapper.insert(bucketDeduct);
+                    recordMapper.insertRecord(bucketDeduct);
 
                     LeaveRecord debtOffset = new LeaveRecord();
                     debtOffset.setUserId(userId);
@@ -220,7 +193,7 @@ public class ScheduledTasks {
                     debtOffset.setDays(offsetFromExpiring);
                     debtOffset.setType("ADJUSTMENT_ADD");
                     debtOffset.setRemarks("系统自动清理透支: 冲抵历史欠费 (来源: " + targetExpiryDate + ")");
-                    recordMapper.insert(debtOffset);
+                    recordMapper.insertRecord(debtOffset);
 
                     debtToSettle = debtToSettle.subtract(offsetFromExpiring);
                     remainingExpiring = remainingExpiring.subtract(offsetFromExpiring);
@@ -242,7 +215,7 @@ public class ScheduledTasks {
                     bucketDeduct.setType("ADJUSTMENT_DEDUCT");
                     bucketDeduct.setExpiryDate(nextYearExpiry);
                     bucketDeduct.setRemarks("系统自动清理透支: 消耗当年配额 (过期: " + nextYearExpiry + ")");
-                    recordMapper.insert(bucketDeduct);
+                    recordMapper.insertRecord(bucketDeduct);
 
                     LeaveRecord debtOffset = new LeaveRecord();
                     debtOffset.setUserId(userId);
@@ -251,7 +224,7 @@ public class ScheduledTasks {
                     debtOffset.setDays(offsetFromProtection);
                     debtOffset.setType("ADJUSTMENT_ADD");
                     debtOffset.setRemarks("系统自动清理透支: 冲抵历史欠费 (来源: 当年配额)");
-                    recordMapper.insert(debtOffset);
+                    recordMapper.insertRecord(debtOffset);
 
                     debtToSettle = debtToSettle.subtract(offsetFromProtection);
                 }
@@ -266,7 +239,7 @@ public class ScheduledTasks {
                 expiredRecord.setType("EXPIRED");
                 expiredRecord.setExpiryDate(targetExpiryDate);
                 expiredRecord.setRemarks("年假已过期自动清理 (到期日期: " + targetExpiryDate + ")");
-                recordMapper.insert(expiredRecord);
+                recordMapper.insertRecord(expiredRecord);
 
                 totalDaysExpired = totalDaysExpired.add(remainingExpiring);
                 totalUsersAffected++;

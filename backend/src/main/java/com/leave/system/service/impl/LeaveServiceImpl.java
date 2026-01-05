@@ -1,11 +1,11 @@
 package com.leave.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.leave.system.dto.LeaveAccountDTO;
 import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
 import com.leave.system.entity.SysUser;
+import com.leave.system.exception.BusinessException;
 import com.leave.system.mapper.LeaveAccountMapper;
 import com.leave.system.mapper.LeaveRecordMapper;
 import com.leave.system.mapper.SysUserMapper;
@@ -53,10 +53,8 @@ public class LeaveServiceImpl implements LeaveService {
         log.info("🔍 Calculating carry-over for user {} from year {} to {}", userId, lastYear, year);
 
         // Get last year's account to get the actualQuota
-        LeaveAccount lastYearAccount = accountMapper.selectOne(
-                new QueryWrapper<LeaveAccount>()
-                        .eq("user_id", userId)
-                        .eq("year", lastYear));
+        // Get last year's account to get the actualQuota
+        LeaveAccount lastYearAccount = accountMapper.selectLastYearAccount(userId, year);
 
         if (lastYearAccount == null) {
             log.info("❌ No account found for year {}, cannot carry over", lastYear);
@@ -74,11 +72,11 @@ public class LeaveServiceImpl implements LeaveService {
         // year)
         // EXCLUDE records with NULL expiry (Floating Debt Pool) to avoid
         // double-deduction during cleanup
-        List<LeaveRecord> lastYearRecords = recordMapper.selectList(
-                new QueryWrapper<LeaveRecord>()
-                        .eq("user_id", userId)
-                        .apply("YEAR(start_date) = {0}", lastYear)
-                        .isNotNull("expiry_date"));
+        // Get all last year's records (usage, adjustments, carry-over from previous
+        // year)
+        // EXCLUDE records with NULL expiry (Floating Debt Pool) to avoid
+        // double-deduction during cleanup
+        List<LeaveRecord> lastYearRecords = recordMapper.selectRecordsForCarryOver(userId, lastYear);
 
         log.info("📋 Found {} bucketed records (with expiry) in year {}", lastYearRecords.size(), lastYear);
 
@@ -176,9 +174,9 @@ public class LeaveServiceImpl implements LeaveService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LeaveAccount initYearlyAccount(Long userId, Integer year) {
-        SysUser user = userMapper.selectById(userId);
+        SysUser user = userMapper.selectUserById(userId);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new BusinessException("User not found");
         }
         return refreshAccount(user, year);
     }
@@ -221,21 +219,15 @@ public class LeaveServiceImpl implements LeaveService {
 
         // Calculate carry over from last year (excluding expired balances)
         BigDecimal carryOver = BigDecimal.ZERO;
-        LeaveAccount lastYearAccount = accountMapper.selectOne(
-                new QueryWrapper<LeaveAccount>()
-                        .eq("user_id", userId)
-                        .eq("year", year - 1));
+        LeaveAccount lastYearAccount = accountMapper.selectLastYearAccount(userId, year);
 
         if (lastYearAccount != null) {
             // Use new calculation method that considers expiry dates
             carryOver = calculateCarryOverBalance(userId, year);
 
             // Create or update CARRY_OVER record
-            LeaveRecord existingCarryOver = recordMapper.selectOne(
-                    new QueryWrapper<LeaveRecord>()
-                            .eq("user_id", userId)
-                            .eq("type", "CARRY_OVER")
-                            .eq("start_date", LocalDate.of(year, 1, 1)));
+            // Create or update CARRY_OVER record
+            LeaveRecord existingCarryOver = recordMapper.selectCarryOverRecord(userId, LocalDate.of(year, 1, 1));
 
             // Carry-over expiry date: end of current year (2-year validity)
             LocalDate carryOverExpiryDate = LocalDate.of(year, 12, 31);
@@ -245,7 +237,7 @@ public class LeaveServiceImpl implements LeaveService {
                 existingCarryOver.setDays(carryOver);
                 existingCarryOver.setExpiryDate(carryOverExpiryDate);
                 existingCarryOver.setRemarks("上年结余年假结转 (过期: " + carryOverExpiryDate + ")");
-                recordMapper.updateById(existingCarryOver);
+                recordMapper.updateRecord(existingCarryOver);
                 log.info("✅ Updated carry-over record: {} days (expires {})", carryOver, carryOverExpiryDate);
             } else {
                 // Create new record
@@ -258,7 +250,7 @@ public class LeaveServiceImpl implements LeaveService {
                 carryOverRecord.setExpiryDate(carryOverExpiryDate);
                 carryOverRecord.setRemarks("上年结余年假结转 (过期: " + carryOverExpiryDate + ")");
                 carryOverRecord.setCreateTime(LocalDateTime.now());
-                recordMapper.insert(carryOverRecord);
+                recordMapper.insertRecord(carryOverRecord);
                 log.info("✅ Created carry-over record: {} days (expires {})", carryOver, carryOverExpiryDate);
             }
         }
@@ -278,7 +270,7 @@ public class LeaveServiceImpl implements LeaveService {
             account.setCurrentYearUsed(BigDecimal.ZERO);
             account.setDaysEmployed(daysEmployed);
             account.setDeleted(0); // Ensure active
-            accountMapper.insert(account);
+            accountMapper.insertAccount(account);
             log.info("Created new account for user {} year {}", userId, year);
         } else {
             // Update existing account (and restore if deleted)
@@ -305,7 +297,7 @@ public class LeaveServiceImpl implements LeaveService {
             // NO.
             // So we MUST reuse this row.
 
-            accountMapper.updateById(account);
+            accountMapper.updateAccount(account);
             log.info("Updated account for user {} year {}", userId, year);
         }
 
@@ -373,7 +365,7 @@ public class LeaveServiceImpl implements LeaveService {
         }
 
         if (changed) {
-            accountMapper.updateById(account);
+            accountMapper.updateAccount(account);
             log.info("✅ Refreshed dynamic quota for user {}: employed={} days, quota={}",
                     user.getId(), daysEmployed, actualQuota);
         }
@@ -385,12 +377,10 @@ public class LeaveServiceImpl implements LeaveService {
         int year = startDate.getYear();
 
         // Ensure account exists
-        LeaveAccount account = accountMapper.selectOne(new QueryWrapper<LeaveAccount>()
-                .eq("user_id", userId).eq("year", year));
+        LeaveAccount account = accountMapper.selectAccountByUserIdAndYear(userId, year);
         if (account == null) {
             initYearlyAccount(userId, year);
-            account = accountMapper.selectOne(new QueryWrapper<LeaveAccount>()
-                    .eq("user_id", userId).eq("year", year));
+            account = accountMapper.selectAccountByUserIdAndYear(userId, year);
         }
 
         // Calculate days requested
@@ -398,7 +388,7 @@ public class LeaveServiceImpl implements LeaveService {
         BigDecimal daysRequested = new BigDecimal(daysDiff);
 
         if (daysRequested.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("Invalid date range");
+            throw new BusinessException("Invalid date range");
         }
 
         log.info("📝 Processing leave application: user={}, dates={} to {}, days={}",
@@ -417,12 +407,10 @@ public class LeaveServiceImpl implements LeaveService {
         int year = startDate.getYear();
 
         // Ensure account exists or init it (needed for quota info)
-        LeaveAccount account = accountMapper.selectOne(new QueryWrapper<LeaveAccount>()
-                .eq("user_id", userId).eq("year", year));
+        LeaveAccount account = accountMapper.selectAccountByUserIdAndYear(userId, year);
         if (account == null) {
             initYearlyAccount(userId, year);
-            account = accountMapper.selectOne(new QueryWrapper<LeaveAccount>()
-                    .eq("user_id", userId).eq("year", year));
+            account = accountMapper.selectAccountByUserIdAndYear(userId, year);
         }
 
         // Ensure quota is fresh for current year before deduction checks
@@ -436,12 +424,7 @@ public class LeaveServiceImpl implements LeaveService {
 
         // Get current balances by expiry date (ordered by expiry date)
         // Broadened query: include non-expired balances regardless of start_date year
-        List<LeaveRecord> availableBalances = recordMapper.selectList(
-                new QueryWrapper<LeaveRecord>()
-                        .eq("user_id", userId)
-                        .ge("expiry_date", LocalDate.now()) // Only use balances that haven't expired AS OF TODAY
-                        .in("type", Arrays.asList("CARRY_OVER", "ADJUSTMENT_ADD"))
-                        .orderByAsc("expiry_date"));
+        List<LeaveRecord> availableBalances = recordMapper.selectAvailableBalances(userId);
 
         // Calculate available balance from each source
         Map<LocalDate, BigDecimal> balanceByExpiry = new HashMap<>();
@@ -471,11 +454,9 @@ public class LeaveServiceImpl implements LeaveService {
 
         // Subtract already used amounts
         // Broadened query: include usage records (and EXPIRED records) for any bucket
-        List<LeaveRecord> usageRecords = recordMapper.selectList(
-                new QueryWrapper<LeaveRecord>()
-                        .eq("user_id", userId)
-                        .in("type", Arrays.asList("ANNUAL", "ADJUSTMENT_DEDUCT", "EXPIRED"))
-                        .isNotNull("expiry_date"));
+        // Subtract already used amounts
+        // Broadened query: include usage records (and EXPIRED records) for any bucket
+        List<LeaveRecord> usageRecords = recordMapper.selectUsageRecords(userId);
 
         for (LeaveRecord usage : usageRecords) {
             LocalDate expiry = usage.getExpiryDate();
@@ -487,12 +468,10 @@ public class LeaveServiceImpl implements LeaveService {
         // NEW: Account for Floating Debt (expiry_date IS NULL)
         // These must be offset from the available buckets starting with the earliest
         // expiring ones.
-        List<LeaveRecord> floatingRecords = recordMapper.selectList(
-                new QueryWrapper<LeaveRecord>()
-                        .eq("user_id", userId)
-                        .isNull("expiry_date")
-                        .ne("type", "CARRY_OVER")
-                        .eq("deleted", 0));
+        // NEW: Account for Floating Debt (expiry_date IS NULL)
+        // These must be offset from the available buckets starting with the earliest
+        // expiring ones.
+        List<LeaveRecord> floatingRecords = recordMapper.selectFloatingRecords(userId);
 
         BigDecimal floatingDebt = floatingRecords.stream()
                 .map(LeaveRecord::getDays)
@@ -580,7 +559,7 @@ public class LeaveServiceImpl implements LeaveService {
 
             usageRecord.setCreateTime(LocalDateTime.now());
 
-            recordMapper.insert(usageRecord);
+            recordMapper.insertRecord(usageRecord);
 
             log.info("  ✅ Allocated {} days from balance expiring on {}", deduction, expiryDate);
 
@@ -609,7 +588,7 @@ public class LeaveServiceImpl implements LeaveService {
             String note = remarksPrefix != null ? remarksPrefix : ("ANNUAL".equals(type) ? "员工请假" : "额度扣除");
             borrowRecord.setRemarks(String.format("%s (额度透支)", note));
             borrowRecord.setCreateTime(LocalDateTime.now());
-            recordMapper.insert(borrowRecord);
+            recordMapper.insertRecord(borrowRecord);
 
             log.info("  ✅ Created OVERDRAFT record for {} days (no expiry)", remainingToAllocate);
         }
@@ -644,7 +623,7 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     private LeaveAccountDTO fillAccountDTO(LeaveAccountDTO dto, Long userId, Integer year) {
-        SysUser user = userMapper.selectById(userId);
+        SysUser user = userMapper.selectUserById(userId);
         if (user == null) {
             return dto;
         }
@@ -674,11 +653,7 @@ public class LeaveServiceImpl implements LeaveService {
             dto.setDaysEmployed(account.getDaysEmployed());
 
             // Get records for this year directly from DB to avoid fetching all history
-            List<LeaveRecord> yearRecords = recordMapper.selectList(
-                    new QueryWrapper<LeaveRecord>()
-                            .eq("user_id", userId)
-                            .apply("YEAR(start_date) = {0}", year)
-                            .orderByDesc("start_date"));
+            List<LeaveRecord> yearRecords = recordMapper.selectRecordsByYear(userId, year);
 
             dto.setRecords(yearRecords);
 
@@ -698,8 +673,6 @@ public class LeaveServiceImpl implements LeaveService {
             // CARRY_OVER is excluded because it's already in LastYearBalance (if we
             // consider cleanup logic)
             // OR if it's a fresh record for this year.
-            // However, based on initYearlyAccount, carryOver is stored in
-            // `lastYearBalance`.
             // The `CARRY_OVER` record is just for history.
             // So we EXCLUDE CARRY_OVER record from the sum to avoid double counting it.
 
@@ -718,11 +691,7 @@ public class LeaveServiceImpl implements LeaveService {
             // 2. Global Floating Debt (Sum of all NULL-expiry records regardless of year)
             // These records represent floating debt/adjustments not tied to a specific
             // bucket.
-            BigDecimal globalFloatingDebt = recordMapper.selectList(
-                    new QueryWrapper<LeaveRecord>()
-                            .eq("user_id", userId)
-                            .isNull("expiry_date")
-                            .eq("deleted", 0))
+            BigDecimal globalFloatingDebt = recordMapper.selectFloatingRecords(userId)
                     .stream()
                     .map(LeaveRecord::getDays)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -752,28 +721,18 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     public List<LeaveRecord> getHistory(Long userId, Integer year) {
-        QueryWrapper<LeaveRecord> queryWrapper = new QueryWrapper<LeaveRecord>()
-                .eq("user_id", userId)
-                .orderByDesc("start_date");
-
-        if (year != null) {
-            queryWrapper.apply("YEAR(start_date) = {0}", year);
-        }
-
-        return recordMapper.selectList(queryWrapper);
+        return recordMapper.selectHistory(userId, year);
     }
 
     @Override
     public List<LeaveRecord> getAllRecords() {
-        return recordMapper.selectList(
-                new QueryWrapper<LeaveRecord>()
-                        .orderByDesc("start_date"));
+        return recordMapper.findAllRecords();
     }
 
     @Override
     @Transactional
     public void updateRecord(LeaveRecord record) {
-        recordMapper.updateById(record);
+        recordMapper.updateRecord(record);
     }
 
     @Override
@@ -836,7 +795,7 @@ public class LeaveServiceImpl implements LeaveService {
             record.setDays(absDays);
         }
 
-        recordMapper.insert(record);
+        recordMapper.insertRecord(record);
         log.info("Added record: userId={}, type={}, days={}, expiryDate={}",
                 record.getUserId(), record.getType(), record.getDays(), record.getExpiryDate());
     }
@@ -844,26 +803,19 @@ public class LeaveServiceImpl implements LeaveService {
     @Override
     @Transactional
     public void updateAccount(LeaveAccount account) {
-        accountMapper.updateById(account);
+        accountMapper.updateAccount(account);
     }
 
     @Override
     @Transactional
     public void deleteAccountsByUserId(Long userId) {
-        accountMapper.delete(new QueryWrapper<LeaveAccount>().eq("user_id", userId));
+        accountMapper.deleteByUserId(userId);
         log.info("Soft deleted all leave accounts for user {}", userId);
     }
 
     @Override
     public List<Integer> getAllAvailableYears() {
-        List<LeaveAccount> accounts = accountMapper.selectList(
-                new QueryWrapper<LeaveAccount>()
-                        .select("DISTINCT year")
-                        .orderByDesc("year"));
-        return accounts.stream()
-                .map(LeaveAccount::getYear)
-                .distinct()
-                .collect(Collectors.toList());
+        return accountMapper.selectDistinctYears();
     }
 
 }

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.leave.system.mapper.LeaveRecordMapper">
+
+    <select id="selectByUserIdAndYear" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record 
+        WHERE user_id = #{userId} 
+        AND YEAR(start_date) = #{year}
+    </select>
+
+    <select id="selectRecordsForCarryOver" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record 
+        WHERE user_id = #{userId} 
+        AND YEAR(start_date) = #{year}
+        AND expiry_date IS NOT NULL
+    </select>
+    
+    <select id="selectCarryOverRecord" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId} 
+        AND type = 'CARRY_OVER'
+        AND start_date = #{date}
+    </select>
+
+    <select id="countDuplicateRecord" resultType="long">
+        SELECT COUNT(*) FROM leave_record
+        WHERE user_id = #{userId}
+        AND start_date = #{startDate}
+        AND type = #{type}
+        AND days = #{days}
+    </select>
+
+    <select id="selectRecordsByYear" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+        AND YEAR(start_date) = #{year}
+        ORDER BY start_date ASC
+    </select>
+    
+    <select id="selectAvailableBalances" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+        AND expiry_date &gt;= DATE(NOW())
+        AND type IN ('CARRY_OVER', 'ADJUSTMENT_ADD')
+        ORDER BY expiry_date ASC
+    </select>
+    
+    <select id="selectUsageRecords" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+        AND type IN ('ANNUAL', 'ADJUSTMENT_DEDUCT', 'EXPIRED')
+        AND expiry_date IS NOT NULL
+    </select>
+    
+    <select id="selectFloatingRecords" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+        AND expiry_date IS NULL
+        AND type != 'CARRY_OVER'
+        AND deleted = 0
+    </select>
+    
+    <select id="findAllRecords" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record ORDER BY start_date DESC
+    </select>
+    
+    <select id="selectHistory" resultType="com.leave.system.entity.LeaveRecord">
+         SELECT * FROM leave_record
+         WHERE user_id = #{userId}
+         <if test="year != null">
+            AND YEAR(start_date) = #{year}
+         </if>
+         ORDER BY start_date DESC
+    </select>
+
+    <select id="selectExpiringRecords" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+        AND expiry_date = #{expiryDate}
+        AND type IN ('ADJUSTMENT_ADD', 'CARRY_OVER')
+        AND deleted = 0
+    </select>
+
+    <select id="selectUsageRecordsForExpiryCleanup" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+        AND type IN ('ANNUAL', 'ADJUSTMENT_DEDUCT')
+        AND expiry_date = #{expiryDate}
+        AND deleted = 0
+        <if test="anchorTime != null">
+            AND create_time &gt; #{anchorTime}
+        </if>
+    </select>
+
+    <select id="selectExpiredRecordsByDate" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+        AND type = 'EXPIRED'
+        AND start_date = #{date}
+        AND deleted = 0
+    </select>
+
+    <select id="selectFloatingRecordsForCleanup" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+        AND expiry_date IS NULL
+        AND type != 'CARRY_OVER'
+        AND deleted = 0
+    </select>
+
+    <select id="countAnnualLeaveUsage" resultType="long">
+        SELECT COUNT(*) FROM leave_record
+        WHERE user_id = #{userId}
+        AND start_date = #{startDate}
+        AND type = 'ANNUAL'
+        AND days = #{days}
+    </select>
+
+    <insert id="insertRecord" parameterType="com.leave.system.entity.LeaveRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO leave_record (
+            user_id, type, start_date, end_date, days, reason, status, create_time, update_time, expiry_date, deleted
+        ) VALUES (
+            #{userId}, #{type}, #{startDate}, #{endDate}, #{days}, #{reason}, #{status}, #{createTime}, #{updateTime}, #{expiryDate}, #{deleted}
+        )
+    </insert>
+
+    <update id="updateRecord" parameterType="com.leave.system.entity.LeaveRecord">
+        UPDATE leave_record
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="days != null">days = #{days},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="expiryDate != null">expiry_date = #{expiryDate},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insertRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO leave_record (user_id, start_date, end_date, days, type, remarks, creator, create_time, expiry_date, deleted)
+        VALUES (#{userId}, #{startDate}, #{endDate}, #{days}, #{type}, #{remarks}, #{creator}, #{createTime}, #{expiryDate}, #{deleted})
+    </insert>
+
+    <update id="updateRecord">
+        UPDATE leave_record
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="days != null">days = #{days},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+            <if test="creator != null">creator = #{creator},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="expiryDate != null">expiry_date = #{expiryDate},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

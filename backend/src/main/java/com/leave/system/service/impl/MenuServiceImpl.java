@@ -34,7 +34,7 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<SysMenu> getUserMenus(Long userId) {
         log.info("getUserMenus called for userId: {}", userId);
-        SysUser user = userMapper.selectById(userId);
+        SysUser user = userMapper.selectUserById(userId);
         if (user == null || user.getRoleId() == null) {
             return List.of();
         }
@@ -96,6 +96,19 @@ public class MenuServiceImpl implements MenuService {
                 roleMenuMapper.insertRoleMenu(roleMenu);
             }
         }
+    }
+
+    @Override
+    public void addRoleMenu(Long roleId, Long menuId) {
+        RoleMenu roleMenu = new RoleMenu();
+        roleMenu.setRoleId(roleId);
+        roleMenu.setMenuId(menuId);
+        // Using insert directly which might fail if duplicate, caller handles it
+        // But wait, roleMenuMapper.insert is BaseMapper method.
+        // roleMenuMapper.insertRoleMenu is custom.
+        // Let's use insertRoleMenu if available or insert.
+        // Check RoleMenuMapper used in assignMenusToRole: insertRoleMenu(roleMenu)
+        roleMenuMapper.insertRoleMenu(roleMenu);
     }
 
     @Override

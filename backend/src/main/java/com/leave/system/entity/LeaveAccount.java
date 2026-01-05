@@ -102,6 +102,10 @@ public class LeaveAccount {
         this.deleted = deleted;
     }
 
+    public Integer getDeleted() {
+        return deleted;
+    }
+
     public void setTotalBalance(BigDecimal totalBalance) {
         this.totalBalance = totalBalance;
     }

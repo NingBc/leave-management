@@ -248,11 +248,18 @@ const handleSubmit = async () => {
 
 const handleDelete = async (row) => {
   try {
+    await ElMessageBox.confirm(`确定要删除用户 ${row.realName} 吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
     await request.delete(`/system/user/delete/${row.id}`)
     ElMessage.success('用户已删除')
     loadData()
   } catch (e) {
-    console.error(e)
+    if (e !== 'cancel') {
+      console.error(e)
+    }
   }
 }
 

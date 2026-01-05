@@ -3,7 +3,8 @@ package com.leave.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.alibaba.fastjson.JSONObject;
+
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiAttendanceGetleavetimebynamesRequest;
@@ -228,11 +229,7 @@ public class DingTalkServiceImpl implements DingTalkService {
         BigDecimal daysBd = BigDecimal.valueOf(days);
 
         // Check if record exists to avoid duplicates
-        Long count = leaveRecordMapper.selectCount(new QueryWrapper<LeaveRecord>()
-                .eq("user_id", user.getId())
-                .eq("start_date", date)
-                .eq("type", "ANNUAL")
-                .eq("days", daysBd.negate())); // Check for negative value (usage record)
+        Long count = leaveRecordMapper.countAnnualLeaveUsage(user.getId(), date, daysBd.negate());
 
         if (count == 0) {
             try {

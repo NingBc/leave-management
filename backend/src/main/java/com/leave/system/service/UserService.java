@@ -18,6 +18,10 @@ public interface UserService {
 
     SysUser getById(Long id);
 
+    SysUser getByUsername(String username);
+
+    SysUser getByDingtalkUserId(String dingtalkUserId);
+
     void addUser(SysUser user);
 
     void updateUser(SysUser user);

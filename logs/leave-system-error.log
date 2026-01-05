@@ -1312,3 +1312,899 @@ org.springframework.transaction.UnexpectedRollbackException: Transaction rolled 
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:833)
+2026-01-05 16:23:35.743 [main] ERROR o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-01-05 16:27:12.248 [main] ERROR o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-01-05 16:34:13.193 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:34:13.194 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:35:13.953 [main] ERROR o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-01-05 16:36:34.208 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:36:34.208 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:37:34.959 [main] ERROR o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-01-05 16:39:11.959 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:39:11.959 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:40:15.078 [main] ERROR o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-01-05 16:41:10.164 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:41:10.164 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:41:43.434 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 1: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:43.485 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 105: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:43.539 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 106: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:43.587 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 107: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:43.644 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 108: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:43.704 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 109: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:43.793 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 110: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:43.847 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 111: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:43.906 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 112: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.028 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 113: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.092 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 114: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.138 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 115: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.179 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 116: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.215 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 117: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.269 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 118: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.344 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 119: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.441 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 120: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.489 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 121: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.536 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 122: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.610 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 123: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.661 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 124: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.710 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 125: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.783 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 126: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.827 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 127: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.869 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 128: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:44.914 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 129: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.071 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 130: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.169 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 131: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.226 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 132: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.280 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 133: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.339 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 134: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.466 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 135: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.525 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 136: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.583 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 137: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.641 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 138: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.769 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 139: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.813 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 140: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:41:45.857 [http-nio-0.0.0.0-8080-exec-6] ERROR com.leave.system.scheduled.ScheduledTasks - Failed to init account for user 141: 
+### Error updating database.  Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+### The error may exist in file [/Users/cccc/.gemini/antigravity/scratch/fullstack_leave_system/backend/target/classes/mapper/LeaveAccountMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: UPDATE leave_account          SET user_id = ?,             year = ?,             social_seniority = ?,             standard_quota = ?,             days_employed = ?,             actual_quota = ?,             last_year_balance = ?,             current_year_used = ?,             deleted = ?,             total_balance = ?          WHERE id = ?
+### Cause: java.sql.SQLException: The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+; uncategorized SQLException; SQL state [HY000]; error code [3105]; The value specified for generated column 'total_balance' in table 'leave_account' is not allowed.
+2026-01-05 16:43:03.684 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:43:03.684 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:50:55.842 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:50:55.843 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:51:39.437 [http-nio-0.0.0.0-8080-exec-9] ERROR com.leave.system.exception.GlobalExceptionHandler - Unhandled Exception: null
+org.mybatis.spring.MyBatisSystemException: null
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:97)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:439)
+	at jdk.proxy2/jdk.proxy2.$Proxy85.update(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.update(SqlSessionTemplate.java:288)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:64)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:152)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+	at jdk.proxy2/jdk.proxy2.$Proxy95.updateJob(Unknown Source)
+	at com.leave.system.service.impl.SysJobServiceImpl.updateJob(SysJobServiceImpl.java:65)
+	at com.leave.system.controller.JobController.updateJob(JobController.java:36)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:352)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+	at com.leave.system.aspect.WebLogAspect.doAround(WebLogAspect.java:38)
+	at jdk.internal.reflect.GeneratedMethodAccessor65.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:637)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:627)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:717)
+	at com.leave.system.controller.JobController$$SpringCGLIB$$0.updateJob(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:254)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.leave.system.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:61)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: org.apache.ibatis.reflection.ReflectionException: There is no getter for property named 'triggerName' in 'class com.leave.system.entity.SysJob'
+	at org.apache.ibatis.reflection.Reflector.getGetInvoker(Reflector.java:385)
+	at org.apache.ibatis.reflection.MetaClass.getGetInvoker(MetaClass.java:160)
+	at org.apache.ibatis.reflection.wrapper.BeanWrapper.getBeanProperty(BeanWrapper.java:153)
+	at org.apache.ibatis.reflection.wrapper.BeanWrapper.get(BeanWrapper.java:49)
+	at org.apache.ibatis.reflection.MetaObject.getValue(MetaObject.java:116)
+	at org.apache.ibatis.scripting.xmltags.DynamicContext$ContextMap.get(DynamicContext.java:102)
+	at org.apache.ibatis.scripting.xmltags.DynamicContext$ContextAccessor.getProperty(DynamicContext.java:112)
+	at org.apache.ibatis.ognl.OgnlRuntime.getProperty(OgnlRuntime.java:2341)
+	at org.apache.ibatis.ognl.ASTProperty.getValueBody(ASTProperty.java:95)
+	at org.apache.ibatis.ognl.SimpleNode.evaluateGetValueBody(SimpleNode.java:171)
+	at org.apache.ibatis.ognl.SimpleNode.getValue(SimpleNode.java:206)
+	at org.apache.ibatis.ognl.ASTNotEq.getValueBody(ASTNotEq.java:34)
+	at org.apache.ibatis.ognl.SimpleNode.evaluateGetValueBody(SimpleNode.java:171)
+	at org.apache.ibatis.ognl.SimpleNode.getValue(SimpleNode.java:206)
+	at org.apache.ibatis.ognl.Ognl.getValue(Ognl.java:408)
+	at org.apache.ibatis.ognl.Ognl.getValue(Ognl.java:383)
+	at org.apache.ibatis.scripting.xmltags.OgnlCache.getValue(OgnlCache.java:47)
+	at org.apache.ibatis.scripting.xmltags.ExpressionEvaluator.evaluateBoolean(ExpressionEvaluator.java:32)
+	at org.apache.ibatis.scripting.xmltags.IfSqlNode.apply(IfSqlNode.java:34)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.lambda$apply$0(MixedSqlNode.java:32)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.apply(MixedSqlNode.java:32)
+	at org.apache.ibatis.scripting.xmltags.TrimSqlNode.apply(TrimSqlNode.java:58)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.lambda$apply$0(MixedSqlNode.java:32)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.apply(MixedSqlNode.java:32)
+	at org.apache.ibatis.scripting.xmltags.DynamicSqlSource.getBoundSql(DynamicSqlSource.java:39)
+	at org.apache.ibatis.mapping.MappedStatement.getBoundSql(MappedStatement.java:320)
+	at com.leave.system.config.SqlLogInterceptor.intercept(SqlLogInterceptor.java:51)
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:59)
+	at jdk.proxy2/jdk.proxy2.$Proxy96.update(Unknown Source)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.apache.ibatis.plugin.Invocation.proceed(Invocation.java:49)
+	at com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor.intercept(MybatisPlusInterceptor.java:106)
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:59)
+	at jdk.proxy2/jdk.proxy2.$Proxy96.update(Unknown Source)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:425)
+	... 128 common frames omitted
+2026-01-05 16:52:14.166 [http-nio-0.0.0.0-8080-exec-10] ERROR com.leave.system.exception.GlobalExceptionHandler - Unhandled Exception: null
+org.mybatis.spring.MyBatisSystemException: null
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:97)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:439)
+	at jdk.proxy2/jdk.proxy2.$Proxy85.update(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.update(SqlSessionTemplate.java:288)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:64)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy$PlainMethodInvoker.invoke(MybatisMapperProxy.java:152)
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:89)
+	at jdk.proxy2/jdk.proxy2.$Proxy95.updateJob(Unknown Source)
+	at com.leave.system.service.impl.SysJobServiceImpl.updateJob(SysJobServiceImpl.java:65)
+	at com.leave.system.controller.JobController.updateJob(JobController.java:36)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:352)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+	at com.leave.system.aspect.WebLogAspect.doAround(WebLogAspect.java:38)
+	at jdk.internal.reflect.GeneratedMethodAccessor65.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:637)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:627)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:717)
+	at com.leave.system.controller.JobController$$SpringCGLIB$$0.updateJob(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:254)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.leave.system.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:61)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: org.apache.ibatis.reflection.ReflectionException: There is no getter for property named 'triggerName' in 'class com.leave.system.entity.SysJob'
+	at org.apache.ibatis.reflection.Reflector.getGetInvoker(Reflector.java:385)
+	at org.apache.ibatis.reflection.MetaClass.getGetInvoker(MetaClass.java:160)
+	at org.apache.ibatis.reflection.wrapper.BeanWrapper.getBeanProperty(BeanWrapper.java:153)
+	at org.apache.ibatis.reflection.wrapper.BeanWrapper.get(BeanWrapper.java:49)
+	at org.apache.ibatis.reflection.MetaObject.getValue(MetaObject.java:116)
+	at org.apache.ibatis.scripting.xmltags.DynamicContext$ContextMap.get(DynamicContext.java:102)
+	at org.apache.ibatis.scripting.xmltags.DynamicContext$ContextAccessor.getProperty(DynamicContext.java:112)
+	at org.apache.ibatis.ognl.OgnlRuntime.getProperty(OgnlRuntime.java:2341)
+	at org.apache.ibatis.ognl.ASTProperty.getValueBody(ASTProperty.java:95)
+	at org.apache.ibatis.ognl.SimpleNode.evaluateGetValueBody(SimpleNode.java:171)
+	at org.apache.ibatis.ognl.SimpleNode.getValue(SimpleNode.java:206)
+	at org.apache.ibatis.ognl.ASTNotEq.getValueBody(ASTNotEq.java:34)
+	at org.apache.ibatis.ognl.SimpleNode.evaluateGetValueBody(SimpleNode.java:171)
+	at org.apache.ibatis.ognl.SimpleNode.getValue(SimpleNode.java:206)
+	at org.apache.ibatis.ognl.Ognl.getValue(Ognl.java:408)
+	at org.apache.ibatis.ognl.Ognl.getValue(Ognl.java:383)
+	at org.apache.ibatis.scripting.xmltags.OgnlCache.getValue(OgnlCache.java:47)
+	at org.apache.ibatis.scripting.xmltags.ExpressionEvaluator.evaluateBoolean(ExpressionEvaluator.java:32)
+	at org.apache.ibatis.scripting.xmltags.IfSqlNode.apply(IfSqlNode.java:34)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.lambda$apply$0(MixedSqlNode.java:32)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.apply(MixedSqlNode.java:32)
+	at org.apache.ibatis.scripting.xmltags.TrimSqlNode.apply(TrimSqlNode.java:58)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.lambda$apply$0(MixedSqlNode.java:32)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.apache.ibatis.scripting.xmltags.MixedSqlNode.apply(MixedSqlNode.java:32)
+	at org.apache.ibatis.scripting.xmltags.DynamicSqlSource.getBoundSql(DynamicSqlSource.java:39)
+	at org.apache.ibatis.mapping.MappedStatement.getBoundSql(MappedStatement.java:320)
+	at com.leave.system.config.SqlLogInterceptor.intercept(SqlLogInterceptor.java:51)
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:59)
+	at jdk.proxy2/jdk.proxy2.$Proxy96.update(Unknown Source)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.apache.ibatis.plugin.Invocation.proceed(Invocation.java:49)
+	at com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor.intercept(MybatisPlusInterceptor.java:106)
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:59)
+	at jdk.proxy2/jdk.proxy2.$Proxy96.update(Unknown Source)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:197)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:425)
+	... 128 common frames omitted
+2026-01-05 16:57:22.922 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 16:57:22.923 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:01:44.623 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:01:44.624 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:16:11.394 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:16:11.395 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:17:12.887 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:17:12.887 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:18:13.612 [main] ERROR o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+2026-01-05 17:18:25.742 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:18:25.742 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:20:03.880 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:20:03.880 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 17:20:56.855 [http-nio-0.0.0.0-8080-exec-2] ERROR com.leave.system.exception.GlobalExceptionHandler - Unhandled Exception: 用户名或密码错误
+org.springframework.security.authentication.BadCredentialsException: 用户名或密码错误
+	at org.springframework.security.authentication.dao.DaoAuthenticationProvider.additionalAuthenticationChecks(DaoAuthenticationProvider.java:89)
+	at org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:147)
+	at org.springframework.security.authentication.ProviderManager.authenticate(ProviderManager.java:182)
+	at com.leave.system.controller.AuthController.login(AuthController.java:47)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:352)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+	at com.leave.system.aspect.WebLogAspect.doAround(WebLogAspect.java:38)
+	at jdk.internal.reflect.GeneratedMethodAccessor78.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:637)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:627)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:765)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:717)
+	at com.leave.system.controller.AuthController$$SpringCGLIB$$0.login(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:254)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.leave.system.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:37)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)

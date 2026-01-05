@@ -3,7 +3,7 @@ package com.leave.system.controller;
 import com.leave.system.common.Result;
 import com.leave.system.config.DingTalkAppConfig;
 import com.leave.system.entity.SysUser;
-import com.leave.system.mapper.SysUserMapper;
+import com.leave.system.service.UserService;
 import com.leave.system.security.JwtUtils;
 import com.leave.system.service.DingTalkService;
 import lombok.Data;
@@ -27,17 +27,17 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    private final SysUserMapper userMapper;
+    private final UserService userService;
     private final DingTalkService dingTalkService;
     private final DingTalkAppConfig dingTalkAppConfig;
 
     public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
-            SysUserMapper userMapper,
+            UserService userService,
             DingTalkService dingTalkService,
             DingTalkAppConfig dingTalkAppConfig) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
-        this.userMapper = userMapper;
+        this.userService = userService;
         this.dingTalkService = dingTalkService;
         this.dingTalkAppConfig = dingTalkAppConfig;
     }
@@ -50,7 +50,7 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtUtils.generateToken(userDetails);
 
-        SysUser user = userMapper.selectByUsername(request.getUsername());
+        SysUser user = userService.getByUsername(request.getUsername());
 
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
@@ -72,7 +72,7 @@ public class AuthController {
         String dingtalkUserId = dingTalkService.getUseridByAuthCode(code);
 
         // 2. Find user by dingtalk_userid
-        SysUser user = userMapper.selectByDingtalkUserId(dingtalkUserId);
+        SysUser user = userService.getByDingtalkUserId(dingtalkUserId);
 
         if (user == null) {
             return Result.error("未找到此钉钉账号对应的系统用户");

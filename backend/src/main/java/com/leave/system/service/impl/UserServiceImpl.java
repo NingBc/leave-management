@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.leave.system.dto.ChangePasswordDTO;
 import com.leave.system.dto.UserImportResult;
 import com.leave.system.entity.SysUser;
+import com.leave.system.exception.BusinessException;
 import com.leave.system.mapper.SysUserMapper;
 import com.leave.system.service.LeaveService;
 import com.leave.system.service.UserService;
@@ -74,6 +75,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public SysUser getByUsername(String username) {
+        return userMapper.selectByUsername(username);
+    }
+
+    @Override
+    public SysUser getByDingtalkUserId(String dingtalkUserId) {
+        return userMapper.selectByDingtalkUserId(dingtalkUserId);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void addUser(SysUser user) {
         log.info("Adding user: {}", user);
@@ -122,15 +133,15 @@ public class UserServiceImpl implements UserService {
     public void changePassword(ChangePasswordDTO dto, String username) {
         SysUser user = userMapper.selectByUsername(username);
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
 
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-            throw new RuntimeException("旧密码错误");
+            throw new BusinessException("旧密码错误");
         }
 
         if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
-            throw new RuntimeException("两次输入的新密码不一致");
+            throw new BusinessException("两次输入的新密码不一致");
         }
 
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
@@ -148,7 +159,7 @@ public class UserServiceImpl implements UserService {
     public void resignUser(Long id, Map<String, String> body) {
         SysUser user = userMapper.selectUserById(id);
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
         user.setStatus("RESIGNED");
         if (body != null && body.containsKey("resignationDate")) {
@@ -170,7 +181,7 @@ public class UserServiceImpl implements UserService {
     public void activateUser(Long id) {
         SysUser user = userMapper.selectUserById(id);
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
         user.setStatus("ACTIVE");
         user.setResignationDate(null);
@@ -180,12 +191,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserImportResult importUsers(MultipartFile file) {
         if (file.isEmpty()) {
-            throw new RuntimeException("文件不能为空");
+            throw new BusinessException("文件不能为空");
         }
 
         String filename = file.getOriginalFilename();
         if (filename == null || !filename.toLowerCase().endsWith(".csv")) {
-            throw new RuntimeException("只支持CSV格式文件");
+            throw new BusinessException("只支持CSV格式文件");
         }
 
         UserImportResult result = new UserImportResult();
@@ -217,7 +228,7 @@ public class UserServiceImpl implements UserService {
             }
         } catch (Exception e) {
             log.error("导入用户失败", e);
-            throw new RuntimeException("导入失败: " + e.getMessage());
+            throw new BusinessException("导入失败: " + e.getMessage());
         }
 
         return result;
@@ -233,14 +244,14 @@ public class UserServiceImpl implements UserService {
         String dingtalkUserId = record.get("钉钉ID");
 
         if (employeeNumber == null || employeeNumber.trim().isEmpty()) {
-            throw new RuntimeException("工号不能为空");
+            throw new BusinessException("工号不能为空");
         }
         if (realName == null || realName.trim().isEmpty()) {
-            throw new RuntimeException("姓名不能为空");
+            throw new BusinessException("姓名不能为空");
         }
 
         if (userMapper.selectByEmployeeNumber(employeeNumber.trim()) != null) {
-            throw new RuntimeException("工号已存在: " + employeeNumber);
+            throw new BusinessException("工号已存在: " + employeeNumber);
         }
 
         String username = PinyinUtil.toPinyin(realName.trim());

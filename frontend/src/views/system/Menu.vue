@@ -76,7 +76,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import request from '../../utils/request'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const tableData = ref([])
 const dialogVisible = ref(false)
@@ -143,11 +143,18 @@ const handleSubmit = async () => {
 
 const handleDelete = async (row) => {
   try {
+    await ElMessageBox.confirm('确定要删除该菜单吗？', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
     await request.delete(`/system/menu/delete/${row.id}`)
     ElMessage.success('菜单已删除')
     loadData()
   } catch (e) {
-    console.error(e)
+    if (e !== 'cancel') {
+      console.error(e)
+    }
   }
 }
 

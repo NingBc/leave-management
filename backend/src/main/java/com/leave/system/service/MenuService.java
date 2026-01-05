@@ -24,6 +24,8 @@ public interface MenuService {
      */
     void assignMenusToRole(Long roleId, List<Long> menuIds);
 
+    void addRoleMenu(Long roleId, Long menuId);
+
     void addMenu(SysMenu menu);
 
     void updateMenu(SysMenu menu);
