@@ -29,7 +29,6 @@ jwt:
   secret: your-secret-key-here-please-change-in-production
   issuer: leave-system
   expiration: 604800000 # 7 days in milliseconds
-#  expiration: 180000 # 7 days in milliseconds
 
 # Logging Configuration
 logging:
@@ -44,8 +43,8 @@ logging:
     max-size: 10MB
     max-history: 30
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"
   logback:
     rollingpolicy:
       max-file-size: 10MB

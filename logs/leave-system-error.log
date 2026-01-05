@@ -2210,3 +2210,5 @@ org.springframework.security.authentication.BadCredentialsException: 用户名�
 	at java.base/java.lang.Thread.run(Thread.java:833)
 2026-01-05 17:51:23.252 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
 2026-01-05 17:51:23.252 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 18:14:52.775 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.insertRecord] is ignored, because it exists, maybe from xml file
+2026-01-05 18:14:52.776 [main] ERROR c.baomidou.mybatisplus.core.MybatisConfiguration - mapper[com.leave.system.mapper.LeaveRecordMapper.updateRecord] is ignored, because it exists, maybe from xml file
