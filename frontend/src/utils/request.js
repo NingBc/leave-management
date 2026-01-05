@@ -2,7 +2,9 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
 const service = axios.create({
-    baseURL: '/api',
+    // In production (All-in-One), backend serves directly at root, so no /api prefix needed.
+    // In dev, /api triggers the Vite proxy to rewrite path.
+    baseURL: import.meta.env.PROD ? '' : '/api',
     timeout: 10000
 })
 
