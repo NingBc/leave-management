@@ -98,32 +98,13 @@ public class ScheduledTasks {
                     .filter(r -> "CARRY_OVER".equals(r.getType()))
                     .max(Comparator.comparing(LeaveRecord::getCreateTime));
 
-            final BigDecimal expiringBalance;
-            final LocalDateTime anchorTime;
+            // Simple Sum of all adding records:
+            BigDecimal expiringBalance = userRecords.stream()
+                    .map(LeaveRecord::getDays)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            log.debug("Summing all credits for user {}: {}", userId, expiringBalance);
 
-            if (latestCarryOver.isPresent()) {
-                LeaveRecord carryOver = latestCarryOver.get();
-                final LocalDateTime snapshotTime = carryOver.getCreateTime();
-                anchorTime = snapshotTime;
-                BigDecimal baseBalance = carryOver.getDays();
-
-                BigDecimal extraCredits = userRecords.stream()
-                        .filter(r -> !"CARRY_OVER".equals(r.getType()))
-                        .filter(r -> r.getCreateTime().isAfter(snapshotTime))
-                        .map(LeaveRecord::getDays)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-                expiringBalance = baseBalance.add(extraCredits);
-                log.debug("Using CARRY_OVER snapshot as base for user {}: {} + {} extra = {}",
-                        userId, baseBalance, extraCredits, expiringBalance);
-            } else {
-                anchorTime = null;
-                expiringBalance = userRecords.stream()
-                        .map(LeaveRecord::getDays)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-                log.debug("No CARRY_OVER found. Summing all credits for user {}: {}", userId, expiringBalance);
-            }
-
+            // Calculate Implicit Carry Over logic (Account value > Sum of Records)
             BigDecimal recordedCarryOverSum = userRecords.stream()
                     .filter(r -> "CARRY_OVER".equals(r.getType()))
                     .map(LeaveRecord::getDays)
@@ -144,8 +125,10 @@ public class ScheduledTasks {
                 protectionBalance = account.getActualQuota();
             }
 
+            // Pass null for anchorTime to include ALL usage linked to this expiry bucket,
+            // regardless of creation time.
             List<LeaveRecord> usageRecords = recordMapper.selectUsageRecordsForExpiryCleanup(userId, targetExpiryDate,
-                    anchorTime);
+                    null);
             BigDecimal totalUsed = usageRecords.stream()
                     .map(LeaveRecord::getDays)
                     .map(BigDecimal::abs)

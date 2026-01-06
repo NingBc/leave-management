@@ -51,7 +51,6 @@ CREATE TABLE IF NOT EXISTS sys_menu (
     menu_name VARCHAR(50) NOT NULL COMMENT '菜单名称',
     path VARCHAR(100) COMMENT '路由路径',
     component VARCHAR(100) COMMENT '组件路径',
-    perms VARCHAR(100) COMMENT '权限标识',
     icon VARCHAR(50) COMMENT '图标',
     order_num INT DEFAULT 0 COMMENT '排序',
     deleted TINYINT DEFAULT 0
