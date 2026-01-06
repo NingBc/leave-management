@@ -88,6 +88,11 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void addUser(SysUser user) {
         log.info("Adding user: {}", user);
+
+        if (userMapper.selectByUsername(user.getUsername()) != null) {
+            throw new BusinessException("用户名 '" + user.getUsername() + "' 已存在，请使用其他用户名");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreateTime(LocalDateTime.now());
         user.setDeleted(0);
@@ -110,6 +115,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(SysUser user) {
+        // Check for duplicate username (if username changed)
+        SysUser existingUser = userMapper.selectByUsername(user.getUsername());
+        if (existingUser != null && !existingUser.getId().equals(user.getId())) {
+            throw new BusinessException("用户名 '" + user.getUsername() + "' 已存在，请使用其他用户名");
+        }
+
         user.setUpdateTime(LocalDateTime.now());
 
         if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {

@@ -14,7 +14,6 @@ public class SysMenu {
     private String menuName;
     private String path;
     private String component;
-    private String perms;
     private String icon;
     private Integer orderNum;
 
@@ -62,14 +61,6 @@ public class SysMenu {
 
     public void setComponent(String component) {
         this.component = component;
-    }
-
-    public String getPerms() {
-        return perms;
-    }
-
-    public void setPerms(String perms) {
-        this.perms = perms;
     }
 
     public String getIcon() {

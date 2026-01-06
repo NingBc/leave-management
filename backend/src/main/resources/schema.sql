@@ -40,7 +40,6 @@ CREATE TABLE IF NOT EXISTS sys_menu (
     menu_name VARCHAR(50) NOT NULL,
     path VARCHAR(100),
     component VARCHAR(100),
-    perms VARCHAR(100) COMMENT 'Permission Identifier',
     icon VARCHAR(50),
     order_num INT DEFAULT 0,
     deleted TINYINT DEFAULT 0
@@ -111,17 +110,17 @@ INSERT INTO sys_user (username, password, real_name, role_id, social_seniority, 
 ('admin', '$2b$12$sDUO0pQ/tZBzMgNQWqVhwujpMkIWLuV97C/Gmb2Fi7GqoWQcXqXlu', 'Administrator', 1, 5, '2020-01-01');
 
 -- Sample Menus
-INSERT INTO sys_menu (parent_id, menu_name, path, component, perms, icon, order_num) VALUES
-(0, '首页', '/dashboard', 'Dashboard', 'dashboard:view', 'Menu', 1),
-(0, '系统管理', '/system', null, null, 'Setting', 2),
-(2, '用户管理', '/system/user', 'system/User', 'system:user:view', null, 1),
-(2, '角色管理', '/system/role', 'system/Role', 'system:role:view', null, 2),
-(2, '菜单管理', '/system/menu', 'system/Menu', 'system:menu:view', null, 3),
-(0, '休假管理', '/leave', null, null, 'Calendar', 3),
-(6, '我的休假', '/leave/my', 'leave/MyLeave', 'leave:my:view', null, 1),
-(6, '休假管理(HR)', '/leave/manage', 'leave/LeaveManagement', 'leave:manage:view', null, 2),
-(0, '系统监控', '/monitor', null, null, 'Monitor', 4),
-(9, '定时任务', '/monitor/job', 'monitor/job/index', 'monitor:job:view', null, 1);
+INSERT INTO sys_menu (parent_id, menu_name, path, component, icon, order_num) VALUES
+(0, '首页', '/dashboard', 'Dashboard', 'Menu', 1),
+(0, '系统管理', '/system', null, 'Setting', 2),
+(2, '用户管理', '/system/user', 'system/User', null, 1),
+(2, '角色管理', '/system/role', 'system/Role', null, 2),
+(2, '菜单管理', '/system/menu', 'system/Menu', null, 3),
+(0, '休假管理', '/leave', null, 'Calendar', 3),
+(6, '我的休假', '/leave/my', 'leave/MyLeave', null, 1),
+(6, '休假管理(HR)', '/leave/manage', 'leave/LeaveManagement', null, 2),
+(0, '系统监控', '/monitor', null, 'Monitor', 4),
+(9, '定时任务', '/monitor/job', 'monitor/job/index', null, 1);
 
 -- Assign all menus to admin role (role_id = 1)
 INSERT INTO role_menu (role_id, menu_id) VALUES

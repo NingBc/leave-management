@@ -160,23 +160,25 @@ INSERT INTO role_menu (role_id, menu_id) VALUES (2, 5);
 -- 第三部分：定时任务配置
 -- ================================================================
 
+-- 3.1 钉钉数据同步任务
+-- 每周一上午10点执行
+INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
+    ('钉钉数据同步', 'DEFAULT', 'dingTalkService.syncLeaveData()', '0 0 10 ? * MON', 0,
+     '每周一上午10点自动从钉钉同步年假数据。从钉钉考勤系统拉取请假记录并更新到本地数据库。');
+
 
 -- 3.2 年假过期清理任务
 -- 每年1月1日凌晨3点执行
 INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
     ('年假过期清理', 'LEAVE', 'scheduledTasks.cleanupExpiredLeaveBalances()', '0 0 3 1 1 ?', 0,
      '每年1月1日凌晨3点自动清理已过期的年假余额（上年结转额度）。');
--- 3.1 年假账户批量初始化任务
+-- 3.3 年假账户批量初始化任务
 -- 每年1月1日凌晨1点执行
 INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
 ('年假账户批量初始化', 'LEAVE', 'scheduledTasks.initAllAccounts(2026)', '0 0 1 1 1 ?', 1, 
 '每年1月1日凌晨1点批量初始化所有员工的新年度账户（含结转计算）。注意：需手动更新年份参数！默认暂停状态。');
 
--- 3.3 钉钉数据同步任务
--- 每周一上午10点执行
-INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
-('钉钉数据同步', 'DEFAULT', 'dingTalkService.syncLeaveData()', '0 0 10 ? * MON', 0, 
-'每周一上午10点自动从钉钉同步年假数据。从钉钉考勤系统拉取请假记录并更新到本地数据库。');
+
 
 -- ================================================================
 -- 完成提示

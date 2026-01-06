@@ -20,8 +20,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="orderNum" label="排序" width="80" align="center" />
-      <el-table-column prop="perms" label="权限标识" width="200" />
-      <el-table-column prop="component" label="组件路径" width="200" />
       <el-table-column prop="path" label="路由地址" />
       <el-table-column label="操作" width="250" fixed="right">
         <template #default="scope">
@@ -37,7 +35,7 @@
         <el-form-item label="上级菜单">
           <el-tree-select
             v-model="form.parentId"
-            :data="[{ id: 0, menuName: '主类目', children: tableData }]"
+            :data="treeOptions"
             :props="{ label: 'menuName', value: 'id', children: 'children' }"
             check-strictly
             placeholder="选择上级菜单"
@@ -52,12 +50,6 @@
         </el-form-item>
         <el-form-item label="路由地址">
           <el-input v-model="form.path" placeholder="请输入路由地址" />
-        </el-form-item>
-        <el-form-item label="组件路径">
-          <el-input v-model="form.component" placeholder="请输入组件路径" />
-        </el-form-item>
-        <el-form-item label="权限标识">
-          <el-input v-model="form.perms" placeholder="请输入权限标识" />
         </el-form-item>
         <el-form-item label="图标">
           <el-input v-model="form.icon" placeholder="请输入图标名称 (如: Menu)" />
@@ -87,8 +79,6 @@ const form = ref({
   parentId: 0,
   menuName: '',
   path: '',
-  component: '',
-  perms: '',
   icon: '',
   orderNum: 1
 })
@@ -114,8 +104,6 @@ const openDialog = (mode, row = null) => {
       parentId: row ? row.id : 0, // If row is provided (Add Submenu), set parentId
       menuName: '',
       path: '',
-      component: '',
-      perms: '',
       icon: '',
       orderNum: 1
     }
@@ -125,13 +113,29 @@ const openDialog = (mode, row = null) => {
   dialogVisible.value = true
 }
 
+const treeOptions = computed(() => {
+  const options = [{ id: 0, menuName: '主类目', children: [] }]
+  // Deep clone to avoid reactive issues
+  const cloneData = JSON.parse(JSON.stringify(tableData.value))
+  options[0].children = cloneData
+  return options
+})
+
 const handleSubmit = async () => {
   try {
+    // Creating a submit payload to ensure we don't send extra fields like 'children'
+    const payload = { ...form.value }
+    delete payload.children
+    // Auto-generate component path from route path for simple systems
+    if (payload.path && !payload.component) {
+      payload.component = payload.path.replace(/^\//, '')
+    }
+    
     if (editMode.value === 'add') {
-      await request.post('/system/menu/add', form.value)
+      await request.post('/system/menu/add', payload)
       ElMessage.success('菜单已添加')
     } else {
-      await request.put('/system/menu/update', form.value)
+      await request.put('/system/menu/update', payload)
       ElMessage.success('菜单已更新')
     }
     dialogVisible.value = false

@@ -3,7 +3,7 @@
 <mapper namespace="com.leave.system.mapper.SysMenuMapper">
 
     <select id="selectAllMenus" resultType="SysMenu">
-        SELECT * FROM sys_menu ORDER BY parent_id, order_num
+        SELECT * FROM sys_menu ORDER BY parent_id, order_num, id
     </select>
 
     <select id="selectMenuById" resultType="SysMenu">
@@ -15,12 +15,12 @@
         <foreach collection="list" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
-        ORDER BY parent_id, order_num
+        ORDER BY parent_id, order_num, id
     </select>
 
     <insert id="insertMenu" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO sys_menu (parent_id, menu_name, path, component, perms, icon, order_num)
-        VALUES (#{parentId}, #{menuName}, #{path}, #{component}, #{perms}, #{icon}, #{orderNum})
+        INSERT INTO sys_menu (parent_id, menu_name, path, component, icon, order_num)
+        VALUES (#{parentId}, #{menuName}, #{path}, #{component}, #{icon}, #{orderNum})
     </insert>
 
     <update id="updateMenu">
@@ -30,7 +30,6 @@
             <if test="menuName != null">menu_name = #{menuName},</if>
             <if test="path != null">path = #{path},</if>
             <if test="component != null">component = #{component},</if>
-            <if test="perms != null">perms = #{perms},</if>
             <if test="icon != null">icon = #{icon},</if>
             <if test="orderNum != null">order_num = #{orderNum},</if>
         </set>
