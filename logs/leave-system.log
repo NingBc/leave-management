@@ -1,0 +1,62 @@
+2026-01-06 16:13:47.203 [main] INFO  com.leave.system.LeaveSystemApplication - Starting LeaveSystemApplication using Java 17.0.6 with PID 22728 (/Users/cccc/IdeaProjects/leave-management/backend/target/classes started by cccc in /Users/cccc/IdeaProjects/leave-management)
+2026-01-06 16:13:47.203 [main] DEBUG com.leave.system.LeaveSystemApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-01-06 16:13:47.204 [main] INFO  com.leave.system.LeaveSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2026-01-06 16:13:47.774 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-01-06 16:13:47.778 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8080"]
+2026-01-06 16:13:47.778 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-01-06 16:13:47.779 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2026-01-06 16:13:47.799 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-01-06 16:13:47.799 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 579 ms
+2026-01-06 16:13:47.866 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Registered plugin: 'com.leave.system.config.SqlLogInterceptor@10177794'
+2026-01-06 16:13:47.866 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Registered plugin: 'com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor@798deee8'
+2026-01-06 16:13:47.866 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Property 'mapperLocations' was not specified.
+2026-01-06 16:13:47.881 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-01-06 16:13:48.001 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5bf4764d
+2026-01-06 16:13:48.002 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-01-06 16:13:48.119 [main] DEBUG com.leave.system.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-01-06 16:13:48.250 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Initializing scheduled tasks...
+2026-01-06 16:13:48.286 [main] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysJobMapper.selectList
+SQL         : SELECT id,job_name,job_group,invoke_target,cron_expression,status,remark,create_time,update_time,deleted FROM sys_job WHERE deleted=0 AND (status = 0)
+Time Taken  : 16 ms
+
+2026-01-06 16:13:48.289 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 钉钉数据同步 with cron: 0 00 10 ? * MON
+2026-01-06 16:13:48.289 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 年假过期清理 with cron: 0 0 3 1 1 ?
+2026-01-06 16:13:48.289 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 年假账户批量初始化 with cron: 0 0 1 1 1 ?
+2026-01-06 16:13:48.289 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Initialized 3 scheduled tasks.
+2026-01-06 16:13:48.515 [main] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4272d8cf, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4e96cb04, org.springframework.security.web.context.SecurityContextHolderFilter@4f676900, org.springframework.security.web.header.HeaderWriterFilter@5f20b6fe, org.springframework.web.filter.CorsFilter@70ecf57b, org.springframework.security.web.authentication.logout.LogoutFilter@48ee3c2d, com.leave.system.security.JwtAuthenticationFilter@afee63, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5eb2972f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@29699283, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4e5364a3, org.springframework.security.web.session.SessionManagementFilter@58ec8271, org.springframework.security.web.access.ExceptionTranslationFilter@3caa4d85, org.springframework.security.web.access.intercept.AuthorizationFilter@4ede035e]
+2026-01-06 16:13:48.652 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8080"]
+2026-01-06 16:13:48.660 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-01-06 16:13:48.664 [main] INFO  com.leave.system.LeaveSystemApplication - Started LeaveSystemApplication in 1.744 seconds (process running for 1.965)
+2026-01-06 16:13:48.665 [main] DEBUG c.b.mybatisplus.autoconfigure.DdlApplicationRunner -   ...  DDL start create  ...  
+2026-01-06 16:13:48.665 [main] DEBUG c.b.mybatisplus.autoconfigure.DdlApplicationRunner -   ...  DDL end create  ...  
+2026-01-06 16:14:21.659 [main] INFO  com.leave.system.LeaveSystemApplication - Starting LeaveSystemApplication using Java 17.0.6 with PID 22759 (/Users/cccc/IdeaProjects/leave-management/backend/target/classes started by cccc in /Users/cccc/IdeaProjects/leave-management)
+2026-01-06 16:14:21.659 [main] DEBUG com.leave.system.LeaveSystemApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2026-01-06 16:14:21.660 [main] INFO  com.leave.system.LeaveSystemApplication - No active profile set, falling back to 1 default profile: "default"
+2026-01-06 16:14:22.188 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-01-06 16:14:22.191 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-0.0.0.0-8080"]
+2026-01-06 16:14:22.192 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-01-06 16:14:22.192 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2026-01-06 16:14:22.208 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-01-06 16:14:22.208 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 532 ms
+2026-01-06 16:14:22.266 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Registered plugin: 'com.leave.system.config.SqlLogInterceptor@10177794'
+2026-01-06 16:14:22.267 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Registered plugin: 'com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor@798deee8'
+2026-01-06 16:14:22.267 [main] DEBUG c.b.m.e.spring.MybatisSqlSessionFactoryBean - Property 'mapperLocations' was not specified.
+2026-01-06 16:14:22.279 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-01-06 16:14:22.395 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@433ef204
+2026-01-06 16:14:22.396 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-01-06 16:14:22.505 [main] DEBUG com.leave.system.security.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2026-01-06 16:14:22.622 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Initializing scheduled tasks...
+2026-01-06 16:14:22.659 [main] INFO  com.leave.system.config.SqlLogInterceptor - ID          : com.leave.system.mapper.SysJobMapper.selectList
+SQL         : SELECT id,job_name,job_group,invoke_target,cron_expression,status,remark,create_time,update_time,deleted FROM sys_job WHERE deleted=0 AND (status = 0)
+Time Taken  : 18 ms
+
+2026-01-06 16:14:22.661 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 钉钉数据同步 with cron: 0 00 10 ? * MON
+2026-01-06 16:14:22.661 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 年假过期清理 with cron: 0 0 3 1 1 ?
+2026-01-06 16:14:22.662 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Scheduled job: 年假账户批量初始化 with cron: 0 0 1 1 1 ?
+2026-01-06 16:14:22.662 [main] INFO  com.leave.system.service.impl.SysJobServiceImpl - Initialized 3 scheduled tasks.
+2026-01-06 16:14:22.892 [main] INFO  o.s.security.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@20184ade, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@35fb3209, org.springframework.security.web.context.SecurityContextHolderFilter@578b2dec, org.springframework.security.web.header.HeaderWriterFilter@6ec3a4c2, org.springframework.web.filter.CorsFilter@5855b0ed, org.springframework.security.web.authentication.logout.LogoutFilter@c190cfc, com.leave.system.security.JwtAuthenticationFilter@4eeb14e0, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@39f4a7c4, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@111fe921, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@92fd091, org.springframework.security.web.session.SessionManagementFilter@4fafd27e, org.springframework.security.web.access.ExceptionTranslationFilter@a6dffdb, org.springframework.security.web.access.intercept.AuthorizationFilter@347b370c]
+2026-01-06 16:14:23.028 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-0.0.0.0-8080"]
+2026-01-06 16:14:23.036 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2026-01-06 16:14:23.040 [main] INFO  com.leave.system.LeaveSystemApplication - Started LeaveSystemApplication in 1.578 seconds (process running for 1.8)
+2026-01-06 16:14:23.041 [main] DEBUG c.b.mybatisplus.autoconfigure.DdlApplicationRunner -   ...  DDL start create  ...  
+2026-01-06 16:14:23.041 [main] DEBUG c.b.mybatisplus.autoconfigure.DdlApplicationRunner -   ...  DDL end create  ...  
