@@ -98,10 +98,30 @@ public class ScheduledTasks {
                     .filter(r -> "CARRY_OVER".equals(r.getType()))
                     .max(Comparator.comparing(LeaveRecord::getCreateTime));
 
-            // Simple Sum of all adding records:
-            BigDecimal expiringBalance = userRecords.stream()
-                    .map(LeaveRecord::getDays)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            final BigDecimal expiringBalance;
+
+            // Restore snapshot logic: Use latest CARRY_OVER as base, add subsequent
+            // adjustments
+            if (latestCarryOver.isPresent()) {
+                LeaveRecord carryOver = latestCarryOver.get();
+                final LocalDateTime snapshotTime = carryOver.getCreateTime();
+                BigDecimal baseBalance = carryOver.getDays();
+
+                BigDecimal extraCredits = userRecords.stream()
+                        .filter(r -> !"CARRY_OVER".equals(r.getType()))
+                        .filter(r -> r.getCreateTime().isAfter(snapshotTime))
+                        .map(LeaveRecord::getDays)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                expiringBalance = baseBalance.add(extraCredits);
+                log.debug("Using CARRY_OVER snapshot as base for user {}: {} + {} extra = {}",
+                        userId, baseBalance, extraCredits, expiringBalance);
+            } else {
+                expiringBalance = userRecords.stream()
+                        .map(LeaveRecord::getDays)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                log.debug("No CARRY_OVER found. Summing all credits for user {}: {}", userId, expiringBalance);
+            }
             log.debug("Summing all credits for user {}: {}", userId, expiringBalance);
 
             // Calculate Implicit Carry Over logic (Account value > Sum of Records)
