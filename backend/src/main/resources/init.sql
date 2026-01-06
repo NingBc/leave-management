@@ -169,12 +169,12 @@ INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status
 -- 3.2 年假过期清理任务
 -- 每年1月1日凌晨3点执行
 INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
-    ('年假过期清理', 'LEAVE', 'scheduledTasks.cleanupExpiredLeaveBalances()', '0 0 3 1 1 ?', 0,
+    ('年假过期清理', 'DEFAULT', 'scheduledTasks.cleanupExpiredLeaveBalances()', '0 0 3 1 1 ?', 0,
      '每年1月1日凌晨3点自动清理已过期的年假余额（上年结转额度）。');
 -- 3.3 年假账户批量初始化任务
 -- 每年1月1日凌晨1点执行
 INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
-('年假账户批量初始化', 'LEAVE', 'scheduledTasks.initAllAccounts(2026)', '0 0 1 1 1 ?', 1, 
+('年假账户批量初始化', 'DEFAULT', 'scheduledTasks.initAllAccounts(2026)', '0 0 1 1 1 ?', 1, 
 '每年1月1日凌晨1点批量初始化所有员工的新年度账户（含结转计算）。注意：需手动更新年份参数！默认暂停状态。');
 
 

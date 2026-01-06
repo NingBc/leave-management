@@ -659,7 +659,7 @@ public class LeaveServiceImpl implements LeaveService {
 
             // Calculate 'Used' (ANNUAL/LEAVE types) - these are stored as negative numbers
             BigDecimal calculatedUsed = yearRecords.stream()
-                    .filter(r -> "ANNUAL".equals(r.getType()) || "LEAVE".equals(r.getType()))
+                    .filter(r -> "ANNUAL".equals(r.getType()))
                     .map(LeaveRecord::getDays)
                     .filter(days -> days.compareTo(BigDecimal.ZERO) < 0) // Only count negative records as usage
                     .map(BigDecimal::abs)

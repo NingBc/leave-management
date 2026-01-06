@@ -187,6 +187,7 @@ public class ScheduledTasks {
                     bucketDeduct.setType("ADJUSTMENT_DEDUCT");
                     bucketDeduct.setExpiryDate(targetExpiryDate);
                     bucketDeduct.setRemarks("系统自动清理透支: 消耗过期额度 (" + targetExpiryDate + ")");
+                    bucketDeduct.setDeleted(0);
                     recordMapper.insertRecord(bucketDeduct);
 
                     LeaveRecord debtOffset = new LeaveRecord();
@@ -196,6 +197,7 @@ public class ScheduledTasks {
                     debtOffset.setDays(offsetFromExpiring);
                     debtOffset.setType("ADJUSTMENT_ADD");
                     debtOffset.setRemarks("系统自动清理透支: 冲抵历史欠费 (来源: " + targetExpiryDate + ")");
+                    debtOffset.setDeleted(0);
                     recordMapper.insertRecord(debtOffset);
 
                     debtToSettle = debtToSettle.subtract(offsetFromExpiring);
@@ -218,6 +220,7 @@ public class ScheduledTasks {
                     bucketDeduct.setType("ADJUSTMENT_DEDUCT");
                     bucketDeduct.setExpiryDate(nextYearExpiry);
                     bucketDeduct.setRemarks("系统自动清理透支: 消耗当年配额 (过期: " + nextYearExpiry + ")");
+                    bucketDeduct.setDeleted(0);
                     recordMapper.insertRecord(bucketDeduct);
 
                     LeaveRecord debtOffset = new LeaveRecord();
@@ -227,6 +230,7 @@ public class ScheduledTasks {
                     debtOffset.setDays(offsetFromProtection);
                     debtOffset.setType("ADJUSTMENT_ADD");
                     debtOffset.setRemarks("系统自动清理透支: 冲抵历史欠费 (来源: 当年配额)");
+                    debtOffset.setDeleted(0);
                     recordMapper.insertRecord(debtOffset);
 
                     debtToSettle = debtToSettle.subtract(offsetFromProtection);
@@ -242,6 +246,7 @@ public class ScheduledTasks {
                 expiredRecord.setType("EXPIRED");
                 expiredRecord.setExpiryDate(targetExpiryDate);
                 expiredRecord.setRemarks("年假已过期自动清理 (到期日期: " + targetExpiryDate + ")");
+                expiredRecord.setDeleted(0);
                 recordMapper.insertRecord(expiredRecord);
 
                 totalDaysExpired = totalDaysExpired.add(remainingExpiring);
