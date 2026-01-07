@@ -52,8 +52,6 @@ public class LeaveServiceImpl implements LeaveService {
 
         log.info("🔍 Calculating carry-over for user {} from year {} to {}", userId, lastYear, year);
 
-        // Get last year's account to get the actualQuota
-        // Get last year's account to get the actualQuota
         LeaveAccount lastYearAccount = accountMapper.selectLastYearAccount(userId, year);
 
         if (lastYearAccount == null) {
@@ -61,74 +59,105 @@ public class LeaveServiceImpl implements LeaveService {
             return BigDecimal.ZERO;
         }
 
-        // Get the base quota for last year
-        BigDecimal lastYearQuota = lastYearAccount.getActualQuota() != null
-                ? lastYearAccount.getActualQuota()
+        // 1. Group balances by expiry date
+        Map<LocalDate, BigDecimal> balanceByExpiry = new HashMap<>();
+
+        // Quota from last year (e.g. 2025 quota) expires at the end of THIS year (2026)
+        // (2-year validity policy)
+        LocalDate quotaExpiry = LocalDate.of(year, 12, 31);
+        BigDecimal lastYearQuota = lastYearAccount.getActualQuota() != null ? lastYearAccount.getActualQuota()
                 : BigDecimal.ZERO;
+        balanceByExpiry.merge(quotaExpiry, lastYearQuota, BigDecimal::add);
 
-        log.info("📊 Last year quota: {}", lastYearQuota);
+        // Balance brought forward TO last year (e.g. 2024 -> 2025) expires at the end
+        // of LAST year (2025)
+        LocalDate carriedForwardExpiry = LocalDate.of(lastYear, 12, 31);
+        BigDecimal lastYearBroughtForward = lastYearAccount.getLastYearBalance() != null
+                ? lastYearAccount.getLastYearBalance()
+                : BigDecimal.ZERO;
+        balanceByExpiry.merge(carriedForwardExpiry, lastYearBroughtForward, BigDecimal::add);
 
-        // Get all last year's records (usage, adjustments, carry-over from previous
-        // year)
-        // EXCLUDE records with NULL expiry (Floating Debt Pool) to avoid
-        // double-deduction during cleanup
-        // Get all last year's records (usage, adjustments, carry-over from previous
-        // year)
-        // EXCLUDE records with NULL expiry (Floating Debt Pool) to avoid
-        // double-deduction during cleanup
+        log.info("📊 Last year base: Quota {} (expires {}), BroughtForward {} (expires {})",
+                lastYearQuota, quotaExpiry, lastYearBroughtForward, carriedForwardExpiry);
+
+        // 2. Add all records from last year to their respective buckets
         List<LeaveRecord> lastYearRecords = recordMapper.selectRecordsForCarryOver(userId, lastYear);
-
-        log.info("📋 Found {} bucketed records (with expiry) in year {}", lastYearRecords.size(), lastYear);
-
-        LocalDate carryOverCheckDate = LocalDate.of(year, 1, 1); // Jan 1 of new year
-
-        // Calculate net change from records (excluding expired ones)
-        BigDecimal netChange = BigDecimal.ZERO;
+        log.info("📋 Found {} records in year {}", lastYearRecords.size(), lastYear);
 
         for (LeaveRecord record : lastYearRecords) {
-            BigDecimal days = record.getDays();
-            LocalDate expiry = record.getExpiryDate();
-
-            log.debug("  Record: type={}, days={}, expiry={}", record.getType(), days, expiry);
-
-            // Skip if already expired
-            if (expiry != null && expiry.isBefore(carryOverCheckDate)) {
-                log.info("  ⏭️  Skipping expired record: {} days, type={}, expired on {}",
-                        days, record.getType(), expiry);
+            if ("EXPIRED".equals(record.getType()) || "CARRY_OVER".equals(record.getType())) {
                 continue;
             }
+            LocalDate recordExpiry = record.getExpiryDate();
+            BigDecimal days = record.getDays() != null ? record.getDays() : BigDecimal.ZERO;
+            balanceByExpiry.merge(recordExpiry, days, BigDecimal::add);
+        }
 
-            // Skip EXPIRED type records as they are system balancing entries
-            if ("EXPIRED".equals(record.getType())) {
-                log.info("  ⏭️  Skipping EXPIRED system record: {} days", days);
-                continue;
-            }
+        // 3. Robust Offset: Deduct all usage (negative) from available credits
+        // (positive)
+        // prioritized by earliest expiry date.
 
-            netChange = netChange.add(days);
-            if (days.compareTo(BigDecimal.ZERO) > 0) {
-                log.info("  ➕ Addition: {} days (type={})", days, record.getType());
+        // Split into Positives (Credits) and total negative (Debt/Usage)
+        Map<LocalDate, BigDecimal> positiveBuckets = new HashMap<>();
+        BigDecimal totalDebt = BigDecimal.ZERO;
+
+        for (Map.Entry<LocalDate, BigDecimal> entry : balanceByExpiry.entrySet()) {
+            BigDecimal val = entry.getValue();
+            if (val.compareTo(BigDecimal.ZERO) >= 0) {
+                positiveBuckets.put(entry.getKey(), val);
             } else {
-                log.info("  ➖ Usage/Deduction: {} days (type={})", days, record.getType());
+                totalDebt = totalDebt.add(val.abs());
             }
         }
 
-        // Total balance = quota + net change from records
-        BigDecimal remaining = lastYearQuota.add(netChange);
-        log.info("💰 Calculation: {} (quota) + {} (net records) = {} remaining",
-                lastYearQuota, netChange, remaining);
+        if (totalDebt.compareTo(BigDecimal.ZERO) > 0) {
+            log.info("⚖️ Offsetting total debt of {} days against available credits", totalDebt);
+            // Sort positive buckets by expiry (earliest first, NULL/Floating comes LAST)
+            List<LocalDate> sortedExpiryDates = new ArrayList<>(positiveBuckets.keySet());
+            sortedExpiryDates.sort((d1, d2) -> {
+                if (d1 == null)
+                    return 1;
+                if (d2 == null)
+                    return -1;
+                return d1.compareTo(d2);
+            });
 
-        // Allow negative carry over (Debt)
-        // if (remaining.compareTo(BigDecimal.ZERO) <= 0) { ... } -> Removed capping
-        // check
+            for (LocalDate expiry : sortedExpiryDates) {
+                BigDecimal credit = positiveBuckets.get(expiry);
+                BigDecimal offset = credit.min(totalDebt);
+                positiveBuckets.put(expiry, credit.subtract(offset));
+                totalDebt = totalDebt.subtract(offset);
+                if (totalDebt.compareTo(BigDecimal.ZERO) <= 0)
+                    break;
+            }
+        }
 
-        // Round down to nearest 0.5
-        BigDecimal carryOver = remaining
-                .divide(new BigDecimal("0.5"), 0, RoundingMode.DOWN)
-                .multiply(new BigDecimal("0.5"));
+        // 4. Determine final carry-over after expiry
+        LocalDate jan1NextYear = LocalDate.of(year, 1, 1);
+        BigDecimal finalCarryOver = BigDecimal.ZERO;
 
-        log.info("✅ Final carry-over for user {} year {}: {} days", userId, year, carryOver);
+        // Sum remaining credits (only if not expired)
+        for (Map.Entry<LocalDate, BigDecimal> entry : positiveBuckets.entrySet()) {
+            LocalDate expiry = entry.getKey();
+            BigDecimal credit = entry.getValue();
 
-        return carryOver;
+            if (expiry != null && expiry.isBefore(jan1NextYear)) {
+                log.info("  ⏭️  Expired credit from bucket {}: {} days", expiry, credit);
+            } else {
+                log.info("  ➕ Carried over credit from bucket {}: {} days",
+                        expiry == null ? "NULL" : expiry, credit);
+                finalCarryOver = finalCarryOver.add(credit);
+            }
+        }
+
+        // Subtract remaining debt (Debt never expires)
+        if (totalDebt.compareTo(BigDecimal.ZERO) > 0) {
+            log.info("  ⚠️  Carrying over remaining DEBT: -{} days", totalDebt);
+            finalCarryOver = finalCarryOver.subtract(totalDebt);
+        }
+
+        log.info("💰 Final carry-over for user {} year {}: {} days", userId, year, finalCarryOver);
+        return finalCarryOver;
     }
 
     /**
@@ -143,12 +172,12 @@ public class LeaveServiceImpl implements LeaveService {
             // If no entry date, assume employed for the full year (past/current)
             return LocalDate.of(year, 12, 31).getDayOfYear();
         }
-
         LocalDate startOfYear = LocalDate.of(year, 1, 1);
         LocalDate endOfYear = LocalDate.of(year, 12, 31);
         LocalDate today = LocalDate.now();
 
-        // If year is in the future, return 0
+        // If year is in the future, return 0 (User requirement: strictly by days
+        // employed)
         if (year > today.getYear()) {
             return 0;
         }
@@ -218,40 +247,39 @@ public class LeaveServiceImpl implements LeaveService {
                 .divide(new BigDecimal("2"), 1, RoundingMode.FLOOR);
 
         // Calculate carry over from last year (excluding expired balances)
-        BigDecimal carryOver = BigDecimal.ZERO;
+        BigDecimal carryOverBalance = BigDecimal.ZERO;
         LeaveAccount lastYearAccount = accountMapper.selectLastYearAccount(userId, year);
 
         if (lastYearAccount != null) {
             // Use new calculation method that considers expiry dates
-            carryOver = calculateCarryOverBalance(userId, year);
+            carryOverBalance = calculateCarryOverBalance(userId, year);
 
-            // Create or update CARRY_OVER record
-            // Create or update CARRY_OVER record
-            LeaveRecord existingCarryOver = recordMapper.selectCarryOverRecord(userId, LocalDate.of(year, 1, 1));
+            // Create or Update CARRY_OVER record (even if negative)
+            LocalDate startOfYear = LocalDate.of(year, 1, 1);
+            LeaveRecord carryRecord = recordMapper.selectCarryOverRecord(userId, startOfYear);
 
             // Carry-over expiry date: end of current year (2-year validity)
-            LocalDate carryOverExpiryDate = LocalDate.of(year, 12, 31);
+            LocalDate expiryDate = LocalDate.of(year, 12, 31);
 
-            if (existingCarryOver != null) {
+            if (carryRecord != null) {
                 // Update existing record
-                existingCarryOver.setDays(carryOver);
-                existingCarryOver.setExpiryDate(carryOverExpiryDate);
-                existingCarryOver.setRemarks("上年结余年假结转 (过期: " + carryOverExpiryDate + ")");
-                recordMapper.updateRecord(existingCarryOver);
-                log.info("✅ Updated carry-over record: {} days (expires {})", carryOver, carryOverExpiryDate);
+                carryRecord.setDays(carryOverBalance);
+                carryRecord.setRemarks(String.format("上年结余年假结转 (过期: %s)", expiryDate));
+                carryRecord.setExpiryDate(expiryDate);
+                recordMapper.updateRecord(carryRecord);
+                log.info("✅ Updated carry-over record: {} days (expires {})", carryOverBalance, expiryDate);
             } else {
-                // Create new record
-                LeaveRecord carryOverRecord = new LeaveRecord();
-                carryOverRecord.setUserId(userId);
-                carryOverRecord.setStartDate(LocalDate.of(year, 1, 1));
-                carryOverRecord.setEndDate(LocalDate.of(year, 1, 1));
-                carryOverRecord.setDays(carryOver);
-                carryOverRecord.setType("CARRY_OVER");
-                carryOverRecord.setExpiryDate(carryOverExpiryDate);
-                carryOverRecord.setRemarks("上年结余年假结转 (过期: " + carryOverExpiryDate + ")");
-                carryOverRecord.setCreateTime(LocalDateTime.now());
-                recordMapper.insertRecord(carryOverRecord);
-                log.info("✅ Created carry-over record: {} days (expires {})", carryOver, carryOverExpiryDate);
+                carryRecord = new LeaveRecord();
+                carryRecord.setUserId(userId);
+                carryRecord.setStartDate(startOfYear);
+                carryRecord.setEndDate(startOfYear);
+                carryRecord.setDays(carryOverBalance);
+                carryRecord.setType("CARRY_OVER");
+                carryRecord.setRemarks(String.format("上年结余年假结转 (过期: %s)", expiryDate));
+                carryRecord.setExpiryDate(expiryDate);
+                carryRecord.setCreateTime(LocalDateTime.now());
+                recordMapper.insertRecord(carryRecord);
+                log.info("✅ Created carry-over record: {} days (expires {})", carryOverBalance, expiryDate);
             }
         }
 
@@ -266,7 +294,7 @@ public class LeaveServiceImpl implements LeaveService {
             account.setSocialSeniority(seniority);
             account.setStandardQuota(standardQuota);
             account.setActualQuota(actualQuota);
-            account.setLastYearBalance(carryOver);
+            account.setLastYearBalance(carryOverBalance);
             account.setCurrentYearUsed(BigDecimal.ZERO);
             account.setDaysEmployed(daysEmployed);
             account.setDeleted(0); // Ensure active
@@ -282,6 +310,11 @@ public class LeaveServiceImpl implements LeaveService {
             account.setStandardQuota(standardQuota);
             account.setActualQuota(actualQuota);
             account.setDaysEmployed(daysEmployed);
+            account.setLastYearBalance(carryOverBalance);
+
+            // Re-evaluating carryOver if restoring or re-running
+            log.info("Updating existing account for user {} year {}: lastYearBalance set to {}", userId, year,
+                    carryOverBalance);
 
             // If we are restoring, we might need to be careful about carryOver overwriting?
             // Current logic does not update lastYearBalance on update path, only on
@@ -676,23 +709,14 @@ public class LeaveServiceImpl implements LeaveService {
             // The `CARRY_OVER` record is just for history.
             // So we EXCLUDE CARRY_OVER record from the sum to avoid double counting it.
 
-            // Calculate Total Balance using "Floating Pool Sovereignty" model:
-            // Total = lastYearBalance (Bucket Carry-over)
-            // + actualQuota (Current Year Bucket)
-            // + currentYearBucketChange (Bucketed records for this year)
-            // + globalFloatingDebt (All NULL-expiry records)
-
-            // 1. Current Year Bucketed Change (records with expiry, excluding carry-over)
-            BigDecimal currentYearBucketChange = yearRecords.stream()
-                    .filter(r -> !"CARRY_OVER".equals(r.getType()) && r.getExpiryDate() != null)
-                    .map(LeaveRecord::getDays)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            // 2. Global Floating Debt (Sum of all NULL-expiry records regardless of year)
-            // These records represent floating debt/adjustments not tied to a specific
-            // bucket.
-            BigDecimal globalFloatingDebt = recordMapper.selectFloatingRecords(userId)
-                    .stream()
+            // Calculate Total Balance for this year's view (Year-local records):
+            // Total = lastYearBalance (stored in account)
+            // + actualQuota (stored in account or refreshed)
+            // + sum(all records of this year except CARRY_OVER)
+            // Note: CARRY_OVER is excluded because it's already reflected in
+            // lastYearBalance.
+            BigDecimal recordsSum = yearRecords.stream()
+                    .filter(r -> !"CARRY_OVER".equals(r.getType()))
                     .map(LeaveRecord::getDays)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -700,9 +724,7 @@ public class LeaveServiceImpl implements LeaveService {
                     : BigDecimal.ZERO;
             BigDecimal actualQuota = account.getActualQuota() != null ? account.getActualQuota() : BigDecimal.ZERO;
 
-            dto.setTotalBalance(lastYearBalance.add(actualQuota)
-                    .add(currentYearBucketChange)
-                    .add(globalFloatingDebt));
+            dto.setTotalBalance(lastYearBalance.add(actualQuota).add(recordsSum));
 
         } else {
             // Account does not exist - return empty DTO instead of auto-creating

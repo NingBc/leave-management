@@ -9,10 +9,10 @@
     </select>
 
     <select id="selectRecordsForCarryOver" resultType="com.leave.system.entity.LeaveRecord">
-        SELECT * FROM leave_record 
-        WHERE user_id = #{userId} 
-        AND YEAR(start_date) = #{year}
-        AND expiry_date IS NOT NULL
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+          AND YEAR(start_date) = #{year}
+          AND deleted = 0
     </select>
     
     <select id="selectCarryOverRecord" resultType="com.leave.system.entity.LeaveRecord">
@@ -34,7 +34,7 @@
         SELECT * FROM leave_record
         WHERE user_id = #{userId}
         AND YEAR(start_date) = #{year}
-        ORDER BY start_date ASC
+        ORDER BY start_date DESC
     </select>
     
     <select id="selectAvailableBalances" resultType="com.leave.system.entity.LeaveRecord">

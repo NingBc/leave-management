@@ -140,15 +140,16 @@ public class ScheduledTasks {
                 log.info("ℹ️ Adding implicit carry-over diff for user {}: {}", userId, implicitDiff);
             }
 
-            BigDecimal protectionBalance = BigDecimal.ZERO;
-            if (targetExpiryDate.getYear() == account.getYear() && account.getActualQuota() != null) {
-                protectionBalance = account.getActualQuota();
-            }
+            // If a CARRY_OVER record exists, we only subtract usage that happened AFTER the
+            // carry-over snapshot.
+            // Usage that happened before the carry-over is already reflected in the
+            // carry-over balance itself.
+            LocalDateTime anchorTime = latestCarryOver.map(LeaveRecord::getCreateTime).orElse(null);
 
-            // Pass null for anchorTime to include ALL usage linked to this expiry bucket,
-            // regardless of creation time.
+            // Pass anchorTime to include ONLY usage linked to this expiry bucket created
+            // after the snapshot.
             List<LeaveRecord> usageRecords = recordMapper.selectUsageRecordsForExpiryCleanup(userId, targetExpiryDate,
-                    null);
+                    anchorTime);
             BigDecimal totalUsed = usageRecords.stream()
                     .map(LeaveRecord::getDays)
                     .map(BigDecimal::abs)
@@ -188,6 +189,7 @@ public class ScheduledTasks {
                     bucketDeduct.setExpiryDate(targetExpiryDate);
                     bucketDeduct.setRemarks("系统自动清理透支: 消耗过期额度 (" + targetExpiryDate + ")");
                     bucketDeduct.setDeleted(0);
+                    bucketDeduct.setCreateTime(LocalDateTime.now());
                     recordMapper.insertRecord(bucketDeduct);
 
                     LeaveRecord debtOffset = new LeaveRecord();
@@ -198,43 +200,16 @@ public class ScheduledTasks {
                     debtOffset.setType("ADJUSTMENT_ADD");
                     debtOffset.setRemarks("系统自动清理透支: 冲抵历史欠费 (来源: " + targetExpiryDate + ")");
                     debtOffset.setDeleted(0);
+                    debtOffset.setCreateTime(LocalDateTime.now());
                     recordMapper.insertRecord(debtOffset);
 
                     debtToSettle = debtToSettle.subtract(offsetFromExpiring);
                     remainingExpiring = remainingExpiring.subtract(offsetFromExpiring);
                 }
 
-                if (debtToSettle.compareTo(BigDecimal.ZERO) > 0 && protectionBalance.compareTo(BigDecimal.ZERO) > 0) {
-                    BigDecimal offsetFromProtection = protectionBalance.min(debtToSettle);
-                    LocalDate nextYearExpiry = LocalDate.of(targetExpiryDate.getYear() + 1, 12, 31);
-
-                    log.info(
-                            "💰 Debt Settlement (Tier 2): Settle {} days using PROTECTION bucket (expires {}) for user {}",
-                            offsetFromProtection, nextYearExpiry, userId);
-
-                    LeaveRecord bucketDeduct = new LeaveRecord();
-                    bucketDeduct.setUserId(userId);
-                    bucketDeduct.setStartDate(targetExpiryDate);
-                    bucketDeduct.setEndDate(targetExpiryDate);
-                    bucketDeduct.setDays(offsetFromProtection.negate());
-                    bucketDeduct.setType("ADJUSTMENT_DEDUCT");
-                    bucketDeduct.setExpiryDate(nextYearExpiry);
-                    bucketDeduct.setRemarks("系统自动清理透支: 消耗当年配额 (过期: " + nextYearExpiry + ")");
-                    bucketDeduct.setDeleted(0);
-                    recordMapper.insertRecord(bucketDeduct);
-
-                    LeaveRecord debtOffset = new LeaveRecord();
-                    debtOffset.setUserId(userId);
-                    debtOffset.setStartDate(targetExpiryDate);
-                    debtOffset.setEndDate(targetExpiryDate);
-                    debtOffset.setDays(offsetFromProtection);
-                    debtOffset.setType("ADJUSTMENT_ADD");
-                    debtOffset.setRemarks("系统自动清理透支: 冲抵历史欠费 (来源: 当年配额)");
-                    debtOffset.setDeleted(0);
-                    recordMapper.insertRecord(debtOffset);
-
-                    debtToSettle = debtToSettle.subtract(offsetFromProtection);
-                }
+                // Tier 2 and 3 removed: Debt is now carried over as negative
+                // 'last_year_balance'
+                // in LeaveServiceImpl.calculateCarryOverBalance, as per user requirement.
             }
 
             if (remainingExpiring.compareTo(BigDecimal.ZERO) > 0) {
@@ -247,6 +222,7 @@ public class ScheduledTasks {
                 expiredRecord.setExpiryDate(targetExpiryDate);
                 expiredRecord.setRemarks("年假已过期自动清理 (到期日期: " + targetExpiryDate + ")");
                 expiredRecord.setDeleted(0);
+                expiredRecord.setCreateTime(LocalDateTime.now());
                 recordMapper.insertRecord(expiredRecord);
 
                 totalDaysExpired = totalDaysExpired.add(remainingExpiring);
@@ -256,8 +232,9 @@ public class ScheduledTasks {
             }
         }
 
-        log.info("✅ Expiry cleanup for year {} completed: {} users affected, {} total days expired",
-                cleanupYear, totalUsersAffected, totalDaysExpired);
+        log.info("✅ Expiry cleanup for year {} completed: {} users affected, {} total days expired", cleanupYear,
+                totalUsersAffected, totalDaysExpired);
+
     }
 
     public void initAllAccounts() {

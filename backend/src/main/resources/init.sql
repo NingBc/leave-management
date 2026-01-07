@@ -128,24 +128,26 @@ INSERT INTO sys_user (username, password, real_name, employee_number, first_work
 VALUES ('admin', '$2b$12$sDUO0pQ/tZBzMgNQWqVhwujpMkIWLuV97C/Gmb2Fi7GqoWQcXqXlu', '系统管理员', 'ADMIN001', '2020-01-01', '2020-01-01', 1, 'ACTIVE');
 
 -- 2.3 菜单数据
-INSERT INTO sys_menu (parent_id, menu_name, path, component, perms, icon, order_num) VALUES
+INSERT INTO sys_menu (parent_id, menu_name, path, component,  icon, order_num) VALUES
 -- 一级菜单
-(0, '首页', '/dashboard', 'Dashboard', 'dashboard:view', 'HomeFilled', 1),
-(0, '休假管理', '/leave', null, null, 'Calendar', 2),
-(0, '系统管理', '/system', null, null, 'Setting', 3),
-(0, '系统监控', '/monitor', null, null, 'Monitor', 4),
+(0, '首页', '/dashboard', 'Dashboard',  'HomeFilled', 1),
+(0, '休假管理', '/leave', null,  'Calendar', 2),
+(0, '系统管理', '/system', null,  'Setting', 3),
+(0, '系统监控', '/monitor', null,  'Monitor', 4),
 
 -- 休假管理子菜单
-(2, '我的休假', '/leave/my', 'leave/MyLeave', 'leave:my:view', null, 1),
-(2, '休假管理(管理员)', '/leave/manage', 'leave/ManageLeave', 'leave:manage:view', null, 2),
+(2, '我的休假', '/leave/my', 'leave/MyLeave',  null, 1),
+(2, '休假管理(管理员)', '/leave/manage', 'leave/ManageLeave',  null, 2),
 
 -- 系统管理子菜单
-(3, '用户管理', '/system/user', 'system/User', 'system:user:view', null, 1),
-(3, '角色管理', '/system/role', 'system/Role', 'system:role:view', null, 2),
-(3, '菜单管理', '/system/menu', 'system/Menu', 'system:menu:view', null, 3),
+(3, '用户管理', '/system/user', 'system/User',  null, 1),
+(3, '角色管理', '/system/role', 'system/Role',  null, 2),
+(3, '菜单管理', '/system/menu', 'system/Menu',  null, 3),
 
 -- 系统监控子菜单
-(4, '定时任务', '/monitor/job', 'monitor/Job', 'monitor:job:view', null, 1);
+(4, '定时任务', '/monitor/job', 'monitor/Job', null, 1);
+
+
 
 -- 2.4 角色菜单关联
 -- 管理员拥有所有菜单权限
