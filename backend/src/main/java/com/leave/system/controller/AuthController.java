@@ -1,39 +1,43 @@
 package com.leave.system.controller;
 
 import com.leave.system.common.Result;
+import com.leave.system.config.DingTalkAppConfig;
+import com.leave.system.entity.SysUser;
+import com.leave.system.service.UserService;
 import com.leave.system.security.JwtUtils;
+import com.leave.system.service.DingTalkService;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@org.springframework.web.bind.annotation.CrossOrigin(origins = "*")
-@lombok.extern.slf4j.Slf4j
+@CrossOrigin(origins = "*")
+@Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-    private final com.leave.system.mapper.SysUserMapper userMapper;
-    private final com.leave.system.service.DingTalkService dingTalkService;
-    private final com.leave.system.config.DingTalkAppConfig dingTalkAppConfig;
+    private final UserService userService;
+    private final DingTalkService dingTalkService;
+    private final DingTalkAppConfig dingTalkAppConfig;
 
     public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
-            com.leave.system.mapper.SysUserMapper userMapper,
-            com.leave.system.service.DingTalkService dingTalkService,
-            com.leave.system.config.DingTalkAppConfig dingTalkAppConfig) {
+            UserService userService,
+            DingTalkService dingTalkService,
+            DingTalkAppConfig dingTalkAppConfig) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
-        this.userMapper = userMapper;
+        this.userService = userService;
         this.dingTalkService = dingTalkService;
         this.dingTalkAppConfig = dingTalkAppConfig;
     }
@@ -46,9 +50,7 @@ public class AuthController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtUtils.generateToken(userDetails);
 
-        com.leave.system.entity.SysUser user = userMapper.selectOne(
-                new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<com.leave.system.entity.SysUser>()
-                        .eq("username", request.getUsername()));
+        SysUser user = userService.getByUsername(request.getUsername());
 
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
@@ -70,9 +72,7 @@ public class AuthController {
         String dingtalkUserId = dingTalkService.getUseridByAuthCode(code);
 
         // 2. Find user by dingtalk_userid
-        com.leave.system.entity.SysUser user = userMapper.selectOne(
-                new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<com.leave.system.entity.SysUser>()
-                        .eq("dingtalk_userid", dingtalkUserId));
+        SysUser user = userService.getByDingtalkUserId(dingtalkUserId);
 
         if (user == null) {
             return Result.error("未找到此钉钉账号对应的系统用户");
@@ -80,10 +80,10 @@ public class AuthController {
 
         // 3. Generate JWT
         // We bypass standard authentication as the trust is inherited from DingTalk
-        UserDetails userDetails = org.springframework.security.core.userdetails.User
+        UserDetails userDetails = User
                 .withUsername(user.getUsername())
                 .password("") // Password not needed for token generation
-                .authorities(new java.util.ArrayList<>())
+                .authorities(new ArrayList<>())
                 .build();
 
         String token = jwtUtils.generateToken(userDetails);
@@ -96,7 +96,7 @@ public class AuthController {
         return Result.success(response, "钉钉免密登录成功");
     }
 
-    @org.springframework.web.bind.annotation.GetMapping("/config/dingtalk")
+    @GetMapping("/config/dingtalk")
     public Result<Map<String, String>> getDingTalkConfig() {
         Map<String, String> config = new HashMap<>();
         config.put("corpId", dingTalkAppConfig.getCorpId());

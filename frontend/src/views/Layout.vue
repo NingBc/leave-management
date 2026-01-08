@@ -165,7 +165,7 @@ const handleResize = () => {
 const loadUserMenus = async () => {
   // 如果Store中已经有菜单数据，直接使用
   if (userStore.userMenus && userStore.userMenus.length > 0) {
-    userMenus.value = buildMenuTree(userStore.userMenus)
+    userMenus.value = userStore.userMenus
     return
   }
 
@@ -179,35 +179,15 @@ const loadUserMenus = async () => {
       params: { userId }
     })
     
-    // 保存到Store
+    // 后端现在直接返回树形结构
     userStore.setUserMenus(menus)
-    
-    // 构建菜单树结构
-    userMenus.value = buildMenuTree(menus)
+    userMenus.value = menus
   } catch (e) {
     console.error('Failed to load user menus:', e)
     userMenus.value = []
   }
 }
 
-const buildMenuTree = (menus) => {
-  const menuMap = {}
-  const tree = []
-  
-  menus.forEach(menu => {
-    menuMap[menu.id] = { ...menu, children: [] }
-  })
-  
-  menus.forEach(menu => {
-    if (menu.parentId === 0 || !menuMap[menu.parentId]) {
-      tree.push(menuMap[menu.id])
-    } else {
-      menuMap[menu.parentId].children.push(menuMap[menu.id])
-    }
-  })
-  
-  return tree
-}
 
 const handleCommand = (command) => {
   if (command === 'logout') {

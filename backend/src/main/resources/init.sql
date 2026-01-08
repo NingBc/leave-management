@@ -51,7 +51,6 @@ CREATE TABLE IF NOT EXISTS sys_menu (
     menu_name VARCHAR(50) NOT NULL COMMENT '菜单名称',
     path VARCHAR(100) COMMENT '路由路径',
     component VARCHAR(100) COMMENT '组件路径',
-    perms VARCHAR(100) COMMENT '权限标识',
     icon VARCHAR(50) COMMENT '图标',
     order_num INT DEFAULT 0 COMMENT '排序',
     deleted TINYINT DEFAULT 0
@@ -129,24 +128,26 @@ INSERT INTO sys_user (username, password, real_name, employee_number, first_work
 VALUES ('admin', '$2b$12$sDUO0pQ/tZBzMgNQWqVhwujpMkIWLuV97C/Gmb2Fi7GqoWQcXqXlu', '系统管理员', 'ADMIN001', '2020-01-01', '2020-01-01', 1, 'ACTIVE');
 
 -- 2.3 菜单数据
-INSERT INTO sys_menu (parent_id, menu_name, path, component, perms, icon, order_num) VALUES
+INSERT INTO sys_menu (parent_id, menu_name, path, component,  icon, order_num) VALUES
 -- 一级菜单
-(0, '首页', '/dashboard', 'Dashboard', 'dashboard:view', 'HomeFilled', 1),
-(0, '休假管理', '/leave', null, null, 'Calendar', 2),
-(0, '系统管理', '/system', null, null, 'Setting', 3),
-(0, '系统监控', '/monitor', null, null, 'Monitor', 4),
+(0, '首页', '/dashboard', 'Dashboard',  'HomeFilled', 1),
+(0, '休假管理', '/leave', null,  'Calendar', 2),
+(0, '系统管理', '/system', null,  'Setting', 3),
+(0, '系统监控', '/monitor', null,  'Monitor', 4),
 
 -- 休假管理子菜单
-(2, '我的休假', '/leave/my', 'leave/MyLeave', 'leave:my:view', null, 1),
-(2, '休假管理(管理员)', '/leave/manage', 'leave/ManageLeave', 'leave:manage:view', null, 2),
+(2, '我的休假', '/leave/my', 'leave/MyLeave',  null, 1),
+(2, '休假管理(管理员)', '/leave/manage', 'leave/ManageLeave',  null, 2),
 
 -- 系统管理子菜单
-(3, '用户管理', '/system/user', 'system/User', 'system:user:view', null, 1),
-(3, '角色管理', '/system/role', 'system/Role', 'system:role:view', null, 2),
-(3, '菜单管理', '/system/menu', 'system/Menu', 'system:menu:view', null, 3),
+(3, '用户管理', '/system/user', 'system/User',  null, 1),
+(3, '角色管理', '/system/role', 'system/Role',  null, 2),
+(3, '菜单管理', '/system/menu', 'system/Menu',  null, 3),
 
 -- 系统监控子菜单
-(4, '定时任务', '/monitor/job', 'monitor/Job', 'monitor:job:view', null, 1);
+(4, '定时任务', '/monitor/job', 'monitor/Job', null, 1);
+
+
 
 -- 2.4 角色菜单关联
 -- 管理员拥有所有菜单权限
@@ -160,23 +161,25 @@ INSERT INTO role_menu (role_id, menu_id) VALUES (2, 5);
 -- 第三部分：定时任务配置
 -- ================================================================
 
+-- 3.1 钉钉数据同步任务
+-- 每周一上午10点执行
+INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
+    ('钉钉数据同步', 'DEFAULT', 'dingTalkService.syncLeaveData()', '0 0 10 ? * MON', 0,
+     '每周一上午10点自动从钉钉同步年假数据。从钉钉考勤系统拉取请假记录并更新到本地数据库。');
+
 
 -- 3.2 年假过期清理任务
 -- 每年1月1日凌晨3点执行
 INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
-    ('年假过期清理', 'LEAVE', 'scheduledTasks.cleanupExpiredLeaveBalances()', '0 0 3 1 1 ?', 0,
+    ('年假过期清理', 'DEFAULT', 'scheduledTasks.cleanupExpiredLeaveBalances()', '0 0 3 1 1 ?', 0,
      '每年1月1日凌晨3点自动清理已过期的年假余额（上年结转额度）。');
--- 3.1 年假账户批量初始化任务
+-- 3.3 年假账户批量初始化任务
 -- 每年1月1日凌晨1点执行
 INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
-('年假账户批量初始化', 'LEAVE', 'scheduledTasks.initAllAccounts(2026)', '0 0 1 1 1 ?', 1, 
+('年假账户批量初始化', 'DEFAULT', 'scheduledTasks.initAllAccounts(2026)', '0 0 1 1 1 ?', 1, 
 '每年1月1日凌晨1点批量初始化所有员工的新年度账户（含结转计算）。注意：需手动更新年份参数！默认暂停状态。');
 
--- 3.3 钉钉数据同步任务
--- 每周一上午10点执行
-INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark) VALUES
-('钉钉数据同步', 'DEFAULT', 'dingTalkService.syncLeaveData()', '0 0 10 ? * MON', 0, 
-'每周一上午10点自动从钉钉同步年假数据。从钉钉考勤系统拉取请假记录并更新到本地数据库。');
+
 
 -- ================================================================
 -- 完成提示

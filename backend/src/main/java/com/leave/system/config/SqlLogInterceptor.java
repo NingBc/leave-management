@@ -61,7 +61,6 @@ public class SqlLogInterceptor implements Interceptor {
         StringBuilder str = new StringBuilder(100);
         str.append("ID          : ").append(sqlId).append("\n");
         str.append("SQL         : ").append(sql).append("\n");
-        str.append("Time Taken  : ").append(timeTaken).append(" ms\n");
         return str.toString();
     }
 

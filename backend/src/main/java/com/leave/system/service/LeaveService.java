@@ -6,6 +6,7 @@ import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
 import java.time.LocalDate;
 import java.util.List;
+import com.leave.system.entity.SysUser;
 
 public interface LeaveService {
     /**
@@ -13,6 +14,12 @@ public interface LeaveService {
      * Calculates quota based on seniority.
      */
     LeaveAccount initYearlyAccount(Long userId, Integer year);
+
+    /**
+     * Refresh account using provided user object (avoids DB fetch latency/cache
+     * issues)
+     */
+    LeaveAccount refreshAccount(SysUser user, Integer year);
 
     /**
      * Apply for annual leave.
@@ -23,12 +30,11 @@ public interface LeaveService {
     /**
      * Get leave account details for a user.
      */
-    com.leave.system.dto.LeaveAccountDTO getAccount(Long userId, Integer year);
+    LeaveAccountDTO getAccount(Long userId, Integer year);
 
-    List<com.leave.system.dto.LeaveAccountDTO> getAllAccounts(Integer year);
+    List<LeaveAccountDTO> getAllAccounts(Integer year);
 
-    com.baomidou.mybatisplus.extension.plugins.pagination.Page<LeaveAccountDTO> getAllAccountsPage(Integer year,
-            int current, int size);
+    Page<LeaveAccountDTO> getAllAccountsPage(Integer year, int current, int size);
 
     /**
      * Get leave history for a user, optionally filtered by year.
@@ -63,6 +69,4 @@ public interface LeaveService {
      * @return List of years with existing leave accounts
      */
     List<Integer> getAllAvailableYears();
-
-    List<com.leave.system.entity.SysUser> getAllUsers();
 }

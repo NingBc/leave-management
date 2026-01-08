@@ -5,9 +5,10 @@ import com.leave.system.common.Result;
 import com.leave.system.dto.LeaveAccountDTO;
 import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
+import com.leave.system.entity.SysUser;
 import com.leave.system.service.LeaveService;
+import com.leave.system.service.UserService;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -18,13 +19,15 @@ import java.util.List;
 public class LeaveController {
 
     private final LeaveService leaveService;
+    private final UserService userService;
 
-    public LeaveController(LeaveService leaveService) {
+    public LeaveController(LeaveService leaveService, UserService userService) {
         this.leaveService = leaveService;
+        this.userService = userService;
     }
 
     @GetMapping("/account")
-    public Result<com.leave.system.dto.LeaveAccountDTO> getAccount(@RequestParam Long userId, @RequestParam int year) {
+    public Result<LeaveAccountDTO> getAccount(@RequestParam Long userId, @RequestParam int year) {
         return Result.success(leaveService.getAccount(userId, year));
     }
 
@@ -46,7 +49,7 @@ public class LeaveController {
             @RequestParam(defaultValue = "1") int current,
             @RequestParam(defaultValue = "10") int size) {
         if (year == null) {
-            year = java.time.LocalDate.now().getYear();
+            year = LocalDate.now().getYear();
         }
 
         Page<LeaveAccountDTO> page = leaveService.getAllAccountsPage(year, current, size);
@@ -66,19 +69,19 @@ public class LeaveController {
     }
 
     @GetMapping("/accounts")
-    public Result<List<com.leave.system.dto.LeaveAccountDTO>> getAllAccounts(@RequestParam int year) {
+    public Result<List<LeaveAccountDTO>> getAllAccounts(@RequestParam int year) {
         return Result.success(leaveService.getAllAccounts(year));
     }
 
     @PostMapping("/updateAccount")
-    public Result<Void> updateAccount(@RequestBody com.leave.system.dto.LeaveAccountDTO account) {
+    public Result<Void> updateAccount(@RequestBody LeaveAccount account) {
         leaveService.updateAccount(account);
         return Result.success(null, "账户更新成功");
     }
 
     @GetMapping("/users")
-    public Result<List<com.leave.system.entity.SysUser>> getAllUsers() {
-        return Result.success(leaveService.getAllUsers());
+    public Result<List<SysUser>> getAllUsers() {
+        return Result.success(userService.getAllUsers());
     }
 
     @GetMapping("/available-years")

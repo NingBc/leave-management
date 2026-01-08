@@ -5,9 +5,14 @@ import java.util.List;
 
 public interface MenuService {
     /**
-     * 获取用户可见的菜单列表（根据用户的角色）
+     * 获取用户可见的菜单树
      */
     List<SysMenu> getUserMenus(Long userId);
+
+    /**
+     * 获取全量菜单树
+     */
+    List<SysMenu> getMenuTree();
 
     /**
      * 获取角色已分配的菜单ID列表
@@ -18,4 +23,14 @@ public interface MenuService {
      * 为角色分配菜单
      */
     void assignMenusToRole(Long roleId, List<Long> menuIds);
+
+    void addRoleMenu(Long roleId, Long menuId);
+
+    void addMenu(SysMenu menu);
+
+    void updateMenu(SysMenu menu);
+
+    void deleteMenu(Long id);
+
+    SysMenu getById(Long id);
 }

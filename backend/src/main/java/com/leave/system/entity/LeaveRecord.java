@@ -22,7 +22,7 @@ public class LeaveRecord {
     private LocalDate expiryDate;
     private LocalDateTime createTime;
     @com.baomidou.mybatisplus.annotation.TableLogic
-    private Integer deleted;
+    private Integer deleted = 0;
 
     public Long getId() {
         return id;

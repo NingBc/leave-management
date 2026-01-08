@@ -2,7 +2,7 @@ package com.leave.system.controller;
 
 import com.leave.system.common.Result;
 import com.leave.system.entity.SysMenu;
-import com.leave.system.mapper.SysMenuMapper;
+import com.leave.system.service.MenuService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,40 +11,15 @@ import java.util.List;
 @RequestMapping("/system/menu")
 public class MenuController {
 
-    private final SysMenuMapper menuMapper;
-    private final com.leave.system.service.MenuService menuService;
+    private final MenuService menuService;
 
-    public MenuController(SysMenuMapper menuMapper, com.leave.system.service.MenuService menuService) {
-        this.menuMapper = menuMapper;
+    public MenuController(MenuService menuService) {
         this.menuService = menuService;
     }
 
     @GetMapping("/list")
     public Result<List<SysMenu>> list() {
-        List<SysMenu> menus = menuMapper.selectList(null);
-        return Result.success(buildTree(menus));
-    }
-
-    private List<SysMenu> buildTree(List<SysMenu> menus) {
-        List<SysMenu> tree = new java.util.ArrayList<>();
-        for (SysMenu menu : menus) {
-            if (menu.getParentId() == 0) {
-                menu.setChildren(getChildren(menu.getId(), menus));
-                tree.add(menu);
-            }
-        }
-        return tree;
-    }
-
-    private List<SysMenu> getChildren(Long parentId, List<SysMenu> menus) {
-        List<SysMenu> children = new java.util.ArrayList<>();
-        for (SysMenu menu : menus) {
-            if (menu.getParentId().equals(parentId)) {
-                menu.setChildren(getChildren(menu.getId(), menus));
-                children.add(menu);
-            }
-        }
-        return children;
+        return Result.success(menuService.getMenuTree());
     }
 
     @GetMapping("/user-menus")
@@ -54,19 +29,19 @@ public class MenuController {
 
     @PostMapping("/add")
     public Result<Void> add(@RequestBody SysMenu menu) {
-        menuMapper.insert(menu);
+        menuService.addMenu(menu);
         return Result.success(null, "菜单添加成功");
     }
 
     @PutMapping("/update")
     public Result<Void> update(@RequestBody SysMenu menu) {
-        menuMapper.updateById(menu);
+        menuService.updateMenu(menu);
         return Result.success(null, "菜单更新成功");
     }
 
     @DeleteMapping("/delete/{id}")
     public Result<Void> delete(@PathVariable Long id) {
-        menuMapper.deleteById(id);
+        menuService.deleteMenu(id);
         return Result.success(null, "菜单删除成功");
     }
 }

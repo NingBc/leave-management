@@ -22,7 +22,7 @@
       <el-table-column label="操作" width="300" fixed="right">
         <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button size="small" type="success" @click="handleRun(scope.row.id)">执行一次</el-button>
+          <el-button size="small" type="success" :loading="!!runningIds[scope.row.id]" @click="handleRun(scope.row.id)">执行一次</el-button>
           <el-button size="small" :type="scope.row.status === 0 ? 'warning' : 'primary'" @click="handleToggleStatus(scope.row)">
             {{ scope.row.status === 0 ? '暂停' : '恢复' }}
           </el-button>
@@ -71,6 +71,7 @@ const jobList = ref([])
 const dialogVisible = ref(false)
 const dialogTitle = ref('添加任务')
 const editMode = ref('add')
+const runningIds = ref({})
 
 const form = ref({
   id: null,
@@ -147,11 +148,14 @@ const handleDelete = async (row) => {
 
 const handleRun = async (id) => {
   try {
+    runningIds.value[id] = true
     await runJob(id)
     ElMessage.success('任务执行成功')
   } catch (e) {
     console.error(e)
     ElMessage.error('任务执行失败')
+  } finally {
+    runningIds.value[id] = false
   }
 }
 

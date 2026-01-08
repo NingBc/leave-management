@@ -1,14 +1,11 @@
 package com.leave.system.exception;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.leave.system.common.Result;
+import com.leave.system.common.ResultCode;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLSyntaxErrorException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -16,52 +13,48 @@ public class GlobalExceptionHandler {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
-     * 处理SQL语法错误
+     * 处理业务异常
      */
-    @ExceptionHandler(SQLSyntaxErrorException.class)
-    public ResponseEntity<Map<String, Object>> handleSQLSyntaxError(SQLSyntaxErrorException e) {
-        log.error("SQL Syntax Error: {}", e.getMessage(), e);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("error", "数据库错误");
-        response.put("message", e.getMessage());
-        response.put("details", "请检查数据库结构是否与代码匹配，可能需要执行数据库迁移");
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    }
-
-    /**
-     * 处理所有未捕获的异常
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGenericException(Exception e) {
-        log.error("Unhandled Exception: {}", e.getMessage(), e);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("error", "服务器内部错误");
-        response.put("message", e.getMessage());
-
-        // 如果是SQL相关错误，提供额外提示
-        if (e.getMessage() != null &&
-                (e.getMessage().contains("Unknown column") ||
-                        e.getMessage().contains("SQLSyntaxErrorException"))) {
-            response.put("details", "数据库结构与代码不匹配，请执行数据库迁移脚本");
-        }
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    @ExceptionHandler(BusinessException.class)
+    public Result<?> handleBusinessException(BusinessException e) {
+        log.warn("Business Exception: {}", e.getMessage());
+        return Result.error(e.getCode(), e.getMessage());
     }
 
     /**
      * 处理非法参数异常
      */
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException e) {
+    public Result<?> handleIllegalArgument(IllegalArgumentException e) {
         log.warn("Illegal Argument: {}", e.getMessage());
+        return Result.error(ResultCode.BAD_REQUEST, e.getMessage());
+    }
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("error", "参数错误");
-        response.put("message", e.getMessage());
+    /**
+     * 处理SQL语法错误
+     */
+    @ExceptionHandler(SQLSyntaxErrorException.class)
+    public Result<?> handleSQLSyntaxError(SQLSyntaxErrorException e) {
+        log.error("SQL Syntax Error: {}", e.getMessage(), e);
+        return Result.error(ResultCode.INTERNAL_ERROR, "数据库错误: " + e.getMessage());
+    }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    /**
+     * 处理所有未捕获的异常
+     */
+    @ExceptionHandler(Exception.class)
+    public Result<?> handleGenericException(Exception e) {
+        log.error("Unhandled Exception: {}", e.getMessage(), e);
+
+        String message = "系统内部错误";
+        // 如果是开发环境，可以在这里添加更多详情，但生产环境建议隐藏
+        if (e.getMessage() != null) {
+            if (e.getMessage().contains("SQLSyntaxErrorException")) {
+                message = "数据库错误，请检查日志";
+            } else {
+                message = e.getMessage();
+            }
+        }
+        return Result.error(ResultCode.INTERNAL_ERROR, message);
     }
 }

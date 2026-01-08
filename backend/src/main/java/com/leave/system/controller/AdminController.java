@@ -1,8 +1,10 @@
 package com.leave.system.controller;
 
 import com.leave.system.common.Result;
+import com.leave.system.entity.SysUser;
 import com.leave.system.scheduled.ScheduledTasks;
 import com.leave.system.service.LeaveService;
+import com.leave.system.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,10 +26,12 @@ public class AdminController {
 
     private final ScheduledTasks scheduledTasks;
     private final LeaveService leaveService;
+    private final UserService userService;
 
-    public AdminController(ScheduledTasks scheduledTasks, LeaveService leaveService) {
+    public AdminController(ScheduledTasks scheduledTasks, LeaveService leaveService, UserService userService) {
         this.scheduledTasks = scheduledTasks;
         this.leaveService = leaveService;
+        this.userService = userService;
     }
 
     /**
@@ -66,13 +70,13 @@ public class AdminController {
             log.info("📋 Admin manually triggered account initialization for year: {}", year);
 
             // Get all users
-            List<com.leave.system.entity.SysUser> users = leaveService.getAllUsers();
+            List<SysUser> users = userService.getAllUsers();
 
             int successCount = 0;
             int failCount = 0;
             StringBuilder errors = new StringBuilder();
 
-            for (com.leave.system.entity.SysUser user : users) {
+            for (SysUser user : users) {
                 try {
                     // Skip resigned users
                     if ("RESIGNED".equals(user.getStatus())) {

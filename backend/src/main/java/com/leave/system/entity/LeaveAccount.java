@@ -50,6 +50,14 @@ public class LeaveAccount {
         return socialSeniority;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
     public Long getId() {
         return id;
     }
@@ -92,6 +100,10 @@ public class LeaveAccount {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getDeleted() {
+        return deleted;
     }
 
     public void setTotalBalance(BigDecimal totalBalance) {

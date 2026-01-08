@@ -1,6 +1,5 @@
 package com.leave.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.leave.system.entity.SysJob;
 import com.leave.system.mapper.SysJobMapper;
 import com.leave.system.service.SysJobService;
@@ -15,6 +14,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,25 +44,27 @@ public class SysJobServiceImpl implements SysJobService, InitializingBean {
 
     @Override
     public List<SysJob> getAllJobs() {
-        return jobMapper.selectList(null);
+        return jobMapper.selectAllJobs();
     }
 
     @Override
     public SysJob getJobById(Long id) {
-        return jobMapper.selectById(id);
+        return jobMapper.selectJobById(id);
     }
 
     @Override
     public void addJob(SysJob job) {
-        job.setStatus(1); // Default to paused
-        jobMapper.insert(job);
+        job.setCreateTime(LocalDateTime.now());
+        job.setUpdateTime(LocalDateTime.now());
+        jobMapper.insertJob(job);
     }
 
     @Override
     public void updateJob(SysJob job) {
-        jobMapper.updateById(job);
+        job.setUpdateTime(LocalDateTime.now());
+        jobMapper.updateJob(job);
         // Reschedule if needed
-        if (job.getStatus() == 0) {
+        if (job.getStatus() == 0) { // 0 for active
             rescheduleJob(job.getId());
         }
     }
@@ -71,12 +73,12 @@ public class SysJobServiceImpl implements SysJobService, InitializingBean {
     public void deleteJob(Long id) {
         // Cancel scheduled task first
         cancelScheduledTask(id);
-        jobMapper.deleteById(id);
+        jobMapper.deleteJobById(id);
     }
 
     @Override
     public void runJob(Long id) {
-        SysJob job = jobMapper.selectById(id);
+        SysJob job = jobMapper.selectJobById(id);
         if (job == null) {
             log.error("Job not found: {}", id);
             return;
@@ -86,12 +88,12 @@ public class SysJobServiceImpl implements SysJobService, InitializingBean {
 
     @Override
     public void changeStatus(Long id, Integer status) {
-        SysJob job = jobMapper.selectById(id);
+        SysJob job = jobMapper.selectJobById(id);
         if (job == null) {
             return;
         }
         job.setStatus(status);
-        jobMapper.updateById(job);
+        jobMapper.updateJob(job);
 
         if (status == 0) {
             // Resume: schedule the task
@@ -105,7 +107,7 @@ public class SysJobServiceImpl implements SysJobService, InitializingBean {
     @Override
     public void initScheduledTasks() {
         log.info("Initializing scheduled tasks...");
-        List<SysJob> jobs = jobMapper.selectList(new QueryWrapper<SysJob>().eq("status", 0));
+        List<SysJob> jobs = jobMapper.selectActiveJobs();
         for (SysJob job : jobs) {
             scheduleJob(job);
         }
@@ -115,7 +117,7 @@ public class SysJobServiceImpl implements SysJobService, InitializingBean {
     @Override
     public void rescheduleJob(Long id) {
         cancelScheduledTask(id);
-        SysJob job = jobMapper.selectById(id);
+        SysJob job = jobMapper.selectJobById(id);
         if (job != null && job.getStatus() == 0) {
             scheduleJob(job);
         }
