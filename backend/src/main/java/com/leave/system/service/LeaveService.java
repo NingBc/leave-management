@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.leave.system.dto.LeaveAccountDTO;
 import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import com.leave.system.entity.SysUser;
@@ -21,11 +22,12 @@ public interface LeaveService {
      */
     LeaveAccount refreshAccount(SysUser user, Integer year);
 
-    /**
-     * Apply for annual leave.
-     * Automatically deducts from Last Year's balance first if applicable.
-     */
     void applyLeave(Long userId, LocalDate startDate, LocalDate endDate);
+
+    /**
+     * Apply for annual leave with specific days.
+     */
+    void applyLeave(Long userId, LocalDate startDate, LocalDate endDate, BigDecimal daysRequested);
 
     /**
      * Get leave account details for a user.

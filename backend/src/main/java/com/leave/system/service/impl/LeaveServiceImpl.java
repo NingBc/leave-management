@@ -407,6 +407,14 @@ public class LeaveServiceImpl implements LeaveService {
     @Override
     @Transactional
     public void applyLeave(Long userId, LocalDate startDate, LocalDate endDate) {
+        // Calculate days requested based on date range (default behavior)
+        long daysDiff = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        applyLeave(userId, startDate, endDate, new BigDecimal(daysDiff));
+    }
+
+    @Override
+    @Transactional
+    public void applyLeave(Long userId, LocalDate startDate, LocalDate endDate, BigDecimal daysRequested) {
         int year = startDate.getYear();
 
         // Ensure account exists
@@ -416,12 +424,8 @@ public class LeaveServiceImpl implements LeaveService {
             account = accountMapper.selectAccountByUserIdAndYear(userId, year);
         }
 
-        // Calculate days requested
-        long daysDiff = ChronoUnit.DAYS.between(startDate, endDate) + 1;
-        BigDecimal daysRequested = new BigDecimal(daysDiff);
-
         if (daysRequested.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BusinessException("Invalid date range");
+            throw new BusinessException("Invalid duration: " + daysRequested);
         }
 
         log.info("📝 Processing leave application: user={}, dates={} to {}, days={}",

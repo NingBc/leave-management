@@ -234,7 +234,8 @@ public class DingTalkServiceImpl implements DingTalkService {
         if (count == 0) {
             try {
                 // ✅ 使用 applyLeave 方法，自动处理优先级和过期日期
-                leaveService.applyLeave(user.getId(), date, date);
+                // 传入实际天数（BigDecimal），解决小数天数为1的问题
+                leaveService.applyLeave(user.getId(), date, date, daysBd);
                 log.info("✅ Applied leave via applyLeave for user {}: {} - {} days",
                         user.getUsername(), date, days);
             } catch (Exception e) {

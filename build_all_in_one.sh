@@ -40,7 +40,7 @@ fi
 cd ..
 
 # 4. Success
-JAR_PATH="$BACKEND_DIR/target/backend-0.0.1-SNAPSHOT.jar"
+JAR_PATH="$BACKEND_DIR/target/leave-management.jar"
 echo "=================================================="
 echo "   Build Success!                                 "
 echo "=================================================="
