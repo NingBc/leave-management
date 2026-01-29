@@ -7,13 +7,17 @@
         </div>
       </template>
       <el-alert
-        title="数据同步通知"
-        :description="'休假额度及请假记录每隔 24 小时从钉钉同步一次，如刚在钉钉提交申请，请稍后查看。上次同步时间：' + (account?.lastSyncTime || '获取中...')"
+        title=""
         type="info"
         show-icon
         :closable="false"
         class="sync-alert"
-      />
+      >
+        <div style="line-height: 1.5;">
+          请假记录每周一从钉钉同步。<br />
+          上次同步：{{ account?.lastSyncTime || '获取中...' }}
+        </div>
+      </el-alert>
       <div v-if="account">
         <!-- Desktop Description View -->
         <el-descriptions v-if="!isMobile" :column="2" border>
