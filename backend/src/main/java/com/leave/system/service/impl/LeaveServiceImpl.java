@@ -310,11 +310,19 @@ public class LeaveServiceImpl implements LeaveService {
             account.setStandardQuota(standardQuota);
             account.setActualQuota(actualQuota);
             account.setDaysEmployed(daysEmployed);
-            account.setLastYearBalance(carryOverBalance);
 
-            // Re-evaluating carryOver if restoring or re-running
-            log.info("Updating existing account for user {} year {}: lastYearBalance set to {}", userId, year,
-                    carryOverBalance);
+            // Only update lastYearBalance if we actually found a last year account to
+            // calculate from.
+            // This prevents overwriting manually entered balances with 0 when no historical
+            // data exists.
+            if (lastYearAccount != null) {
+                account.setLastYearBalance(carryOverBalance);
+                log.info("Updating existing account for user {} year {}: lastYearBalance updated to {}",
+                        userId, year, carryOverBalance);
+            } else {
+                log.info("Updating existing account for user {} year {}: kept existing lastYearBalance {}",
+                        userId, year, account.getLastYearBalance());
+            }
 
             // If we are restoring, we might need to be careful about carryOver overwriting?
             // Current logic does not update lastYearBalance on update path, only on

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
@@ -76,6 +77,7 @@ public class SysJobServiceImpl implements SysJobService, InitializingBean {
         jobMapper.deleteJobById(id);
     }
 
+    @Async
     @Override
     public void runJob(Long id) {
         SysJob job = jobMapper.selectJobById(id);

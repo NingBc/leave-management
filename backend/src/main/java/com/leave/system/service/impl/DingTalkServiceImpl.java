@@ -6,26 +6,23 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONObject;
 
 import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiAttendanceGetleavetimebynamesRequest;
 import com.dingtalk.api.request.OapiGettokenRequest;
 import com.dingtalk.api.response.OapiAttendanceGetleavetimebynamesResponse;
 import com.dingtalk.api.response.OapiGettokenResponse;
-import com.leave.system.entity.LeaveRecord;
 import com.leave.system.entity.SysUser;
 import com.leave.system.mapper.LeaveRecordMapper;
 import com.leave.system.mapper.SysUserMapper;
 import com.leave.system.service.DingTalkService;
 import com.leave.system.config.DingTalkConfig;
 import com.leave.system.config.DingTalkAppConfig;
-import com.leave.system.mapper.LeaveAccountMapper;
 import com.leave.system.service.LeaveService;
 import com.taobao.api.ApiException;
 import com.taobao.api.internal.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +31,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service("dingTalkService")
 public class DingTalkServiceImpl implements DingTalkService {
@@ -54,13 +50,13 @@ public class DingTalkServiceImpl implements DingTalkService {
     private LeaveRecordMapper leaveRecordMapper;
 
     @Autowired
-    private LeaveAccountMapper leaveAccountMapper;
-
-    @Autowired
     private LeaveService leaveService;
 
+    @Autowired
+    @Lazy
+    private DingTalkServiceImpl self;
+
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void syncLeaveData() {
         log.info("Starting DingTalk leave data sync...");
         try {
@@ -85,10 +81,12 @@ public class DingTalkServiceImpl implements DingTalkService {
             }
             log.info("Found {} users to sync.", users.size());
 
-            for (SysUser user : users) {
+            // Use parallel stream to speed up sync while respecting rate limits (default
+            // ForkJoinPool is usually sufficient)
+            users.parallelStream().forEach(user -> {
                 log.info("Fetching data for user: {} (DingTalk ID: {})", user.getUsername(), user.getDingtalkUserId());
                 fetchForSingleUser(accessToken, fromDateStr, toDateStr, user);
-            }
+            });
 
             log.info("DingTalk leave data sync completed.");
         } catch (Exception e) {
@@ -102,7 +100,10 @@ public class DingTalkServiceImpl implements DingTalkService {
         try {
             // Use DingTalkAppConfig instead of DingTalkConfig for SSO
             String accessToken = getAccessTokenForApp();
-            DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/v2/user/getuserinfo");
+            DefaultDingTalkClient client = new DefaultDingTalkClient(
+                    "https://oapi.dingtalk.com/topapi/v2/user/getuserinfo");
+            client.setConnectTimeout(10000); // 10s
+            client.setReadTimeout(15000); // 15s
             com.dingtalk.api.request.OapiV2UserGetuserinfoRequest req = new com.dingtalk.api.request.OapiV2UserGetuserinfoRequest();
             req.setCode(authCode);
             com.dingtalk.api.response.OapiV2UserGetuserinfoResponse rsp = client.execute(req, accessToken);
@@ -122,7 +123,9 @@ public class DingTalkServiceImpl implements DingTalkService {
     }
 
     private String getAccessToken() throws ApiException {
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
+        DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
+        client.setConnectTimeout(5000);
+        client.setReadTimeout(10000);
         OapiGettokenRequest req = new OapiGettokenRequest();
         req.setAppkey(dingTalkConfig.getAppKey());
         req.setAppsecret(dingTalkConfig.getAppSecret());
@@ -136,7 +139,9 @@ public class DingTalkServiceImpl implements DingTalkService {
     }
 
     private String getAccessTokenForApp() throws ApiException {
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
+        DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
+        client.setConnectTimeout(5000);
+        client.setReadTimeout(10000);
         OapiGettokenRequest req = new OapiGettokenRequest();
         req.setAppkey(dingTalkAppConfig.getAppKey());
         req.setAppsecret(dingTalkAppConfig.getAppSecret());
@@ -152,8 +157,10 @@ public class DingTalkServiceImpl implements DingTalkService {
     // Helper to fetch for single user to ensure data integrity
     private void fetchForSingleUser(String accessToken, String fromDateStr, String toDateStr, SysUser user) {
         try {
-            DingTalkClient client = new DefaultDingTalkClient(
+            DefaultDingTalkClient client = new DefaultDingTalkClient(
                     "https://oapi.dingtalk.com/topapi/attendance/getleavetimebynames");
+            client.setConnectTimeout(10000);
+            client.setReadTimeout(20000); // Larger timeout for complex attendance query
             OapiAttendanceGetleavetimebynamesRequest req = new OapiAttendanceGetleavetimebynamesRequest();
             req.setUserid(user.getDingtalkUserId());
             req.setLeaveNames("年假");
@@ -203,7 +210,7 @@ public class DingTalkServiceImpl implements DingTalkService {
                         try {
                             double value = Double.parseDouble(valueStr);
                             if (value > 0) {
-                                saveLeaveRecord(user, dateStr, value);
+                                self.saveLeaveRecord(user, dateStr, value);
                             } else {
                                 log.info("Skipping zero value entry");
                             }
@@ -216,7 +223,8 @@ public class DingTalkServiceImpl implements DingTalkService {
         }
     }
 
-    private void saveLeaveRecord(SysUser user, String dateStr, double days) {
+    @Transactional(rollbackFor = Exception.class)
+    protected void saveLeaveRecord(SysUser user, String dateStr, double days) {
         LocalDate date;
         try {
             // Try parsing as DateTime first (e.g., "2025-12-02 00:00:00")
