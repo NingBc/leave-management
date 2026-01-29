@@ -15,8 +15,8 @@
     </select>
 
     <insert id="insertJob" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark, create_time, update_time)
-        VALUES (#{jobName}, #{jobGroup}, #{invokeTarget}, #{cronExpression}, #{status}, #{remark}, #{createTime}, #{updateTime})
+        INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, last_run_time, status, remark, create_time, update_time)
+        VALUES (#{jobName}, #{jobGroup}, #{invokeTarget}, #{cronExpression}, #{lastRunTime}, #{status}, #{remark}, #{createTime}, #{updateTime})
     </insert>
 
     <update id="updateJob">
@@ -26,6 +26,7 @@
             <if test="jobGroup != null">job_group = #{jobGroup},</if>
             <if test="invokeTarget != null">invoke_target = #{invokeTarget},</if>
             <if test="cronExpression != null">cron_expression = #{cronExpression},</if>
+            <if test="lastRunTime != null">last_run_time = #{lastRunTime},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

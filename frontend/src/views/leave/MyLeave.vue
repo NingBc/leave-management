@@ -6,6 +6,14 @@
           <span>我的假期余额 ({{ currentYear }})</span>
         </div>
       </template>
+      <el-alert
+        title="数据同步通知"
+        :description="'休假额度及请假记录每隔 24 小时从钉钉同步一次，如刚在钉钉提交申请，请稍后查看。上次同步时间：' + (account?.lastSyncTime || '获取中...')"
+        type="info"
+        show-icon
+        :closable="false"
+        class="sync-alert"
+      />
       <div v-if="account">
         <!-- Desktop Description View -->
         <el-descriptions v-if="!isMobile" :column="2" border>
@@ -203,6 +211,12 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.sync-alert {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border-left: 5px solid #409eff;
 }
 
 .history-container {

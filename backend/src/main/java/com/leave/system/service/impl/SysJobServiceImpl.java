@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
@@ -181,9 +180,21 @@ public class SysJobServiceImpl implements SysJobService, InitializingBean {
             Method method = findMethod(bean.getClass(), methodName, params.length);
             method.invoke(bean, params);
 
+            // Update last run time
+            updateLastRunTime(job.getId());
+
             log.info("Job executed successfully: {}", job.getJobName());
         } catch (Exception e) {
             log.error("Failed to execute job: {}", job.getJobName(), e);
+        }
+    }
+
+    @Override
+    public void updateLastRunTime(Long id) {
+        SysJob job = jobMapper.selectJobById(id);
+        if (job != null) {
+            job.setLastRunTime(LocalDateTime.now());
+            jobMapper.updateJob(job);
         }
     }
 

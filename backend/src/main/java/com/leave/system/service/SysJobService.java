@@ -48,4 +48,9 @@ public interface SysJobService {
      * Reschedule a specific job
      */
     void rescheduleJob(Long id);
+
+    /**
+     * Update the last run time of a job to now
+     */
+    void updateLastRunTime(Long id);
 }

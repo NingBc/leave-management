@@ -22,6 +22,7 @@ public class SysJob {
 
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private LocalDateTime lastRunTime;
 
     @com.baomidou.mybatisplus.annotation.TableLogic
     private Integer deleted;
@@ -104,5 +105,13 @@ public class SysJob {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public LocalDateTime getLastRunTime() {
+        return lastRunTime;
+    }
+
+    public void setLastRunTime(LocalDateTime lastRunTime) {
+        this.lastRunTime = lastRunTime;
     }
 }

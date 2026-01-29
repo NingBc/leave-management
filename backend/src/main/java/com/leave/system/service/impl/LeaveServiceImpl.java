@@ -8,10 +8,13 @@ import com.leave.system.entity.SysUser;
 import com.leave.system.exception.BusinessException;
 import com.leave.system.mapper.LeaveAccountMapper;
 import com.leave.system.mapper.LeaveRecordMapper;
+import com.leave.system.mapper.SysJobMapper;
 import com.leave.system.mapper.SysUserMapper;
 import com.leave.system.service.LeaveService;
+import com.leave.system.entity.SysJob;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.format.DateTimeFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +35,14 @@ public class LeaveServiceImpl implements LeaveService {
     private final LeaveAccountMapper accountMapper;
     private final LeaveRecordMapper recordMapper;
     private final SysUserMapper userMapper;
+    private final SysJobMapper jobMapper;
 
     public LeaveServiceImpl(LeaveAccountMapper accountMapper, LeaveRecordMapper recordMapper,
-            SysUserMapper userMapper) {
+            SysUserMapper userMapper, SysJobMapper jobMapper) {
         this.accountMapper = accountMapper;
         this.recordMapper = recordMapper;
         this.userMapper = userMapper;
+        this.jobMapper = jobMapper;
     }
 
     /**
@@ -679,6 +684,23 @@ public class LeaveServiceImpl implements LeaveService {
         dto.setEmployeeNumber(user.getEmployeeNumber());
         dto.setEntryDate(user.getEntryDate());
         dto.setYear(year);
+
+        // Fetch last sync time from DingTalk sync job
+        try {
+            List<SysJob> jobs = jobMapper.selectAllJobs();
+            Optional<SysJob> syncJob = jobs.stream()
+                    .filter(j -> j.getInvokeTarget().contains("syncLeaveData"))
+                    .findFirst();
+            if (syncJob.isPresent() && syncJob.get().getLastRunTime() != null) {
+                dto.setLastSyncTime(syncJob.get().getLastRunTime()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            } else {
+                dto.setLastSyncTime("暂无同步记录");
+            }
+        } catch (Exception e) {
+            log.error("Failed to fetch last sync time", e);
+            dto.setLastSyncTime("获取失败");
+        }
 
         // Only query existing account, DO NOT auto-initialize
         // Initialization should only happen through scheduled tasks or manual execution

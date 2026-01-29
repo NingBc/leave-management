@@ -8,12 +8,22 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@lombok.EqualsAndHashCode(callSuper = true)
 public class LeaveAccountDTO extends LeaveAccount {
     private String username;
     private String realName;
     private String employeeNumber;
     private LocalDate entryDate;
     private List<LeaveRecord> records;
+    private String lastSyncTime;
+
+    public String getLastSyncTime() {
+        return lastSyncTime;
+    }
+
+    public void setLastSyncTime(String lastSyncTime) {
+        this.lastSyncTime = lastSyncTime;
+    }
 
     public String getUsername() {
         return username;
