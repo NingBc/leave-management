@@ -52,6 +52,7 @@ public class AuthController {
 
         SysUser user = userService.getByUsername(request.getUsername());
 
+
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         if (user != null) {
