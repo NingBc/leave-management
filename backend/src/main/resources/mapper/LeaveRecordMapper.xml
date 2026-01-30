@@ -6,6 +6,7 @@
         SELECT * FROM leave_record 
         WHERE user_id = #{userId} 
         AND YEAR(start_date) = #{year}
+        AND deleted = 0
     </select>
 
     <select id="selectRecordsForCarryOver" resultType="com.leave.system.entity.LeaveRecord">
@@ -20,6 +21,7 @@
         WHERE user_id = #{userId} 
         AND type = 'CARRY_OVER'
         AND start_date = #{date}
+        AND deleted = 0
     </select>
 
     <select id="countDuplicateRecord" resultType="long">
@@ -28,12 +30,14 @@
         AND start_date = #{startDate}
         AND type = #{type}
         AND days = #{days}
+        AND deleted = 0
     </select>
 
     <select id="selectRecordsByYear" resultType="com.leave.system.entity.LeaveRecord">
         SELECT * FROM leave_record
         WHERE user_id = #{userId}
         AND YEAR(start_date) = #{year}
+        AND deleted = 0
         ORDER BY start_date DESC
     </select>
     
@@ -42,6 +46,7 @@
         WHERE user_id = #{userId}
         AND expiry_date &gt;= DATE(NOW())
         AND type IN ('CARRY_OVER', 'ADJUSTMENT_ADD')
+        AND deleted = 0
         ORDER BY expiry_date ASC
     </select>
     
@@ -50,6 +55,7 @@
         WHERE user_id = #{userId}
         AND type IN ('ANNUAL', 'ADJUSTMENT_DEDUCT', 'EXPIRED')
         AND expiry_date IS NOT NULL
+        AND deleted = 0
     </select>
     
     <select id="selectFloatingRecords" resultType="com.leave.system.entity.LeaveRecord">
@@ -61,7 +67,7 @@
     </select>
     
     <select id="findAllRecords" resultType="com.leave.system.entity.LeaveRecord">
-        SELECT * FROM leave_record ORDER BY start_date DESC
+        SELECT * FROM leave_record WHERE deleted = 0 ORDER BY start_date DESC
     </select>
     
     <select id="selectHistory" resultType="com.leave.system.entity.LeaveRecord">
@@ -70,6 +76,7 @@
          <if test="year != null">
             AND YEAR(start_date) = #{year}
          </if>
+         AND deleted = 0
          ORDER BY start_date DESC
     </select>
 
@@ -114,6 +121,15 @@
         AND start_date = #{startDate}
         AND type = 'ANNUAL'
         AND days = #{days}
+        AND deleted = 0
+    </select>
+
+    <select id="sumAnnualLeaveUsage" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(days), 0) FROM leave_record
+        WHERE user_id = #{userId}
+        AND start_date = #{date}
+        AND type = 'ANNUAL'
+        AND deleted = 0
     </select>
 
     <insert id="insertRecord" useGeneratedKeys="true" keyProperty="id">

@@ -218,29 +218,21 @@ public class LeaveServiceImpl implements LeaveService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LeaveAccount refreshAccount(SysUser user, Integer year) {
-        Long userId = user.getId();
-
-        // Calculate seniority as of today
+        // 1. Calculate seniority as of today (Previous Logic)
         int seniority = 0;
         if (user.getFirstWorkDate() != null) {
             java.time.Period period = java.time.Period.between(user.getFirstWorkDate(), LocalDate.now());
             seniority = period.getYears();
         }
 
-        // Company Policy: <10 yr: 5, 10-20 yr: 10, >=20 yr: 15
-        BigDecimal standardQuota;
-        if (seniority < 10) {
-            standardQuota = new BigDecimal("5.0");
-        } else if (seniority < 20) {
-            standardQuota = new BigDecimal("10.0");
-        } else {
-            standardQuota = new BigDecimal("15.0");
-        }
+        // 2. Company Policy: <10 yr: 5, 10-20 yr: 10, >=20 yr: 15
+        BigDecimal standardQuota = getQuotaBySeniority(seniority);
 
-        // Calculate Days Employed in this year
+        // 3. Calculate Days Employed in this year
         int daysEmployed = calculateDaysEmployed(user.getEntryDate(), year);
 
-        // Calculate Actual Quota based on days employed
+        // 4. Calculate Actual Quota based on days employed
+        // Formula: standardQuota * (daysEmployed / daysInYear)
         BigDecimal daysInYear = new BigDecimal(LocalDate.of(year, 12, 31).getDayOfYear());
         BigDecimal rawQuota = standardQuota
                 .multiply(new BigDecimal(daysEmployed))
@@ -251,6 +243,25 @@ public class LeaveServiceImpl implements LeaveService {
                 .setScale(0, RoundingMode.FLOOR)
                 .divide(new BigDecimal("2"), 1, RoundingMode.FLOOR);
 
+        return updateOrCreateAccount(user, year, standardQuota, actualQuota, daysEmployed, seniority);
+    }
+
+    private BigDecimal getQuotaBySeniority(int seniority) {
+        if (seniority < 10) {
+            return new BigDecimal("5.0");
+        } else if (seniority < 20) {
+            return new BigDecimal("10.0");
+        } else {
+            return new BigDecimal("15.0");
+        }
+    }
+
+    /**
+     * Extracted logic for updating/creating the account record
+     */
+    private LeaveAccount updateOrCreateAccount(SysUser user, Integer year, BigDecimal standardQuota,
+            BigDecimal actualQuota, int daysEmployed, int seniority) {
+        Long userId = user.getId();
         // Calculate carry over from last year (excluding expired balances)
         BigDecimal carryOverBalance = BigDecimal.ZERO;
         LeaveAccount lastYearAccount = accountMapper.selectLastYearAccount(userId, year);
@@ -259,20 +270,16 @@ public class LeaveServiceImpl implements LeaveService {
             // Use new calculation method that considers expiry dates
             carryOverBalance = calculateCarryOverBalance(userId, year);
 
-            // Create or Update CARRY_OVER record (even if negative)
+            // Create or Update CARRY_OVER record
             LocalDate startOfYear = LocalDate.of(year, 1, 1);
             LeaveRecord carryRecord = recordMapper.selectCarryOverRecord(userId, startOfYear);
-
-            // Carry-over expiry date: end of current year (2-year validity)
             LocalDate expiryDate = LocalDate.of(year, 12, 31);
 
             if (carryRecord != null) {
-                // Update existing record
                 carryRecord.setDays(carryOverBalance);
                 carryRecord.setRemarks(String.format("上年结余年假结转 (过期: %s)", expiryDate));
                 carryRecord.setExpiryDate(expiryDate);
                 recordMapper.updateRecord(carryRecord);
-                log.info("✅ Updated carry-over record: {} days (expires {})", carryOverBalance, expiryDate);
             } else {
                 carryRecord = new LeaveRecord();
                 carryRecord.setUserId(userId);
@@ -284,15 +291,11 @@ public class LeaveServiceImpl implements LeaveService {
                 carryRecord.setExpiryDate(expiryDate);
                 carryRecord.setCreateTime(LocalDateTime.now());
                 recordMapper.insertRecord(carryRecord);
-                log.info("✅ Created carry-over record: {} days (expires {})", carryOverBalance, expiryDate);
             }
         }
 
-        // Check if account exists (INCLUDING deleted ones)
         LeaveAccount account = accountMapper.selectAccountByUserIdAndYearIncludeDeleted(userId, year);
-
         if (account == null) {
-            // Create new account
             account = new LeaveAccount();
             account.setUserId(userId);
             account.setYear(year);
@@ -302,51 +305,21 @@ public class LeaveServiceImpl implements LeaveService {
             account.setLastYearBalance(carryOverBalance);
             account.setCurrentYearUsed(BigDecimal.ZERO);
             account.setDaysEmployed(daysEmployed);
-            account.setDeleted(0); // Ensure active
+            account.setDeleted(0);
             accountMapper.insertAccount(account);
-            log.info("Created new account for user {} year {}", userId, year);
         } else {
-            // Update existing account (and restore if deleted)
             if (account.getDeleted() != null && account.getDeleted() == 1) {
-                log.info("Restoring logically deleted account for user {} year {}", userId, year);
                 account.setDeleted(0);
             }
             account.setSocialSeniority(seniority);
             account.setStandardQuota(standardQuota);
             account.setActualQuota(actualQuota);
             account.setDaysEmployed(daysEmployed);
-
-            // Only update lastYearBalance if we actually found a last year account to
-            // calculate from.
-            // This prevents overwriting manually entered balances with 0 when no historical
-            // data exists.
             if (lastYearAccount != null) {
                 account.setLastYearBalance(carryOverBalance);
-                log.info("Updating existing account for user {} year {}: lastYearBalance updated to {}",
-                        userId, year, carryOverBalance);
-            } else {
-                log.info("Updating existing account for user {} year {}: kept existing lastYearBalance {}",
-                        userId, year, account.getLastYearBalance());
             }
-
-            // If we are restoring, we might need to be careful about carryOver overwriting?
-            // Current logic does not update lastYearBalance on update path, only on
-            // creation.
-            // But if it was deleted, maybe we should re-eval carryOver?
-            // For now, let's keep stick to original logic: only set carryOver on creation.
-            // Wait, if it was deleted, it's effectively "re-created".
-            // If I restore it, should I reset carryOver?
-            // Let's assume restoration implies "it's back", and we update Quotas.
-            // Use existing lastYearBalance?
-            // If the user was deleted/resigned then re-hired?
-            // If re-hired, maybe we should treat as new? But unique key constraints says
-            // NO.
-            // So we MUST reuse this row.
-
             accountMapper.updateAccount(account);
-            log.info("Updated account for user {} year {}", userId, year);
         }
-
         return account;
     }
 
@@ -426,7 +399,7 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void applyLeave(Long userId, LocalDate startDate, LocalDate endDate, BigDecimal daysRequested) {
         int year = startDate.getYear();
 

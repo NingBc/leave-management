@@ -5,7 +5,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://10.48.0.13:3306/leave_system?useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://10.48.0.13:3306/leave_system_test?useLegacyDatetimeCode=false&serverTimezone=UTC
     username: insp_dev
     password: insp_dev@123
 
@@ -47,24 +47,24 @@ logging:
       max-history: 30
       total-size-cap: 1GB
 
-#dingtalk:
-#  app-key: dingvtpnsylpixmtxrdo
-#  app-secret: CvgoWAu6h1PPsK5JeaARrBv06Z9vNGlusLe-cUQnq-YxIUQ_flPfcUB_Mo220Pvh
-#  sync-lookback-days: 7
+dingtalk:
+  app-key: dingvtpnsylpixmtxrdo
+  app-secret: CvgoWAu6h1PPsK5JeaARrBv06Z9vNGlusLe-cUQnq-YxIUQ_flPfcUB_Mo220Pvh
+  sync-lookback-days: 7
 
-#dingtalk-app:
-#  corp-id: ding7087a447c2e569cbf5bf40eda33b7ba0
-#  agent-id: 4143455094
-#  app-key: dinggka7jwjfffpjnyhe
-#  app-secret: egMtT-6mHT_paWW9lXmOfogDP_xDrXk2m9TgKrMpwaKRl2PvMDZko1TZSRPnR6xd
+dingtalk-app:
+  corp-id: ding7087a447c2e569cbf5bf40eda33b7ba0
+  agent-id: 4143455094
+  app-key: dinggka7jwjfffpjnyhe
+  app-secret: egMtT-6mHT_paWW9lXmOfogDP_xDrXk2m9TgKrMpwaKRl2PvMDZko1TZSRPnR6xd
 
 #车神
-dingtalk:
-  app-key: dingh45ic48sony0cjsr
-  app-secret: Ojz8zc5Y3YlcI9Z8KK-Ic_1oQLepNYFOZUF9Y-eY-rzPuulcfLXntW1uDeAZDH-n
-  sync-lookback-days: 27
-dingtalk-app:
-  corp-id: dingaf5da3fc8563c9d2f2c783f7214b6d69
-  agent-id: 4223836288
-  app-key: dinga8er3zdqdywpip30
-  app-secret: YfcOszLwYa28dQG2dmFvyni10GCQopyc9el7EqB6PSiQ6oHFUoxG9cKcSUpZm2gA
+#dingtalk:
+#  app-key: dingh45ic48sony0cjsr
+#  app-secret: Ojz8zc5Y3YlcI9Z8KK-Ic_1oQLepNYFOZUF9Y-eY-rzPuulcfLXntW1uDeAZDH-n
+#  sync-lookback-days: 27
+#dingtalk-app:
+#  corp-id: dingaf5da3fc8563c9d2f2c783f7214b6d69
+#  agent-id: 4223836288
+#  app-key: dinga8er3zdqdywpip30
+#  app-secret: YfcOszLwYa28dQG2dmFvyni10GCQopyc9el7EqB6PSiQ6oHFUoxG9cKcSUpZm2gA

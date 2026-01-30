@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS leave_record (
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     deleted TINYINT DEFAULT 0,
     INDEX idx_user_year (user_id, start_date),
-    INDEX idx_expiry (expiry_date)
+    INDEX idx_expiry (expiry_date),
 ) COMMENT 'Leave Record Table';
 
 -- Initial Data

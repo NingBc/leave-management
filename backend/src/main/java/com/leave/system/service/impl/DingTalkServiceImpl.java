@@ -81,12 +81,19 @@ public class DingTalkServiceImpl implements DingTalkService {
             }
             log.info("Found {} users to sync.", users.size());
 
-            // Use parallel stream to speed up sync while respecting rate limits (default
-            // ForkJoinPool is usually sufficient)
-            users.parallelStream().forEach(user -> {
+            // Sequential sync with a small delay to respect DingTalk QPS limits (max 20/s)
+            for (SysUser user : users) {
                 log.info("Fetching data for user: {} (DingTalk ID: {})", user.getUsername(), user.getDingtalkUserId());
                 fetchForSingleUser(accessToken, fromDateStr, toDateStr, user);
-            });
+
+                try {
+                    // 50ms interval ensures we don't exceed 20 QPS (1000ms / 50ms = 20)
+                    Thread.sleep(60);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
 
             log.info("DingTalk leave data sync completed.");
         } catch (Exception e) {
@@ -173,7 +180,13 @@ public class DingTalkServiceImpl implements DingTalkService {
                 return;
             }
 
-            processResponse(rsp.getBody(), user);
+            String body = rsp.getBody();
+            if (body == null || body.trim().isEmpty()) {
+                log.warn("Empty response body for user: {}", user.getUsername());
+                return;
+            }
+
+            processResponse(body, user);
         } catch (Exception e) {
             log.error("Error fetching for user " + user.getUsername(), e);
         }
@@ -234,24 +247,38 @@ public class DingTalkServiceImpl implements DingTalkService {
             date = LocalDate.parse(dateStr);
         }
 
-        BigDecimal daysBd = BigDecimal.valueOf(days);
+        BigDecimal reportDays = BigDecimal.valueOf(days);
 
-        // Check if record exists to avoid duplicates
-        Long count = leaveRecordMapper.countAnnualLeaveUsage(user.getId(), date, daysBd.negate());
+        // Delta Sync Logic: Compare total daily duration to handle fragmented or
+        // duplicate-looking records
+        // 1. Get sum of existing annual leave records for this user on this day (stored
+        // as negative)
+        BigDecimal localSum = leaveRecordMapper.sumAnnualLeaveUsage(user.getId(), date);
+        BigDecimal localSumAbs = localSum.abs();
 
-        if (count == 0) {
+        // 2. Calculate the difference (Delta)
+        // e.g., DingTalk Report = 1.0, Local = 0.5 -> diff = 0.5 (need to apply more)
+        // e.g., DingTalk Report = 1.0, Local = 1.0 -> diff = 0 (perfect match, skip)
+        BigDecimal diff = reportDays.subtract(localSumAbs);
+
+        if (diff.compareTo(BigDecimal.ZERO) > 0) {
+            log.info("📊 Delta detected for user {} on {}: Report={}, Local={}, Applying diff={}",
+                    user.getUsername(), date, reportDays, localSumAbs, diff);
             try {
-                // ✅ 使用 applyLeave 方法，自动处理优先级和过期日期
-                // 传入实际天数（BigDecimal），解决小数天数为1的问题
-                leaveService.applyLeave(user.getId(), date, date, daysBd);
-                log.info("✅ Applied leave via applyLeave for user {}: {} - {} days",
-                        user.getUsername(), date, days);
+                // Apply the difference via priority deduction logic (automatically sets
+                // expiry_date)
+                leaveService.applyLeave(user.getId(), date, date, diff);
+                log.info("✅ Applied delta for user {}: {} - {} days",
+                        user.getUsername(), date, diff);
             } catch (Exception e) {
-                log.error("❌ Failed to apply leave for user {}: {}", user.getUsername(), e.getMessage(), e);
+                log.error("❌ Failed to apply delta for user {}: {}", user.getUsername(), e.getMessage(), e);
             }
+        } else if (diff.compareTo(BigDecimal.ZERO) < 0) {
+            log.warn(
+                    "⚠️ Local leave duration ({}) exceeds DingTalk report ({}) for user {} on {}. Manual check recommended.",
+                    localSumAbs, reportDays, user.getUsername(), date);
         } else {
-            log.info("⏭️ Skipping duplicate record for user {}: {} - {} days",
-                    user.getUsername(), date, days);
+            log.info("⏭️ Data consistent for user {} on {}: {} days", user.getUsername(), date, reportDays);
         }
     }
 }

@@ -15,7 +15,7 @@
     </select>
 
     <delete id="deleteByUserId">
-        DELETE FROM leave_account WHERE user_id = #{userId}
+        UPDATE leave_account SET deleted = 1 WHERE user_id = #{userId}
     </delete>
 
     <select id="selectDistinctYears" resultType="java.lang.Integer">

@@ -5,6 +5,7 @@ import com.leave.system.entity.LeaveRecord;
 import com.leave.system.entity.SysUser;
 import com.leave.system.mapper.LeaveAccountMapper;
 import com.leave.system.mapper.LeaveRecordMapper;
+import com.leave.system.service.DingTalkService;
 import com.leave.system.service.LeaveService;
 import com.leave.system.service.UserService;
 import org.slf4j.Logger;
@@ -29,15 +30,18 @@ public class ScheduledTasks {
     private final LeaveAccountMapper accountMapper;
     private final LeaveService leaveService;
     private final UserService userService;
+    private final DingTalkService dingTalkService;
 
     public ScheduledTasks(LeaveRecordMapper recordMapper,
             LeaveAccountMapper accountMapper,
             LeaveService leaveService,
-            UserService userService) {
+            UserService userService,
+            DingTalkService dingTalkService) {
         this.recordMapper = recordMapper;
         this.accountMapper = accountMapper;
         this.leaveService = leaveService;
         this.userService = userService;
+        this.dingTalkService = dingTalkService;
     }
 
     /**
@@ -47,6 +51,13 @@ public class ScheduledTasks {
      */
     @Transactional(rollbackFor = Exception.class)
     public void cleanupExpiredLeaveBalances() {
+        log.info("🚀 Triggering DingTalk sync before expiry cleanup...");
+        try {
+            dingTalkService.syncLeaveData();
+        } catch (Exception e) {
+            log.error("❌ DingTalk sync failed during scheduled cleanup, proceeding with cleanup anyway", e);
+        }
+
         int lastYear = LocalDate.now().getYear() - 1;
         performCleanupForYear(lastYear);
     }
@@ -58,6 +69,13 @@ public class ScheduledTasks {
      */
     @Transactional(rollbackFor = Exception.class)
     public void cleanupExpiredLeaveBalances(String year) {
+        log.info("🚀 Triggering DingTalk sync before manual expiry cleanup...");
+        try {
+            dingTalkService.syncLeaveData();
+        } catch (Exception e) {
+            log.error("❌ DingTalk sync failed during manual cleanup, proceeding with cleanup anyway", e);
+        }
+
         try {
             int targetYear = Integer.parseInt(year);
             performCleanupForYear(targetYear);

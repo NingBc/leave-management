@@ -31,7 +31,11 @@
     </select>
 
     <select id="selectUsersWithDingtalkId" resultType="SysUser">
-        SELECT * FROM sys_user WHERE dingtalk_userid IS NOT NULL AND dingtalk_userid != '' AND deleted = 0
+        SELECT * FROM sys_user 
+        WHERE dingtalk_userid IS NOT NULL 
+        AND dingtalk_userid != '' 
+        AND (status != 'RESIGNED' OR status IS NULL)
+        AND deleted = 0
     </select>
 
     <select id="selectUserById" resultType="SysUser">
