@@ -60,6 +60,9 @@ public class ScheduledTasks {
 
         int lastYear = LocalDate.now().getYear() - 1;
         performCleanupForYear(lastYear);
+
+        log.info("🔄 Re-initializing all accounts for the current year to refresh carry-over balances...");
+        initAllAccounts();
     }
 
     /**
@@ -79,6 +82,9 @@ public class ScheduledTasks {
         try {
             int targetYear = Integer.parseInt(year);
             performCleanupForYear(targetYear);
+
+            log.info("🔄 Re-initializing all accounts for year {} to refresh carry-over balances...", targetYear + 1);
+            initAllAccounts(String.valueOf(targetYear + 1));
         } catch (NumberFormatException e) {
             log.error("❌ Invalid year parameter for manual cleanup: {}", year);
         }
@@ -127,7 +133,7 @@ public class ScheduledTasks {
 
                 BigDecimal extraCredits = userRecords.stream()
                         .filter(r -> !"CARRY_OVER".equals(r.getType()))
-                        .filter(r -> r.getCreateTime().isAfter(snapshotTime))
+                        .filter(r -> !r.getCreateTime().isBefore(snapshotTime))
                         .map(LeaveRecord::getDays)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
 

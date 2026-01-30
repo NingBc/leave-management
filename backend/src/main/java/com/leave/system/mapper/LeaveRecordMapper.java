@@ -41,7 +41,8 @@ public interface LeaveRecordMapper extends BaseMapper<LeaveRecord> {
 
         List<LeaveRecord> selectRecordsByYear(@Param("userId") Long userId, @Param("year") Integer year);
 
-        List<LeaveRecord> selectAvailableBalances(@Param("userId") Long userId);
+        List<LeaveRecord> selectAvailableBalances(@Param("userId") Long userId,
+                        @Param("anchorDate") LocalDate anchorDate);
 
         List<LeaveRecord> selectUsageRecords(@Param("userId") Long userId);
 

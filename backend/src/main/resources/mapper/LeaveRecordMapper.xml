@@ -44,7 +44,7 @@
     <select id="selectAvailableBalances" resultType="com.leave.system.entity.LeaveRecord">
         SELECT * FROM leave_record
         WHERE user_id = #{userId}
-        AND expiry_date &gt;= DATE(NOW())
+        AND expiry_date &gt;= #{anchorDate}
         AND type IN ('CARRY_OVER', 'ADJUSTMENT_ADD')
         AND deleted = 0
         ORDER BY expiry_date ASC
@@ -95,7 +95,7 @@
         AND expiry_date = #{expiryDate}
         AND deleted = 0
         <if test="anchorTime != null">
-            AND create_time &gt; #{anchorTime}
+            AND create_time &gt;= #{anchorTime}
         </if>
     </select>
 

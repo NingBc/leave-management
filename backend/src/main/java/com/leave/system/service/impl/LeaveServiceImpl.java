@@ -446,8 +446,9 @@ public class LeaveServiceImpl implements LeaveService {
         }
 
         // Get current balances by expiry date (ordered by expiry date)
-        // Broadened query: include non-expired balances regardless of start_date year
-        List<LeaveRecord> availableBalances = recordMapper.selectAvailableBalances(userId);
+        // Pass startDate as anchorDate to ensure we can consume buckets that were valid
+        // at the time the leave started
+        List<LeaveRecord> availableBalances = recordMapper.selectAvailableBalances(userId, startDate);
 
         // Calculate available balance from each source
         Map<LocalDate, BigDecimal> balanceByExpiry = new HashMap<>();
