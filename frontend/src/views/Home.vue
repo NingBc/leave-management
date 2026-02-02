@@ -5,6 +5,9 @@
         <div class="greeting">
           <h1>你好，{{ userInfo.realName || userStore.username || '用户' }}！</h1>
         </div>
+        <div v-if="dailyQuote" class="daily-quote">
+          🍵 {{ dailyQuote }}
+        </div>
       </div>
     </div>
 
@@ -75,6 +78,7 @@ import { useUserStore } from '../stores/user'
 const router = useRouter()
 const userStore = useUserStore()
 const userInfo = ref({})
+const dailyQuote = ref('')
 const userMenus = ref([])
 const screenWidth = ref(window.innerWidth)
 
@@ -146,6 +150,23 @@ const loadUserInfo = async () => {
   }
 }
 
+const getDailyQuote = async () => {
+  try {
+    const userId = userStore.userId
+    const apiUrl = userId == 6
+      ? 'https://api.oick.cn/api/dog?apikey=4fb8e9f4b65be468e0cdbe226701a370'
+      : 'https://api.oick.cn/api/dutang?apikey=4ca862840fce3181c75d8d029f0876ec'
+    
+    const response = await fetch(apiUrl)
+    if (response.ok) {
+      const data = await response.json()
+      dailyQuote.value = data
+    }
+  } catch (e) {
+    console.error('Failed to fetch daily quote:', e)
+  }
+}
+
 const loadUserMenus = async () => {
   // 直接从Store获取菜单数据，不再发起请求
   if (userStore.userMenus && userStore.userMenus.length > 0) {
@@ -170,6 +191,7 @@ const loadUserMenus = async () => {
 onMounted(() => {
   loadUserInfo()
   loadUserMenus()
+  getDailyQuote()
   window.addEventListener('resize', handleResize)
 })
 
@@ -225,6 +247,17 @@ onUnmounted(() => {
   margin: 0;
   font-size: 16px;
   opacity: 0.9;
+}
+
+.daily-quote {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.95;
 }
 
 .stats-section {
