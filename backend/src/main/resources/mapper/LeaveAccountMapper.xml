@@ -27,8 +27,8 @@
     </select>
 
     <insert id="insertAccount" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO leave_account (user_id, year, social_seniority, standard_quota, days_employed, actual_quota, last_year_balance, current_year_used, deleted)
-        VALUES (#{userId}, #{year}, #{socialSeniority}, #{standardQuota}, #{daysEmployed}, #{actualQuota}, #{lastYearBalance}, #{currentYearUsed}, #{deleted})
+        INSERT INTO leave_account (user_id, year, social_seniority, standard_quota, days_employed, actual_quota, last_year_balance, current_year_used, deleted, last_synced_balance)
+        VALUES (#{userId}, #{year}, #{socialSeniority}, #{standardQuota}, #{daysEmployed}, #{actualQuota}, #{lastYearBalance}, #{currentYearUsed}, #{deleted}, #{lastSyncedBalance})
     </insert>
 
     <update id="updateAccount">
@@ -43,6 +43,7 @@
             <if test="lastYearBalance != null">last_year_balance = #{lastYearBalance},</if>
             <if test="currentYearUsed != null">current_year_used = #{currentYearUsed},</if>
             <if test="deleted != null">deleted = #{deleted},</if>
+            <if test="lastSyncedBalance != null">last_synced_balance = #{lastSyncedBalance},</if>
         </set>
         WHERE id = #{id}
     </update>

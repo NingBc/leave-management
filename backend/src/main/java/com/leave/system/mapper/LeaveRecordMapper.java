@@ -32,6 +32,8 @@ public interface LeaveRecordMapper extends BaseMapper<LeaveRecord> {
 
         BigDecimal sumAnnualLeaveUsage(@Param("userId") Long userId, @Param("date") LocalDate date);
 
+        List<LeaveRecord> selectAnnualRecordsByDate(@Param("userId") Long userId, @Param("date") LocalDate date);
+
         LeaveRecord selectCarryOverRecord(@Param("userId") Long userId, @Param("date") LocalDate date);
 
         long countDuplicateRecord(@Param("userId") Long userId,

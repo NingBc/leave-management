@@ -22,6 +22,7 @@ public class LeaveAccount {
     private BigDecimal currentYearUsed;
     @com.baomidou.mybatisplus.annotation.TableLogic
     private Integer deleted;
+    private BigDecimal lastSyncedBalance;
 
     @TableField(insertStrategy = com.baomidou.mybatisplus.annotation.FieldStrategy.NEVER, updateStrategy = com.baomidou.mybatisplus.annotation.FieldStrategy.NEVER)
     private BigDecimal totalBalance; // 年假余额
@@ -108,5 +109,13 @@ public class LeaveAccount {
 
     public void setTotalBalance(BigDecimal totalBalance) {
         this.totalBalance = totalBalance;
+    }
+
+    public BigDecimal getLastSyncedBalance() {
+        return lastSyncedBalance;
+    }
+
+    public void setLastSyncedBalance(BigDecimal lastSyncedBalance) {
+        this.lastSyncedBalance = lastSyncedBalance;
     }
 }

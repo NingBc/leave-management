@@ -6,10 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONObject;
 
 import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.request.OapiAttendanceGetleavetimebynamesRequest;
-import com.dingtalk.api.request.OapiGettokenRequest;
-import com.dingtalk.api.response.OapiAttendanceGetleavetimebynamesResponse;
-import com.dingtalk.api.response.OapiGettokenResponse;
+import com.dingtalk.api.request.*;
+import com.dingtalk.api.response.*;
+import com.leave.system.entity.LeaveRecord;
 import com.leave.system.entity.SysUser;
 import com.leave.system.mapper.LeaveRecordMapper;
 import com.leave.system.mapper.SysUserMapper;
@@ -17,6 +16,7 @@ import com.leave.system.service.DingTalkService;
 import com.leave.system.config.DingTalkConfig;
 import com.leave.system.config.DingTalkAppConfig;
 import com.leave.system.service.LeaveService;
+import com.leave.system.exception.BusinessException;
 import com.taobao.api.ApiException;
 import com.taobao.api.internal.util.StringUtils;
 import org.slf4j.Logger;
@@ -30,7 +30,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Collections;
+import java.util.Set;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 
 @Service("dingTalkService")
 public class DingTalkServiceImpl implements DingTalkService {
@@ -55,6 +63,49 @@ public class DingTalkServiceImpl implements DingTalkService {
     @Autowired
     @Lazy
     private DingTalkServiceImpl self;
+
+    // NEW: Serialized Sync Queue for multiple users
+    private final LinkedBlockingQueue<Long> syncQueue = new LinkedBlockingQueue<>();
+    private final Set<Long> pendingSyncUsers = Collections.synchronizedSet(new java.util.HashSet<>());
+    private ExecutorService syncExecutor;
+
+    @PostConstruct
+    public void init() {
+        syncExecutor = Executors.newSingleThreadExecutor(r -> {
+            Thread t = new Thread(r, "DingTalk-Sync-Worker");
+            t.setDaemon(true);
+            return t;
+        });
+        syncExecutor.submit(this::processSyncQueue);
+        log.info("DingTalk Sync Worker started.");
+    }
+
+    @PreDestroy
+    public void shutdown() {
+        if (syncExecutor != null) {
+            syncExecutor.shutdownNow();
+        }
+    }
+
+    private void processSyncQueue() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                Long userId = syncQueue.take();
+                pendingSyncUsers.remove(userId);
+
+                log.info("Processing queued sync for user ID: {}", userId);
+                self.doSyncToDingTalk(userId);
+
+                // Controlled delay: 500ms between any two sync operations to avoid burst limits
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (Exception e) {
+                log.error("Error in DingTalk sync worker", e);
+            }
+        }
+    }
 
     @Override
     public void syncLeaveData() {
@@ -212,7 +263,7 @@ public class DingTalkServiceImpl implements DingTalkService {
             if (columnVo != null && "年假".equals(columnVo.getString("name"))) {
                 JSONArray columnVals = columnItem.getJSONArray("columnvals");
                 if (columnVals != null) {
-                    log.info("Found {} daily entries for Annual Leave", columnVals.size());
+                    log.info("Found {} daily entries for Custom Annual Leave", columnVals.size());
                     for (int j = 0; j < columnVals.size(); j++) {
                         JSONObject dailyData = columnVals.getJSONObject(j);
                         String dateStr = dailyData.getString("date");
@@ -234,6 +285,148 @@ public class DingTalkServiceImpl implements DingTalkService {
                 }
             }
         }
+    }
+
+    @Override
+    public void syncToDingTalk() {
+        log.info("Starting Full Sync to DingTalk...");
+        List<SysUser> users = userMapper.selectUsersWithDingtalkId();
+        for (SysUser user : users) {
+            try {
+                self.syncToDingTalk(user.getId());
+                Thread.sleep(100); // 10 QPS
+            } catch (Exception e) {
+                log.error("Failed to sync user {} to DingTalk: {}", user.getUsername(), e.getMessage());
+            }
+        }
+        log.info("Full Sync to DingTalk completed.");
+    }
+
+    @Override
+    public void syncToDingTalk(Long userId) {
+        if (pendingSyncUsers.add(userId)) {
+            if (syncQueue.offer(userId)) {
+                log.info("Sync request for user {} added to queue. (Queue size: {})", userId, syncQueue.size());
+            } else {
+                pendingSyncUsers.remove(userId);
+                log.error("Failed to add sync request for user {} to queue (queue full).", userId);
+            }
+        } else {
+            log.info("Sync request for user {} is already pending in queue, skipping duplicate.", userId);
+        }
+    }
+
+    // Actual sync logic moved from syncToDingTalk(userId) to
+    // doSyncToDingTalk(userId)
+    @Transactional(rollbackFor = Exception.class)
+    public void doSyncToDingTalk(Long userId) {
+        SysUser user = userMapper.selectUserById(userId);
+        if (user == null || StringUtils.isEmpty(user.getDingtalkUserId())
+                || user.getDingtalkUserId().trim().isEmpty()) {
+            log.warn("User {} has no DingTalk ID, skipping sync.", userId);
+            return;
+        }
+
+        String leaveCode = dingTalkConfig.getAnnualLeaveCode();
+        if (StringUtils.isEmpty(leaveCode)) {
+            log.warn("DingTalk annualLeaveCode is not configured, skipping sync.");
+            return;
+        }
+
+        log.info("Executing serialized sync for user {} to DingTalk (Code: {})", user.getRealName(), leaveCode);
+
+        try {
+            String accessToken = getAccessToken();
+            int currentYear = LocalDate.now().getYear();
+            String opUserId = getOpUserId();
+
+            // 2. Get Local Balance and Account
+            com.leave.system.entity.LeaveAccount account = leaveService.getAccount(userId, currentYear);
+            BigDecimal localBalance = account.getTotalBalance();
+            log.info("Local balance for user {}: {} days", user.getRealName(), localBalance);
+
+            // 3. Balance Change Check
+            if (account.getLastSyncedBalance() != null && account.getLastSyncedBalance().compareTo(localBalance) == 0) {
+                log.info("Skipping sync for user {}: Balance has not changed since last sync ({})",
+                        user.getRealName(), localBalance);
+                return;
+            }
+
+            // Execute actual API call
+            DefaultDingTalkClient updateClient = new DefaultDingTalkClient(
+                    "https://oapi.dingtalk.com/topapi/attendance/vacation/quota/init");
+            OapiAttendanceVacationQuotaInitRequest initReq = new OapiAttendanceVacationQuotaInitRequest();
+            initReq.setOpUserid(opUserId);
+
+            OapiAttendanceVacationQuotaInitRequest.LeaveQuotas quota = new OapiAttendanceVacationQuotaInitRequest.LeaveQuotas();
+            quota.setUserid(user.getDingtalkUserId());
+            quota.setLeaveCode(leaveCode);
+            quota.setQuotaNumPerDay(localBalance.multiply(new BigDecimal(100)).longValue());
+            quota.setReason("Synchronized from Leave Management System (Init)");
+            quota.setQuotaCycle(String.valueOf(currentYear));
+            quota.setQuotaNumPerHour(0L);
+
+            long startTimeMillis = LocalDate.of(currentYear, 1, 1).atStartOfDay(java.time.ZoneId.systemDefault())
+                    .toInstant().toEpochMilli();
+            long endTimeMillis = LocalDate.of(currentYear + 1, 12, 31).atTime(23, 59, 59)
+                    .atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+            quota.setStartTime(startTimeMillis);
+            quota.setEndTime(endTimeMillis);
+
+            List<OapiAttendanceVacationQuotaInitRequest.LeaveQuotas> quotas = new ArrayList<>();
+            quotas.add(quota);
+            initReq.setLeaveQuotas(quotas);
+
+            log.info("Sending DingTalk INIT Request for user {}: {}", user.getRealName(),
+                    JSON.toJSONString(initReq.getTextParams()));
+
+            OapiAttendanceVacationQuotaInitResponse updateRsp = updateClient.execute(initReq, accessToken);
+            if (updateRsp.getErrcode() == 0) {
+                log.info("Successfully initialized DingTalk balance for user {}.", user.getRealName());
+                // Update last synced info
+                account.setLastSyncedBalance(localBalance);
+                leaveService.updateAccount(account);
+            } else {
+                log.error("Failed to update DingTalk balance for user {}: {}", user.getRealName(),
+                        updateRsp.getErrmsg());
+            }
+
+        } catch (Exception e) {
+            log.error("Error syncing user {} to DingTalk", user.getRealName(), e);
+        }
+    }
+
+    @Override
+    public String listVacationTypes() {
+        log.info("Listing DingTalk vacation types for discovery...");
+        try {
+            String accessToken = getAccessToken();
+            String opUserId = getOpUserId();
+            DefaultDingTalkClient client = new DefaultDingTalkClient(
+                    "https://oapi.dingtalk.com/topapi/attendance/vacation/type/list");
+            OapiAttendanceVacationTypeListRequest req = new OapiAttendanceVacationTypeListRequest();
+            req.setOpUserid(opUserId);
+            OapiAttendanceVacationTypeListResponse rsp = client.execute(req, accessToken);
+
+            if (rsp.getErrcode() == 0) {
+                return JSON.toJSONString(rsp.getResult());
+            } else {
+                log.error("Failed to list vacation types: {}", rsp.getErrmsg());
+                return "Error: " + rsp.getErrmsg();
+            }
+        } catch (Exception e) {
+            log.error("Error listing vacation types", e);
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    private String getOpUserId() {
+        if (!StringUtils.isEmpty(dingTalkConfig.getOpUserid())) {
+            return dingTalkConfig.getOpUserid();
+        }
+        throw new BusinessException(
+                "No valid DingTalk user found in system to use as opUserid. Please configure dingtalk.op-userid in application.yml.");
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -274,9 +467,42 @@ public class DingTalkServiceImpl implements DingTalkService {
                 log.error("❌ Failed to apply delta for user {}: {}", user.getUsername(), e.getMessage(), e);
             }
         } else if (diff.compareTo(BigDecimal.ZERO) < 0) {
-            log.warn(
-                    "⚠️ Local leave duration ({}) exceeds DingTalk report ({}) for user {} on {}. Manual check recommended.",
-                    localSumAbs, reportDays, user.getUsername(), date);
+            BigDecimal toReturn = diff.abs();
+            log.info("⏪ Reduction detected for user {} on {}: Report={}, Local={}, Refunding diff={}",
+                    user.getUsername(), date, reportDays, localSumAbs, toReturn);
+
+            List<LeaveRecord> records = leaveRecordMapper.selectAnnualRecordsByDate(user.getId(), date);
+            for (LeaveRecord record : records) {
+                // Scheme A: Only refund records that appear to be auto-synced (based on remark
+                // pattern)
+                if (record.getRemarks() == null || !record.getRemarks().contains("(来自")) {
+                    log.info("⏭️ Skipping refund for protected/manual record: {}", record.getRemarks());
+                    continue;
+                }
+
+                BigDecimal recordAbs = record.getDays().abs();
+                if (recordAbs.compareTo(toReturn) <= 0) {
+                    // Fully refund this record (Soft Delete)
+                    record.setDeleted(1);
+                    record.setRemarks(record.getRemarks() + " (钉钉同步撤销)");
+                    leaveRecordMapper.updateRecord(record);
+                    toReturn = toReturn.subtract(recordAbs);
+                } else {
+                    // Partially refund this record
+                    record.setDays(record.getDays().add(toReturn));
+                    record.setRemarks(record.getRemarks() + " (钉钉同步部分撤销)");
+                    leaveRecordMapper.updateRecord(record);
+                    toReturn = BigDecimal.ZERO;
+                }
+
+                if (toReturn.compareTo(BigDecimal.ZERO) <= 0)
+                    break;
+            }
+
+            if (toReturn.compareTo(BigDecimal.ZERO) > 0) {
+                log.warn("⚠️ Could not fully refund {} days for user {} on {}. Remaining: {}",
+                        diff.abs(), user.getUsername(), date, toReturn);
+            }
         } else {
             log.info("⏭️ Data consistent for user {} on {}: {} days", user.getUsername(), date, reportDays);
         }

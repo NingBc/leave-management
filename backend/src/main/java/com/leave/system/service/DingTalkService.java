@@ -13,4 +13,23 @@ public interface DingTalkService {
      * @return DingTalk userid
      */
     String getUseridByAuthCode(String authCode);
+
+    /**
+     * Sync local leave balance to DingTalk (Full Sync).
+     */
+    void syncToDingTalk();
+
+    /**
+     * Sync local leave balance to DingTalk for a single user (Real-time Sync).
+     * 
+     * @param userId Local user ID
+     */
+    void syncToDingTalk(Long userId);
+
+    /**
+     * List all vacation types from DingTalk for discovery.
+     * 
+     * @return JSON string of vacation types
+     */
+    String listVacationTypes();
 }

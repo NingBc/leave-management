@@ -132,6 +132,15 @@
         AND deleted = 0
     </select>
 
+    <select id="selectAnnualRecordsByDate" resultType="com.leave.system.entity.LeaveRecord">
+        SELECT * FROM leave_record
+        WHERE user_id = #{userId}
+        AND start_date = #{date}
+        AND type = 'ANNUAL'
+        AND deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
     <insert id="insertRecord" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO leave_record (user_id, start_date, end_date, days, type, remarks, create_time, expiry_date, deleted)
         VALUES (#{userId}, #{startDate}, #{endDate}, #{days}, #{type}, #{remarks}, #{createTime}, #{expiryDate}, COALESCE(#{deleted}, 0))

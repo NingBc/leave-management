@@ -12,6 +12,9 @@ import com.leave.system.mapper.SysJobMapper;
 import com.leave.system.mapper.SysUserMapper;
 import com.leave.system.service.LeaveService;
 import com.leave.system.entity.SysJob;
+import com.leave.system.service.DingTalkService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.format.DateTimeFormatter;
@@ -44,6 +47,10 @@ public class LeaveServiceImpl implements LeaveService {
         this.userMapper = userMapper;
         this.jobMapper = jobMapper;
     }
+
+    @Autowired
+    @Lazy
+    private DingTalkService dingTalkService;
 
     /**
      * Calculate carry-over balance excluding expired leave
@@ -320,6 +327,11 @@ public class LeaveServiceImpl implements LeaveService {
             }
             accountMapper.updateAccount(account);
         }
+
+        // Sync to DingTalk when account is updated/created (quota changed)
+        if (dingTalkService != null) {
+            dingTalkService.syncToDingTalk(userId);
+        }
         return account;
     }
 
@@ -420,6 +432,11 @@ public class LeaveServiceImpl implements LeaveService {
         deductLeaveDays(userId, daysRequested, startDate, endDate, "ANNUAL", "员工请假");
 
         log.info("✅ Leave application processed successfully");
+
+        // Sync to DingTalk after leave is applied
+        if (dingTalkService != null) {
+            dingTalkService.syncToDingTalk(userId);
+        }
     }
 
     /**
@@ -801,6 +818,11 @@ public class LeaveServiceImpl implements LeaveService {
             log.info("🔄 Routing manual {} record to priority deduction logic. Days: {}", record.getType(), absDays);
             deductLeaveDays(record.getUserId(), absDays, record.getStartDate(), record.getEndDate(),
                     record.getType(), record.getRemarks());
+
+            // Sync to DingTalk after deduction
+            if (dingTalkService != null) {
+                dingTalkService.syncToDingTalk(record.getUserId());
+            }
             return;
         }
 
@@ -828,12 +850,21 @@ public class LeaveServiceImpl implements LeaveService {
         recordMapper.insertRecord(record);
         log.info("Added record: userId={}, type={}, days={}, expiryDate={}",
                 record.getUserId(), record.getType(), record.getDays(), record.getExpiryDate());
+
+        // Auto-sync to DingTalk for any annual leave record insertion
+        if (dingTalkService != null) {
+            dingTalkService.syncToDingTalk(record.getUserId());
+        }
     }
 
     @Override
     @Transactional
     public void updateAccount(LeaveAccount account) {
         accountMapper.updateAccount(account);
+        // Sync to DingTalk when account is updated (usually quota changed)
+        if (dingTalkService != null) {
+            dingTalkService.syncToDingTalk(account.getUserId());
+        }
     }
 
     @Override

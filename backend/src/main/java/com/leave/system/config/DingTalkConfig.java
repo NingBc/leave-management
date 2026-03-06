@@ -11,6 +11,8 @@ public class DingTalkConfig {
     private String appKey;
     private String appSecret;
     private int syncLookbackDays = 7; // Default to 10 days
+    private String annualLeaveCode;
+    private String opUserid;
 
     public String getAppKey() {
         return appKey;
@@ -34,5 +36,21 @@ public class DingTalkConfig {
 
     public void setSyncLookbackDays(int syncLookbackDays) {
         this.syncLookbackDays = syncLookbackDays;
+    }
+
+    public String getOpUserid() {
+        return opUserid;
+    }
+
+    public void setOpUserid(String opUserid) {
+        this.opUserid = opUserid;
+    }
+
+    public String getAnnualLeaveCode() {
+        return annualLeaveCode;
+    }
+
+    public void setAnnualLeaveCode(String annualLeaveCode) {
+        this.annualLeaveCode = annualLeaveCode;
     }
 }
