@@ -60,6 +60,8 @@ public interface LeaveService {
 
     void updateAccount(LeaveAccount account);
 
+    void updateAccount(LeaveAccount account, boolean triggerSync);
+
     /**
      * Soft delete all leave accounts for a user.
      */

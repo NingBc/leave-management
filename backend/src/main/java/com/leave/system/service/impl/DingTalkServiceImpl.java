@@ -37,6 +37,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.Collections;
 import java.util.Set;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
@@ -237,9 +239,13 @@ public class DingTalkServiceImpl implements DingTalkService {
                 return;
             }
 
+
             processResponse(body, user);
+
+            // Trigger balance push back to DingTalk only once after all entries for this user are processed
+            self.syncToDingTalk(user.getId());
         } catch (Exception e) {
-            log.error("Error fetching for user " + user.getUsername(), e);
+            log.error("Error fetching for user " + user.getRealName(), e);
         }
     }
 
@@ -273,7 +279,7 @@ public class DingTalkServiceImpl implements DingTalkService {
 
                         try {
                             double value = Double.parseDouble(valueStr);
-                            if (value > 0) {
+                            if (value >= 0) {
                                 self.saveLeaveRecord(user, dateStr, value);
                             } else {
                                 log.info("Skipping zero value entry");
@@ -304,6 +310,20 @@ public class DingTalkServiceImpl implements DingTalkService {
 
     @Override
     public void syncToDingTalk(Long userId) {
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            log.info("Transaction active, registering sync to DingTalk for user {} after commit.", userId);
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    enqueueSyncRequest(userId);
+                }
+            });
+        } else {
+            enqueueSyncRequest(userId);
+        }
+    }
+
+    private void enqueueSyncRequest(Long userId) {
         if (pendingSyncUsers.add(userId)) {
             if (syncQueue.offer(userId)) {
                 log.info("Sync request for user {} added to queue. (Queue size: {})", userId, syncQueue.size());
@@ -386,7 +406,7 @@ public class DingTalkServiceImpl implements DingTalkService {
                 log.info("Successfully initialized DingTalk balance for user {}.", user.getRealName());
                 // Update last synced info
                 account.setLastSyncedBalance(localBalance);
-                leaveService.updateAccount(account);
+                leaveService.updateAccount(account, false);
             } else {
                 log.error("Failed to update DingTalk balance for user {}: {}", user.getRealName(),
                         updateRsp.getErrmsg());

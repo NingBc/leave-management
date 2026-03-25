@@ -860,9 +860,15 @@ public class LeaveServiceImpl implements LeaveService {
     @Override
     @Transactional
     public void updateAccount(LeaveAccount account) {
+        updateAccount(account, true);
+    }
+
+    @Override
+    @Transactional
+    public void updateAccount(LeaveAccount account, boolean triggerSync) {
         accountMapper.updateAccount(account);
         // Sync to DingTalk when account is updated (usually quota changed)
-        if (dingTalkService != null) {
+        if (triggerSync && dingTalkService != null) {
             dingTalkService.syncToDingTalk(account.getUserId());
         }
     }
