@@ -6,6 +6,7 @@ import com.leave.system.dto.UserImportResult;
 import com.leave.system.entity.SysUser;
 import com.leave.system.exception.BusinessException;
 import com.leave.system.mapper.SysUserMapper;
+import com.leave.system.service.LeaveAccountMaintenance;
 import com.leave.system.service.LeaveService;
 import com.leave.system.service.UserService;
 import com.leave.system.util.PinyinUtil;
@@ -41,15 +42,18 @@ public class UserServiceImpl implements UserService {
     private final SysUserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final LeaveService leaveService;
+    private final LeaveAccountMaintenance leaveAccountMaintenance;
 
     @Autowired
     @Lazy
     private UserService self;
 
-    public UserServiceImpl(SysUserMapper userMapper, PasswordEncoder passwordEncoder, LeaveService leaveService) {
+    public UserServiceImpl(SysUserMapper userMapper, PasswordEncoder passwordEncoder, LeaveService leaveService,
+            LeaveAccountMaintenance leaveAccountMaintenance) {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.leaveService = leaveService;
+        this.leaveAccountMaintenance = leaveAccountMaintenance;
     }
 
     @Override
@@ -102,14 +106,8 @@ public class UserServiceImpl implements UserService {
         calculateSeniority(user);
         userMapper.insertUser(user);
 
-        // 自动初始化当前年度的年假账户
-        try {
-            int currentYear = LocalDate.now().getYear();
-            leaveService.initYearlyAccount(user.getId(), currentYear);
-            log.info("✅ Auto-initialized leave account for user {} year {}", user.getUsername(), currentYear);
-        } catch (Exception e) {
-            log.warn("⚠️ Failed to auto-initialize leave account for user {}: {}", user.getUsername(), e.getMessage());
-        }
+        // 自动初始化当前年度的年假账户 (独立事务, 失败不影响用户创建)
+        leaveAccountMaintenance.initCurrentYearQuietly(user);
     }
 
     @Override
@@ -132,12 +130,8 @@ public class UserServiceImpl implements UserService {
         calculateSeniority(user);
         userMapper.updateUser(user);
 
-        try {
-            int currentYear = LocalDate.now().getYear();
-            leaveService.refreshAccount(user, currentYear);
-        } catch (Exception e) {
-            log.warn("Failed to refresh leave account for user {}: {}", user.getId(), e.getMessage());
-        }
+        // 独立事务, 失败不影响用户资料更新
+        leaveAccountMaintenance.refreshCurrentYearQuietly(user);
     }
 
     @Override
@@ -180,12 +174,8 @@ public class UserServiceImpl implements UserService {
         }
         userMapper.updateUser(user);
 
-        try {
-            leaveService.deleteAccountsByUserId(id);
-            log.info("Soft deleted leave accounts for resigned user {}", id);
-        } catch (Exception e) {
-            log.error("Failed to soft delete leave accounts for user {}", id, e);
-        }
+        // 独立事务, 失败不影响离职状态写入
+        leaveAccountMaintenance.softDeleteAccountsQuietly(id);
     }
 
     @Override
@@ -296,20 +286,14 @@ public class UserServiceImpl implements UserService {
 
         userMapper.insertUser(user);
 
-        try {
-            int currentYear = LocalDate.now().getYear();
-            leaveService.initYearlyAccount(user.getId(), currentYear);
-            log.info("✅ 导入用户成功并初始化账户: {} ({})", realName, finalUsername);
-        } catch (Exception accountException) {
-            log.warn("⚠️ 用户{}导入成功，但账户初始化失败: {}", finalUsername, accountException.getMessage());
-            // Rethrowing to ensure rollback but wait, we want success if user created?
-            // Actually, if account init fails, we might want to know.
-            // But if we want the USER to be created regardless, we should catch inside
-            // importSingleUser.
-            // Let's decide: if account init fails, should the user be created?
-            // In the log, user said "用户xiaonan导入成功，但账户初始化失败: User not found".
-            // If they want the user to be created, we should NOT rethrow.
-        }
+        // 账户初始化与用户导入同属本条记录的事务, 必须一起成功或一起失败。
+        // 不能在这里 catch 掉: initYearlyAccount 是 @Transactional 方法, 它抛异常后
+        // 本事务已被标记 rollback-only, 吞掉异常只会让本方法提交时抛
+        // UnexpectedRollbackException —— 日志报「导入成功」而数据其实全部回滚。
+        // 让异常向上传播, 由 importUsers 记入失败明细, 结果才是真实的。
+        int currentYear = LocalDate.now().getYear();
+        leaveService.initYearlyAccount(user.getId(), currentYear);
+        log.info("✅ 导入用户成功并初始化账户: {} ({})", realName, finalUsername);
     }
 
     @Override

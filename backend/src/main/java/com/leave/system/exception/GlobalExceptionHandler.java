@@ -2,6 +2,7 @@ package com.leave.system.exception;
 
 import com.leave.system.common.Result;
 import com.leave.system.common.ResultCode;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -28,6 +29,16 @@ public class GlobalExceptionHandler {
     public Result<?> handleIllegalArgument(IllegalArgumentException e) {
         log.warn("Illegal Argument: {}", e.getMessage());
         return Result.error(ResultCode.BAD_REQUEST, e.getMessage());
+    }
+
+    /**
+     * 处理权限不足异常
+     * 必须显式声明，否则会被下面的 Exception 兜底处理器吞成 500
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public Result<?> handleAccessDenied(AccessDeniedException e) {
+        log.warn("Access Denied: {}", e.getMessage());
+        return Result.error(ResultCode.FORBIDDEN, "无权访问该资源");
     }
 
     /**
