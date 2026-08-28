@@ -13,3 +13,7 @@ export function updateAccount(data) {
 export function addRecord(data) {
     return request.post('/leave/add-record', data)
 }
+
+export function updateRecord(data) {
+    return request.post('/leave/update-record', data)
+}
