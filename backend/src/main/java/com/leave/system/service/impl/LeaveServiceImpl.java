@@ -91,18 +91,17 @@ public class LeaveServiceImpl implements LeaveService {
         // 3. 上年度桶账本 + 债务冲抵
         TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(lastYearAccount, lastYear, LocalDate.of(lastYear, 1, 1));
         log.info("📊 Year {} buckets before expiry: {}", lastYear, buckets);
-        settleFloatingDebt(buckets);
+        settleNegativeBuckets(buckets);
 
-        // 4. 丢弃已过期的桶; 浮动债务 (null 桶) 不会过期, 随结转带入下一年
+        // 4. 丢弃已过期的桶。正数额度作废, 负数欠账转为浮动债务继续背 (债务不过期);
+        //    浮动债务本身也随结转带入下一年。
         LocalDate jan1 = LocalDate.of(year, 1, 1);
+        dropExpiredBuckets(buckets, jan1);
+
         BigDecimal carryOver = BigDecimal.ZERO;
         for (Map.Entry<LocalDate, BigDecimal> entry : buckets.entrySet()) {
-            LocalDate expiry = entry.getKey();
-            if (expiry != null && expiry.isBefore(jan1)) {
-                log.info("  ⏭️  Expired bucket {}: {} days dropped", expiry, entry.getValue());
-                continue;
-            }
-            log.info("  ➕ Carried over bucket {}: {} days", expiry == null ? "FLOATING" : expiry, entry.getValue());
+            log.info("  ➕ Carried over bucket {}: {} days",
+                    entry.getKey() == null ? "FLOATING" : entry.getKey(), entry.getValue());
             carryOver = carryOver.add(entry.getValue());
         }
 
@@ -428,10 +427,42 @@ public class LeaveServiceImpl implements LeaveService {
             buckets.merge(expiry, days, BigDecimal::add);
         }
 
-        // 丢弃在 asOfDate 之前就已过期的桶 (正数已作废, 负数已由结转/过期清理处理过)
-        buckets.keySet().removeIf(expiry -> expiry != null && expiry.isBefore(asOfDate));
+        dropExpiredBuckets(buckets, asOfDate);
 
         return buckets;
+    }
+
+    /**
+     * 丢弃在 asOfDate 之前就已过期的桶。
+     *
+     * <p>
+     * <b>只有正数额度会作废。</b> 桶里的负数是超额消耗形成的欠账 —— 欠账不会因为
+     * 所属批次到期就一笔勾销, 必须转成浮动债务继续跟着人走, 否则员工只要拖到
+     * 桶过期就能把透支洗掉。
+     *
+     * @return 从过期桶转出的欠账 (负数或 0)
+     */
+    private BigDecimal dropExpiredBuckets(TreeMap<LocalDate, BigDecimal> buckets, LocalDate asOfDate) {
+        BigDecimal expiredDebt = BigDecimal.ZERO;
+
+        Iterator<Map.Entry<LocalDate, BigDecimal>> it = buckets.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<LocalDate, BigDecimal> entry = it.next();
+            LocalDate expiry = entry.getKey();
+            if (expiry == null || !expiry.isBefore(asOfDate)) {
+                continue;
+            }
+            if (entry.getValue().compareTo(BigDecimal.ZERO) < 0) {
+                expiredDebt = expiredDebt.add(entry.getValue());
+            }
+            it.remove();
+        }
+
+        if (expiredDebt.compareTo(BigDecimal.ZERO) < 0) {
+            log.info("  ⚠️  Debt {} moved out of expired bucket(s) — debt does not expire", expiredDebt);
+            buckets.merge(null, expiredDebt, BigDecimal::add);
+        }
+        return expiredDebt;
     }
 
     /** 桶账本合计, 即该年度的年假总余额 (浮动债务为负数, 自然被减掉) */
@@ -440,21 +471,37 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     /**
-     * 用正数桶冲抵浮动债务 (透支), 按到期日从早到晚。
-     * 冲抵后 null 桶只保留仍未偿还的部分。
+     * 用可用额度冲抵欠账, 按到期日从早到晚。
+     *
+     * <p>
+     * 欠账有两种表示形式, 必须一视同仁:
+     * <ul>
+     * <li>{@code null} 桶的负数 —— 请假时额度不够留下的透支流水</li>
+     * <li>某个到期桶的负数 —— 该批次被超额消耗, 典型来源是上年结转本身就是负数</li>
+     * </ul>
+     * 只冲抵前者的话, 带着负结转的员工可以把当年额度全部用光而不产生任何透支记录 ——
+     * 余额虽然还是对的, 但「已经欠账」这件事在流水上看不出来。
+     *
+     * <p>
+     * 冲抵不改变总额, 只是把欠账挪到有额度的桶上; 还不完的部分统一沉到 null 桶,
+     * 因为欠账不随批次到期而消失。
      */
-    private void settleFloatingDebt(TreeMap<LocalDate, BigDecimal> buckets) {
-        BigDecimal floating = buckets.get(null);
-        if (floating == null || floating.compareTo(BigDecimal.ZERO) >= 0) {
+    private void settleNegativeBuckets(TreeMap<LocalDate, BigDecimal> buckets) {
+        BigDecimal debt = BigDecimal.ZERO;
+        for (Map.Entry<LocalDate, BigDecimal> entry : buckets.entrySet()) {
+            if (entry.getValue().compareTo(BigDecimal.ZERO) < 0) {
+                debt = debt.add(entry.getValue().negate());
+                entry.setValue(BigDecimal.ZERO);
+            }
+        }
+        if (debt.compareTo(BigDecimal.ZERO) <= 0) {
             return;
         }
 
-        BigDecimal debt = floating.negate();
-        log.info("⚠️  Settling floating debt of {} days from available buckets", debt);
-
+        log.info("⚠️  Settling debt of {} days from available buckets", debt);
         for (Map.Entry<LocalDate, BigDecimal> entry : buckets.entrySet()) {
             if (entry.getKey() == null) {
-                continue;
+                continue; // null 桶只用来存放还不完的欠账
             }
             BigDecimal credit = entry.getValue();
             if (credit.compareTo(BigDecimal.ZERO) <= 0) {
@@ -515,7 +562,7 @@ public class LeaveServiceImpl implements LeaveService {
 
         TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, startDate);
         // 额度不足以完全覆盖的部分仍是浮动债务, 在内存里冲抵掉, 避免超发
-        settleFloatingDebt(buckets);
+        settleNegativeBuckets(buckets);
 
         log.info("💰 Available balances by expiry: {}", buckets);
 
@@ -623,12 +670,19 @@ public class LeaveServiceImpl implements LeaveService {
     private BigDecimal normalizeFloatingDebt(LeaveAccount account, int year, LocalDate asOfDate) {
         TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, asOfDate);
 
-        BigDecimal floating = buckets.get(null);
-        if (floating == null || floating.compareTo(BigDecimal.ZERO) >= 0) {
+        // 欠账 = 所有负数桶之和 (浮动透支 + 被超额消耗的到期桶)
+        BigDecimal debt = BigDecimal.ZERO;
+        List<LocalDate> debtBuckets = new ArrayList<>();
+        for (Map.Entry<LocalDate, BigDecimal> entry : buckets.entrySet()) {
+            if (entry.getValue().compareTo(BigDecimal.ZERO) < 0) {
+                debt = debt.add(entry.getValue().negate());
+                debtBuckets.add(entry.getKey());
+            }
+        }
+        if (debt.compareTo(BigDecimal.ZERO) <= 0) {
             return BigDecimal.ZERO;
         }
 
-        BigDecimal debt = floating.negate();
         BigDecimal remaining = debt;
         // 流水日期不能直接用今天: 年终结算上年度时今天已经跨年了, 记到今天会落进新年度的账本。
         LocalDate today = quotaReferenceDate(year);
@@ -667,16 +721,30 @@ public class LeaveServiceImpl implements LeaveService {
 
         offsets.forEach(recordMapper::insertRecord);
 
-        LeaveRecord clear = new LeaveRecord();
-        clear.setUserId(userId);
-        clear.setStartDate(today);
-        clear.setEndDate(today);
-        clear.setDays(settled);
-        clear.setType("ADJUSTMENT_ADD");
-        clear.setExpiryDate(null);
-        clear.setRemarks(String.format("透支归位: 冲销历史透支 %s 天", settled.stripTrailingZeros().toPlainString()));
-        clear.setCreateTime(LocalDateTime.now());
-        recordMapper.insertRecord(clear);
+        // 把冲抵额按欠账所在的桶写回, 让每个桶都回到非负
+        BigDecimal toClear = settled;
+        for (LocalDate debtBucket : debtBuckets) {
+            if (toClear.compareTo(BigDecimal.ZERO) <= 0) {
+                break;
+            }
+            BigDecimal owed = buckets.get(debtBucket).negate();
+            BigDecimal clearAmount = owed.min(toClear);
+
+            LeaveRecord clear = new LeaveRecord();
+            clear.setUserId(userId);
+            clear.setStartDate(today);
+            clear.setEndDate(today);
+            clear.setDays(clearAmount);
+            clear.setType("ADJUSTMENT_ADD");
+            clear.setExpiryDate(debtBucket);
+            clear.setRemarks(debtBucket == null
+                    ? String.format("透支归位: 冲销历史透支 %s 天", clearAmount.stripTrailingZeros().toPlainString())
+                    : String.format("透支归位: 补回超额消耗的额度 (过期: %s)", debtBucket));
+            clear.setCreateTime(LocalDateTime.now());
+            recordMapper.insertRecord(clear);
+
+            toClear = toClear.subtract(clearAmount);
+        }
 
         log.info("♻️  Normalized {} day(s) of floating debt for user {} (year {})", settled, userId, year);
         return settled;
