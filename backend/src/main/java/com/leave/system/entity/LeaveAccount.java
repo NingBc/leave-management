@@ -1,7 +1,6 @@
 package com.leave.system.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -10,6 +9,12 @@ import java.math.BigDecimal;
 @Data
 @TableName("leave_account")
 public class LeaveAccount {
+    // 注意: 本类的 @Data 不会生成任何方法(项目里 Lombok 注解处理未生效),
+    // 新增字段必须手写 getter/setter, 否则 Jackson 不会序列化。
+    //
+    // 「本年已用」「年假余额」是派生值, 不再落库(见 LeaveAccountDTO):
+    // 它们只能由流水实时算出, 曾经的 current_year_used 列几乎从不更新,
+    // 连带 MySQL 生成列 total_balance 全线失真(最多偏高 8.5 天)。
     @TableId(type = IdType.AUTO)
     private Long id;
     private Long userId;
@@ -19,12 +24,8 @@ public class LeaveAccount {
     private Integer daysEmployed; // 年在职天数
     private BigDecimal actualQuota; // 年假天数 (Replaces annualQuota)
     private BigDecimal lastYearBalance;
-    private BigDecimal currentYearUsed;
     @com.baomidou.mybatisplus.annotation.TableLogic
     private Integer deleted;
-
-    @TableField(insertStrategy = com.baomidou.mybatisplus.annotation.FieldStrategy.NEVER, updateStrategy = com.baomidou.mybatisplus.annotation.FieldStrategy.NEVER)
-    private BigDecimal totalBalance; // 年假余额
 
     public BigDecimal getStandardQuota() {
         return standardQuota;
@@ -40,10 +41,6 @@ public class LeaveAccount {
 
     public BigDecimal getLastYearBalance() {
         return lastYearBalance;
-    }
-
-    public BigDecimal getCurrentYearUsed() {
-        return currentYearUsed;
     }
 
     public Integer getSocialSeniority() {
@@ -94,10 +91,6 @@ public class LeaveAccount {
         this.lastYearBalance = lastYearBalance;
     }
 
-    public void setCurrentYearUsed(BigDecimal currentYearUsed) {
-        this.currentYearUsed = currentYearUsed;
-    }
-
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
@@ -106,19 +99,5 @@ public class LeaveAccount {
         return deleted;
     }
 
-    public void setTotalBalance(BigDecimal totalBalance) {
-        this.totalBalance = totalBalance;
-    }
 
-    /**
-     * 年假余额。
-     *
-     * <p>
-     * 这个 getter 必须手写: 本项目的 Lombok 注解处理实际未生效 (类上的 @Data 不产生任何方法,
-     * 所有访问器都是手写的)。此前漏了这个 getter, 导致 Jackson 不会把 totalBalance 序列化进
-     * 接口响应, 前端「总可用余额 / 年假余额」恒为空。
-     */
-    public BigDecimal getTotalBalance() {
-        return totalBalance;
-    }
 }

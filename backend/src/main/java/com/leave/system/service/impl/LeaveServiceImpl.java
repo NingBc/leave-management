@@ -177,7 +177,7 @@ public class LeaveServiceImpl implements LeaveService {
      * 避免两处公式漂移 —— 旧实现的动态刷新不重算工龄档, 员工年中满 10 年也拿不到增量。
      *
      * <p>
-     * 不触碰 last_year_balance / current_year_used, 也不落库, 由调用方决定何时写。
+     * 不触碰 last_year_balance, 也不落库, 由调用方决定何时写。
      *
      * @return 是否有字段发生变化
      */
@@ -269,7 +269,6 @@ public class LeaveServiceImpl implements LeaveService {
             account = new LeaveAccount();
             account.setUserId(userId);
             account.setYear(year);
-            account.setCurrentYearUsed(BigDecimal.ZERO);
             account.setLastYearBalance(BigDecimal.ZERO);
         }
         if (account.getDeleted() != null && account.getDeleted() == 1) {
@@ -579,6 +578,103 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean refreshQuotaAndSettleDebt(Long userId, Integer year) {
+        LeaveAccount account = accountMapper.selectAccountByUserIdAndYear(userId, year);
+        if (account == null) {
+            return false;
+        }
+        SysUser user = userMapper.selectUserById(userId);
+        if (user == null) {
+            return false;
+        }
+
+        boolean changed = recalcQuotaFields(account, user, year);
+        if (changed) {
+            accountMapper.updateAccount(account);
+        }
+
+        BigDecimal settled = normalizeFloatingDebt(account, year);
+        return changed || settled.compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    /**
+     * 历史透支归位。
+     *
+     * <p>
+     * 按天累计的额度模型下, 年初请假必然产生 expiry_date 为 NULL 的透支流水;
+     * 等额度累计上来之后这笔「债」其实早已不成立, 却会一直挂在账上 ——
+     * 页面显示为「额度透支」, 跨年时还要参与结转冲抵, 容易重复计算。
+     *
+     * <p>
+     * 这里在额度足以覆盖时写一对冲抵流水把它转正: 从最早到期的桶按额扣除,
+     * 同时冲销等额浮动债务。总余额不变, 但债务清零、消耗落到正确的到期桶上。
+     * 幂等: 归位后浮动债务为 0, 再次执行不会产生新流水。
+     *
+     * @return 本次实际归位的天数
+     */
+    private BigDecimal normalizeFloatingDebt(LeaveAccount account, int year) {
+        TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, LocalDate.of(year, 1, 1));
+
+        BigDecimal floating = buckets.get(null);
+        if (floating == null || floating.compareTo(BigDecimal.ZERO) >= 0) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal debt = floating.negate();
+        BigDecimal remaining = debt;
+        LocalDate today = LocalDate.now();
+        Long userId = account.getUserId();
+        List<LeaveRecord> offsets = new ArrayList<>();
+
+        for (Map.Entry<LocalDate, BigDecimal> entry : buckets.entrySet()) {
+            LocalDate expiry = entry.getKey();
+            if (expiry == null || remaining.compareTo(BigDecimal.ZERO) <= 0) {
+                continue;
+            }
+            BigDecimal credit = entry.getValue();
+            if (credit.compareTo(BigDecimal.ZERO) <= 0) {
+                continue;
+            }
+            BigDecimal take = credit.min(remaining);
+
+            LeaveRecord deduct = new LeaveRecord();
+            deduct.setUserId(userId);
+            deduct.setStartDate(today);
+            deduct.setEndDate(today);
+            deduct.setDays(take.negate());
+            deduct.setType("ADJUSTMENT_DEDUCT");
+            deduct.setExpiryDate(expiry);
+            deduct.setRemarks(String.format("透支归位: 由额度承接 (过期: %s)", expiry));
+            deduct.setCreateTime(LocalDateTime.now());
+            offsets.add(deduct);
+
+            remaining = remaining.subtract(take);
+        }
+
+        BigDecimal settled = debt.subtract(remaining);
+        if (settled.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
+        }
+
+        offsets.forEach(recordMapper::insertRecord);
+
+        LeaveRecord clear = new LeaveRecord();
+        clear.setUserId(userId);
+        clear.setStartDate(today);
+        clear.setEndDate(today);
+        clear.setDays(settled);
+        clear.setType("ADJUSTMENT_ADD");
+        clear.setExpiryDate(null);
+        clear.setRemarks(String.format("透支归位: 冲销历史透支 %s 天", settled.stripTrailingZeros().toPlainString()));
+        clear.setCreateTime(LocalDateTime.now());
+        recordMapper.insertRecord(clear);
+
+        log.info("♻️  Normalized {} day(s) of floating debt for user {} (year {})", settled, userId, year);
+        return settled;
+    }
+
+    @Override
     public LeaveAccountDTO getAccount(Long userId, Integer year) {
         return fillAccountDTO(new LeaveAccountDTO(), userId, year);
     }
@@ -650,9 +746,11 @@ public class LeaveServiceImpl implements LeaveService {
         // Initialization should only happen through scheduled tasks or manual execution
         LeaveAccount account = accountMapper.selectAccountByUserIdAndYear(userId, year);
 
-        // Dynamically refresh if it is current year
+        // 当年额度按天累计, 展示前先在内存里补算到今天。
+        // 这里刻意不落库: 读接口不应该写数据库(列表一页就是 10 次写, 还没有事务),
+        // 库里的值由每日任务 refreshCurrentYearQuota 负责保持新鲜。
         if (account != null && year == LocalDate.now().getYear()) {
-            refreshCurrentYearAccount(account, user);
+            recalcQuotaFields(account, user, year);
         }
 
         if (account != null) {

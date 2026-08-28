@@ -30,6 +30,14 @@ public interface LeaveService {
     void applyLeave(Long userId, LocalDate startDate, LocalDate endDate, BigDecimal daysRequested);
 
     /**
+     * 刷新指定年度账户的额度字段, 并把已能被额度覆盖的历史透支归位。
+     * 供每日定时任务逐用户调用, 每次独立事务。
+     *
+     * @return 是否产生了变更
+     */
+    boolean refreshQuotaAndSettleDebt(Long userId, Integer year);
+
+    /**
      * Get leave account details for a user.
      */
     LeaveAccountDTO getAccount(Long userId, Integer year);

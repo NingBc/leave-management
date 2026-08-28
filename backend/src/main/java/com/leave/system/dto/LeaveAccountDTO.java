@@ -4,6 +4,7 @@ import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,6 +17,28 @@ public class LeaveAccountDTO extends LeaveAccount {
     private LocalDate entryDate;
     private List<LeaveRecord> records;
     private String lastSyncTime;
+
+    /** 本年已用: 由本年度 ANNUAL 流水实时汇总, 不落库 */
+    private BigDecimal currentYearUsed;
+
+    /** 年假余额: 由桶账本实时汇总, 不落库 */
+    private BigDecimal totalBalance;
+
+    public BigDecimal getCurrentYearUsed() {
+        return currentYearUsed;
+    }
+
+    public void setCurrentYearUsed(BigDecimal currentYearUsed) {
+        this.currentYearUsed = currentYearUsed;
+    }
+
+    public BigDecimal getTotalBalance() {
+        return totalBalance;
+    }
+
+    public void setTotalBalance(BigDecimal totalBalance) {
+        this.totalBalance = totalBalance;
+    }
 
     public String getLastSyncTime() {
         return lastSyncTime;

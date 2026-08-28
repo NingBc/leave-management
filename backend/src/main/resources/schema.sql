@@ -78,8 +78,9 @@ CREATE TABLE IF NOT EXISTS leave_account (
     days_employed INT DEFAULT 0 COMMENT 'Days Employed in Year (年在职天数)',
     actual_quota DECIMAL(5, 1) DEFAULT 0.0 COMMENT 'Actual Quota (年假天数)',
     last_year_balance DECIMAL(5, 1) DEFAULT 0.0 COMMENT 'Last Year Balance (上年结余)',
-    current_year_used DECIMAL(5, 1) DEFAULT 0.0 COMMENT 'Used from This Year',
-    total_balance DECIMAL(5, 1) GENERATED ALWAYS AS (last_year_balance + (actual_quota - current_year_used)) VIRTUAL COMMENT 'Total Balance (年假余额)',
+    -- 「本年已用」与「年假余额」是派生值, 只由接口按流水实时计算, 不落库。
+    -- 历史上这里有 current_year_used + 生成列 total_balance, 但前者几乎从不更新,
+    -- 导致后者全线失真, 已随 V2 迁移脚本移除。
     deleted TINYINT DEFAULT 0,
     UNIQUE KEY uk_user_year (user_id, year)
 ) COMMENT 'Leave Account Table';

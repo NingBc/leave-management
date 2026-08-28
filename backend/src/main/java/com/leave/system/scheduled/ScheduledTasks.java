@@ -306,6 +306,45 @@ public class ScheduledTasks {
         return BigDecimal.ZERO;
     }
 
+    /**
+     * 每日刷新当年度额度, 并把已能被额度覆盖的历史透支归位。
+     *
+     * <p>
+     * 当年额度按在职天数逐日累计, 但库里的值此前只在有人读取该用户账户时才更新,
+     * 于是同一批账户的 days_employed 会散落在好几个月之前 —— 直接查库导报表拿到的是旧值,
+     * 12 月 31 日之后更是没人再访问上年度账户, 结转基数就此冻结在残值上。
+     * 这个任务让库里的值最多陈旧一天, 且不依赖有没有人登录。
+     *
+     * <p>
+     * 只处理已存在的账户, 不会凭空建号 —— 建号要算结转, 那是年初 initAllAccounts 的职责。
+     */
+    public void refreshCurrentYearQuota() {
+        int year = LocalDate.now().getYear();
+        List<LeaveAccount> accounts = accountMapper.selectAccountsByYear(year);
+
+        log.info("🔄 Daily quota refresh for year {}: {} account(s)", year, accounts.size());
+
+        int changed = 0;
+        int failed = 0;
+        for (LeaveAccount account : accounts) {
+            // 逐用户独立事务, 单个失败不影响其余
+            try {
+                if (leaveService.refreshQuotaAndSettleDebt(account.getUserId(), year)) {
+                    changed++;
+                }
+            } catch (Exception e) {
+                failed++;
+                log.error("❌ Daily quota refresh failed for user {}", account.getUserId(), e);
+            }
+        }
+
+        if (failed > 0) {
+            log.error("⚠️  Daily quota refresh: {} account(s) FAILED", failed);
+        }
+        log.info("✅ Daily quota refresh done: {} changed, {} unchanged, {} failed",
+                changed, accounts.size() - changed - failed, failed);
+    }
+
     public void initAllAccounts() {
         initAllAccounts(null);
     }
