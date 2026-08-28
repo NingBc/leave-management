@@ -14,7 +14,8 @@ public interface LeaveAccountMapper extends BaseMapper<LeaveAccount> {
 
     LeaveAccount selectLastYearAccount(@Param("userId") Long userId, @Param("year") Integer year);
 
-    void deleteByUserId(@Param("userId") Long userId);
+    /** 软删指定年度之后的账户 (离职结算用: 当年及历史必须保留) */
+    void deleteAccountsAfterYear(@Param("userId") Long userId, @Param("year") Integer year);
 
     List<Integer> selectDistinctYears();
 

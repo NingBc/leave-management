@@ -1,5 +1,5 @@
 -- =============================================================================
--- V2: 移除 leave_account 上的两个派生列, 并登记每日额度刷新任务
+-- V2: 移除 leave_account 上的两个派生列, 并让定时任务的执行结果可见
 --
 -- 背景
 --   current_year_used 只在管理员打开编辑弹窗并保存时才会写入, 平时恒为 0;
@@ -28,18 +28,12 @@ ALTER TABLE leave_account DROP COLUMN total_balance;
 -- 2) 再删被它引用的列
 ALTER TABLE leave_account DROP COLUMN current_year_used;
 
--- 3) 登记每日额度刷新任务
---    当年额度按在职天数逐日累计。此前库里的 days_employed / actual_quota 只在有人
---    读取该用户账户时才更新, 同一批账户会散落在好几个月之前; 12/31 之后更是没人再访问
---    上年度账户, 结转基数就此冻结在残值上。这个任务让库里的值最多陈旧一天,
---    且不依赖有没有人登录。顺带把已能被额度覆盖的历史透支归位。
-INSERT INTO sys_job (job_name, job_group, invoke_target, cron_expression, status, remark)
-SELECT '年假额度每日刷新', 'DEFAULT', 'scheduledTasks.refreshCurrentYearQuota()', '0 30 0 * * ?', 0,
-       '每日 00:30 刷新当年度全员在职天数与实际额度, 并将已被额度覆盖的历史透支归位。'
-FROM DUAL
-WHERE NOT EXISTS (
-    SELECT 1 FROM sys_job WHERE invoke_target = 'scheduledTasks.refreshCurrentYearQuota()'
-);
+-- 3) sys_job 增加执行结果字段
+--    此前任务失败只进日志。年终结算一年只跑一次, 悄悄失败等于全员额度和结转
+--    都错到明年, 而任务列表上看不出任何异常。
+ALTER TABLE sys_job
+    ADD COLUMN last_run_status TINYINT DEFAULT NULL COMMENT '上次执行结果: 0=成功, 1=失败',
+    ADD COLUMN last_run_result VARCHAR(500) DEFAULT NULL COMMENT '上次执行结果说明';
 
 -- 4) 停用重复的年初初始化任务
 --    scheduledTasks.cleanupExpiredLeaveBalances() 内部已经会在清理后调用 initAllAccounts,
@@ -55,5 +49,5 @@ WHERE invoke_target = 'scheduledTasks.initAllAccounts()' AND status = 0;
 --     ADD COLUMN total_balance DECIMAL(5,1)
 --       GENERATED ALWAYS AS (last_year_balance + (actual_quota - current_year_used)) VIRTUAL;
 --   UPDATE sys_job SET status = 0 WHERE invoke_target = 'scheduledTasks.initAllAccounts()';
---   DELETE FROM sys_job WHERE invoke_target = 'scheduledTasks.refreshCurrentYearQuota()';
+--   ALTER TABLE sys_job DROP COLUMN last_run_status, DROP COLUMN last_run_result;
 -- =============================================================================

@@ -27,6 +27,8 @@
             <if test="invokeTarget != null">invoke_target = #{invokeTarget},</if>
             <if test="cronExpression != null">cron_expression = #{cronExpression},</if>
             <if test="lastRunTime != null">last_run_time = #{lastRunTime},</if>
+            <if test="lastRunStatus != null">last_run_status = #{lastRunStatus},</if>
+            <if test="lastRunResult != null">last_run_result = #{lastRunResult},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>

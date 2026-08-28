@@ -85,12 +85,15 @@ public class LeaveServiceImpl implements LeaveService {
             log.warn("⚠️ User {} not found, carrying over with stored quota {}", userId, lastYearAccount.getActualQuota());
         }
 
-        // 2. 上年度桶账本 + 债务冲抵
+        // 2. 年终兜底: 把上年度还能被额度覆盖的透支归位, 留下可追溯的冲抵流水
+        normalizeFloatingDebt(lastYearAccount, lastYear, LocalDate.of(lastYear, 1, 1));
+
+        // 3. 上年度桶账本 + 债务冲抵
         TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(lastYearAccount, lastYear, LocalDate.of(lastYear, 1, 1));
         log.info("📊 Year {} buckets before expiry: {}", lastYear, buckets);
         settleFloatingDebt(buckets);
 
-        // 3. 丢弃已过期的桶; 浮动债务 (null 桶) 不会过期, 随结转带入下一年
+        // 4. 丢弃已过期的桶; 浮动债务 (null 桶) 不会过期, 随结转带入下一年
         LocalDate jan1 = LocalDate.of(year, 1, 1);
         BigDecimal carryOver = BigDecimal.ZERO;
         for (Map.Entry<LocalDate, BigDecimal> entry : buckets.entrySet()) {
@@ -506,8 +509,12 @@ public class LeaveServiceImpl implements LeaveService {
             }
         }
 
+        // 先还债再放款。这里落库归位: 账户在每次请假时自愈, 历史透支不会一直挂着,
+        // 也不会跨年参与结转冲抵。归位不改变总余额, 只是把消耗记到正确的到期桶上。
+        normalizeFloatingDebt(account, year, startDate);
+
         TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, startDate);
-        // 先还债再放款: 历史透支必须优先从可用额度里扣回, 否则同一笔债会被反复忽略
+        // 额度不足以完全覆盖的部分仍是浮动债务, 在内存里冲抵掉, 避免超发
         settleFloatingDebt(buckets);
 
         log.info("💰 Available balances by expiry: {}", buckets);
@@ -579,7 +586,7 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean refreshQuotaAndSettleDebt(Long userId, Integer year) {
+    public boolean settleYearQuota(Long userId, Integer year) {
         LeaveAccount account = accountMapper.selectAccountByUserIdAndYear(userId, year);
         if (account == null) {
             return false;
@@ -594,7 +601,7 @@ public class LeaveServiceImpl implements LeaveService {
             accountMapper.updateAccount(account);
         }
 
-        BigDecimal settled = normalizeFloatingDebt(account, year);
+        BigDecimal settled = normalizeFloatingDebt(account, year, LocalDate.of(year, 1, 1));
         return changed || settled.compareTo(BigDecimal.ZERO) > 0;
     }
 
@@ -613,8 +620,8 @@ public class LeaveServiceImpl implements LeaveService {
      *
      * @return 本次实际归位的天数
      */
-    private BigDecimal normalizeFloatingDebt(LeaveAccount account, int year) {
-        TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, LocalDate.of(year, 1, 1));
+    private BigDecimal normalizeFloatingDebt(LeaveAccount account, int year, LocalDate asOfDate) {
+        TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, asOfDate);
 
         BigDecimal floating = buckets.get(null);
         if (floating == null || floating.compareTo(BigDecimal.ZERO) >= 0) {
@@ -623,7 +630,8 @@ public class LeaveServiceImpl implements LeaveService {
 
         BigDecimal debt = floating.negate();
         BigDecimal remaining = debt;
-        LocalDate today = LocalDate.now();
+        // 流水日期不能直接用今天: 年终结算上年度时今天已经跨年了, 记到今天会落进新年度的账本。
+        LocalDate today = quotaReferenceDate(year);
         Long userId = account.getUserId();
         List<LeaveRecord> offsets = new ArrayList<>();
 
@@ -883,10 +891,20 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     @Override
-    @Transactional
-    public void deleteAccountsByUserId(Long userId) {
-        accountMapper.deleteByUserId(userId);
-        log.info("Soft deleted all leave accounts for user {}", userId);
+    @Transactional(rollbackFor = Exception.class)
+    public void settleResignation(Long userId, LocalDate resignationDate) {
+        LocalDate effective = resignationDate != null ? resignationDate : LocalDate.now();
+        int year = effective.getYear();
+
+        // 1. 算定离职当年的最终额度 (calculateDaysEmployed 会把区间截到离职日)
+        settleYearQuota(userId, year);
+
+        // 2. 只清理离职年度之后的账户。当年及历史年度保留:
+        //    旧实现一刀切软删该员工所有年度, 结果既没有结算依据, 年终结算也扫不到他,
+        //    连"这个人当年有多少天"都查不出来。
+        accountMapper.deleteAccountsAfterYear(userId, year);
+        log.info("Settled resignation for user {} (resigned {}), kept accounts up to year {}",
+                userId, effective, year);
     }
 
     @Override

@@ -53,14 +53,13 @@ public class LeaveAccountMaintenance {
         }
     }
 
-    /** 离职后软删账户, 失败仅记录日志 */
+    /** 离职结算(算定当年额度 + 清理未来年度账户), 失败仅记录日志 */
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
-    public void softDeleteAccountsQuietly(Long userId) {
+    public void settleResignationQuietly(Long userId, LocalDate resignationDate) {
         try {
-            leaveService.deleteAccountsByUserId(userId);
-            log.info("Soft deleted leave accounts for resigned user {}", userId);
+            leaveService.settleResignation(userId, resignationDate);
         } catch (Exception e) {
-            log.error("⚠️ Failed to soft delete leave accounts for user {}", userId, e);
+            log.error("⚠️ Failed to settle resignation for user {}", userId, e);
         }
     }
 }

@@ -96,17 +96,35 @@ public class ScheduledTasks {
     private void runYearEndRollover(int cleanupYear) {
         log.info("🚀 Year-end rollover start: cleanup {} -> init {}", cleanupYear, cleanupYear + 1);
 
+        List<String> problems = new ArrayList<>();
+
         log.info("🚀 Triggering DingTalk sync before expiry cleanup...");
         try {
             dingTalkService.syncLeaveData();
         } catch (Exception e) {
             log.error("❌ DingTalk sync failed, proceeding with cleanup anyway", e);
+            problems.add("钉钉同步失败: " + e.getMessage());
         }
 
-        performCleanupForYear(cleanupYear);
+        int cleanupFailures = performCleanupForYear(cleanupYear);
+        if (cleanupFailures > 0) {
+            problems.add(cleanupYear + " 年过期清理有 " + cleanupFailures + " 人失败");
+        }
 
         log.info("🔄 Re-initializing all accounts for year {} to refresh carry-over balances...", cleanupYear + 1);
-        initAllAccounts(String.valueOf(cleanupYear + 1));
+        int initFailures = initAllAccounts(String.valueOf(cleanupYear + 1));
+        if (initFailures > 0) {
+            problems.add((cleanupYear + 1) + " 年账户初始化有 " + initFailures + " 人失败");
+        }
+
+        if (!problems.isEmpty()) {
+            // 抛出去, 让 SysJobServiceImpl 把失败原因写进 sys_job.last_run_result。
+            // 年终结算一年只跑一次, 悄悄失败等于全员额度和结转都错到明年 ——
+            // 必须让它在任务列表里显示为红色。本方法幂等, 修完可直接重跑。
+            String summary = String.join("; ", problems);
+            log.error("❌ Year-end rollover finished WITH PROBLEMS: {}", summary);
+            throw new IllegalStateException("年终结算未完全成功 —— " + summary + " (修复后可重跑本任务, 幂等)");
+        }
 
         log.info("✅ Year-end rollover finished: cleanup {} -> init {}", cleanupYear, cleanupYear + 1);
     }
@@ -116,7 +134,7 @@ public class ScheduledTasks {
      * 
      * @param cleanupYear The year whose Dec 31 expiry balances should be cleaned
      */
-    private void performCleanupForYear(int cleanupYear) {
+    private int performCleanupForYear(int cleanupYear) {
         LocalDate targetExpiryDate = LocalDate.of(cleanupYear, 12, 31);
 
         log.info("🔄 Starting leave expiry cleanup for year: {} (Target Expiry: {})", cleanupYear, targetExpiryDate);
@@ -126,7 +144,7 @@ public class ScheduledTasks {
 
         if (yearAccounts.isEmpty()) {
             log.info("No accounts found for year {}", cleanupYear);
-            return;
+            return 0;
         }
 
         int totalUsersAffected = 0;
@@ -152,6 +170,7 @@ public class ScheduledTasks {
         }
         log.info("✅ Expiry cleanup for year {} completed: {} users affected, {} total days expired, {} failed",
                 cleanupYear, totalUsersAffected, totalDaysExpired, failedUsers);
+        return failedUsers;
     }
 
     /**
@@ -162,6 +181,17 @@ public class ScheduledTasks {
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public BigDecimal cleanupUserForYear(LeaveAccount account, LocalDate targetExpiryDate) {
         Long userId = account.getUserId();
+        int cleanupYear = targetExpiryDate.getYear();
+
+        // 年终结算第一步: 按入职/离职日期算定该年度的在职天数与实际额度。
+        // 当年额度是逐日累计的移动靶, 库里的值平时没有意义, 必须在这里算定成
+        // 「这一年最终给了多少天」, 否则结转基数就是年中冻结的残值。
+        // 顺带把还能被额度覆盖的历史透支归位。
+        leaveService.settleYearQuota(userId, cleanupYear);
+        LeaveAccount settled = accountMapper.selectAccountByUserIdAndYear(userId, cleanupYear);
+        if (settled != null) {
+            account = settled;
+        }
         {
             // Find records for this user that expire on the target date (Bucket credits)
             List<LeaveRecord> userRecords = recordMapper.selectExpiringRecords(userId, targetExpiryDate);
@@ -306,50 +336,12 @@ public class ScheduledTasks {
         return BigDecimal.ZERO;
     }
 
-    /**
-     * 每日刷新当年度额度, 并把已能被额度覆盖的历史透支归位。
-     *
-     * <p>
-     * 当年额度按在职天数逐日累计, 但库里的值此前只在有人读取该用户账户时才更新,
-     * 于是同一批账户的 days_employed 会散落在好几个月之前 —— 直接查库导报表拿到的是旧值,
-     * 12 月 31 日之后更是没人再访问上年度账户, 结转基数就此冻结在残值上。
-     * 这个任务让库里的值最多陈旧一天, 且不依赖有没有人登录。
-     *
-     * <p>
-     * 只处理已存在的账户, 不会凭空建号 —— 建号要算结转, 那是年初 initAllAccounts 的职责。
-     */
-    public void refreshCurrentYearQuota() {
-        int year = LocalDate.now().getYear();
-        List<LeaveAccount> accounts = accountMapper.selectAccountsByYear(year);
-
-        log.info("🔄 Daily quota refresh for year {}: {} account(s)", year, accounts.size());
-
-        int changed = 0;
-        int failed = 0;
-        for (LeaveAccount account : accounts) {
-            // 逐用户独立事务, 单个失败不影响其余
-            try {
-                if (leaveService.refreshQuotaAndSettleDebt(account.getUserId(), year)) {
-                    changed++;
-                }
-            } catch (Exception e) {
-                failed++;
-                log.error("❌ Daily quota refresh failed for user {}", account.getUserId(), e);
-            }
-        }
-
-        if (failed > 0) {
-            log.error("⚠️  Daily quota refresh: {} account(s) FAILED", failed);
-        }
-        log.info("✅ Daily quota refresh done: {} changed, {} unchanged, {} failed",
-                changed, accounts.size() - changed - failed, failed);
-    }
-
     public void initAllAccounts() {
         initAllAccounts(null);
     }
 
-    public void initAllAccounts(String year) {
+    /** @return 初始化失败的用户数 */
+    public int initAllAccounts(String year) {
         Integer targetYear;
         if (year == null || year.trim().isEmpty() || "DEFAULT".equalsIgnoreCase(year)) {
             targetYear = LocalDate.now().getYear();
@@ -359,7 +351,7 @@ public class ScheduledTasks {
                 targetYear = Integer.parseInt(year);
             } catch (NumberFormatException e) {
                 log.error("Invalid year parameter: {}", year);
-                return;
+                return 0;
             }
         }
 
@@ -389,7 +381,9 @@ public class ScheduledTasks {
                     successCount, failCount, users.size());
         } catch (Exception e) {
             log.error("❌ Batch initialization failed", e);
+            failCount++;
         }
+        return failCount;
     }
 
 }

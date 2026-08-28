@@ -119,10 +119,21 @@ class LeaveLedgerTest {
 
     /** 按到期桶汇总本次写入的流水; expiry 为 null 的记为浮动债务 */
     private BigDecimal allocatedTo(LocalDate expiry) {
+        return sumInserted(expiry, null);
+    }
+
+    /** 按到期桶 + 类型汇总本次写入的流水。扣减时会顺带写入 ADJUSTMENT_* 的透支归位流水, 需要区分开 */
+    private BigDecimal sumInserted(LocalDate expiry, String type) {
         return inserted.stream()
                 .filter(r -> expiry == null ? r.getExpiryDate() == null : expiry.equals(r.getExpiryDate()))
+                .filter(r -> type == null || type.equals(r.getType()))
                 .map(LeaveRecord::getDays)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    /** 本次写入流水的净额, 即这次操作对总余额的影响 */
+    private BigDecimal netInserted() {
+        return inserted.stream().map(LeaveRecord::getDays).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private static void assertDays(String expected, BigDecimal actual) {
@@ -205,9 +216,16 @@ class LeaveLedgerTest {
 
         service.applyLeave(USER_ID, LocalDate.of(YEAR, 8, 1), LocalDate.of(YEAR, 8, 1), new BigDecimal("3.0"));
 
-        // 只能划走 2 天, 剩下 1 天转为新的透支
-        assertDays("-2.0", allocatedTo(QUOTA_BUCKET));
-        assertDays("-1.0", allocatedTo(null));
+        // 本次请假 3 天, 但真实可用只有 2 天
+        assertDays("-2.0", sumInserted(QUOTA_BUCKET, "ANNUAL"));   // 能划走的 2 天
+        assertDays("-1.0", sumInserted(null, "ANNUAL"));           // 剩下 1 天转为新的透支
+
+        // 扣减时顺带把 1.5 天历史透支归位: 由当年额度桶承接, 同时冲销浮动债务
+        assertDays("-1.5", sumInserted(QUOTA_BUCKET, "ADJUSTMENT_DEDUCT"));
+        assertDays("1.5", sumInserted(null, "ADJUSTMENT_ADD"));
+
+        // 归位不改变总余额, 所以本次写入的净额就是请的 3 天
+        assertDays("-3.0", netInserted());
     }
 
     // ------------------------------------------------------------------

@@ -63,6 +63,9 @@ CREATE TABLE IF NOT EXISTS sys_job (
     cron_expression VARCHAR(255) NOT NULL COMMENT 'Cron Expression',
     status INT DEFAULT 0 COMMENT '0=Normal, 1=Paused',
     remark VARCHAR(500) COMMENT 'Remark',
+    last_run_time DATETIME COMMENT 'Last Run Time',
+    last_run_status TINYINT DEFAULT NULL COMMENT '上次执行结果: 0=成功, 1=失败',
+    last_run_result VARCHAR(500) DEFAULT NULL COMMENT '上次执行结果说明',
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted TINYINT DEFAULT 0

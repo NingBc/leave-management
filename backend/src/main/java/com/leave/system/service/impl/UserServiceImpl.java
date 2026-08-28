@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUser(user);
 
         // 独立事务, 失败不影响离职状态写入
-        leaveAccountMaintenance.softDeleteAccountsQuietly(id);
+        leaveAccountMaintenance.settleResignationQuietly(id, user.getResignationDate());
     }
 
     @Override

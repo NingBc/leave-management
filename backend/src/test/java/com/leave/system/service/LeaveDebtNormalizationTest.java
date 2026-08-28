@@ -35,6 +35,13 @@ import static org.mockito.Mockito.when;
  * <p>
  * 场景取自生产用户「贾玉龙」: 按天累计的额度模型下他在 2 月请假产生了 1.5 天透支,
  * 到 8 月额度已累计到 6.5 天, 那笔透支早就不成立, 却仍以「额度透支」挂在账上。
+ *
+ * <p>
+ * 归位有两个触发点, 这里都覆盖:
+ * <ul>
+ * <li>{@code settleYearQuota} —— 年终结算 / 离职结算</li>
+ * <li>{@code applyLeave} —— 每次扣减时账户自愈</li>
+ * </ul>
  */
 class LeaveDebtNormalizationTest {
 
@@ -144,7 +151,7 @@ class LeaveDebtNormalizationTest {
         BigDecimal before = service.getAccount(USER_ID, year).getTotalBalance();
         assertDays(quota.subtract(new BigDecimal("4.0")), before);
 
-        assertTrue(service.refreshQuotaAndSettleDebt(USER_ID, year));
+        assertTrue(service.settleYearQuota(USER_ID, year));
 
         // 一对冲抵流水: 从当年额度桶扣 1.5, 同时冲销 1.5 浮动债务
         assertDays("-1.5", sumOf(quotaBucket));
@@ -160,10 +167,10 @@ class LeaveDebtNormalizationTest {
         givenAccount("0.0", "6.5");
         ledger.add(record("ANNUAL", "-1.5", null, LocalDate.of(year, 2, 14)));
 
-        assertTrue(service.refreshQuotaAndSettleDebt(USER_ID, year));
+        assertTrue(service.settleYearQuota(USER_ID, year));
         int afterFirst = inserted.size();
 
-        assertFalse(service.refreshQuotaAndSettleDebt(USER_ID, year));
+        assertFalse(service.settleYearQuota(USER_ID, year));
         assertEquals(afterFirst, inserted.size(), "第二次执行不应再写入任何流水");
     }
 
@@ -176,7 +183,7 @@ class LeaveDebtNormalizationTest {
         ledger.add(record("ANNUAL", debt.negate().toPlainString(), null, LocalDate.of(year, 2, 14)));
 
         BigDecimal quota = recalculatedQuota();
-        assertTrue(service.refreshQuotaAndSettleDebt(USER_ID, year));
+        assertTrue(service.settleYearQuota(USER_ID, year));
 
         // 只能归位到当年额度为止
         assertDays(quota.negate(), sumOf(quotaBucket));
@@ -191,7 +198,7 @@ class LeaveDebtNormalizationTest {
         givenAccount("1.0", "6.5");
         ledger.add(record("ANNUAL", "-2.0", null, LocalDate.of(year, 2, 14)));
 
-        assertTrue(service.refreshQuotaAndSettleDebt(USER_ID, year));
+        assertTrue(service.settleYearQuota(USER_ID, year));
 
         assertDays("-1.0", sumOf(carryBucket));   // 结转桶 1.0 先被用掉
         assertDays("-1.0", sumOf(quotaBucket));   // 余下 1.0 由当年额度承接
@@ -204,8 +211,24 @@ class LeaveDebtNormalizationTest {
         givenAccount("0.0", "6.5");
         ledger.add(record("ANNUAL", "-2.5", quotaBucket, LocalDate.of(year, 5, 29)));
 
-        service.refreshQuotaAndSettleDebt(USER_ID, year);
+        service.settleYearQuota(USER_ID, year);
 
         assertTrue(inserted.isEmpty(), "无透支时不应写入任何流水");
+    }
+
+    @Test
+    @DisplayName("扣减路径同样会归位: 请假时账户自愈")
+    void deductionPathNormalizesToo() {
+        givenAccount("0.0", "6.5");
+        ledger.add(record("ANNUAL", "-1.5", null, LocalDate.of(year, 2, 14)));
+
+        BigDecimal quota = recalculatedQuota();
+        service.applyLeave(USER_ID, LocalDate.of(year, 8, 1), LocalDate.of(year, 8, 1), new BigDecimal("1.0"));
+
+        // 归位的 1.5 + 本次请假的 1.0 都记在当年额度桶上
+        assertDays("-2.5", sumOf(quotaBucket));
+        // 浮动债务被冲销, 没有产生新的透支
+        assertDays("1.5", sumOf(null));
+        assertDays(quota.subtract(new BigDecimal("2.5")), service.getAccount(USER_ID, year).getTotalBalance());
     }
 }

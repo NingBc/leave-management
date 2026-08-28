@@ -14,8 +14,8 @@
         SELECT * FROM leave_account WHERE user_id = #{userId} AND year = #{year} - 1 AND deleted = 0
     </select>
 
-    <delete id="deleteByUserId">
-        UPDATE leave_account SET deleted = 1 WHERE user_id = #{userId}
+    <delete id="deleteAccountsAfterYear">
+        UPDATE leave_account SET deleted = 1 WHERE user_id = #{userId} AND year &gt; #{year}
     </delete>
 
     <select id="selectDistinctYears" resultType="java.lang.Integer">
