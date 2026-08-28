@@ -2,34 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.leave.system.mapper.LeaveRecordMapper">
 
-    <select id="selectByUserIdAndYear" resultType="com.leave.system.entity.LeaveRecord">
-        SELECT * FROM leave_record 
-        WHERE user_id = #{userId} 
-        AND YEAR(start_date) = #{year}
-        AND deleted = 0
-    </select>
-
-    <select id="selectRecordsForCarryOver" resultType="com.leave.system.entity.LeaveRecord">
-        SELECT * FROM leave_record
-        WHERE user_id = #{userId}
-          AND YEAR(start_date) = #{year}
-          AND deleted = 0
-    </select>
-    
     <select id="selectCarryOverRecord" resultType="com.leave.system.entity.LeaveRecord">
         SELECT * FROM leave_record
         WHERE user_id = #{userId} 
         AND type = 'CARRY_OVER'
         AND start_date = #{date}
-        AND deleted = 0
-    </select>
-
-    <select id="countDuplicateRecord" resultType="long">
-        SELECT COUNT(*) FROM leave_record
-        WHERE user_id = #{userId}
-        AND start_date = #{startDate}
-        AND type = #{type}
-        AND days = #{days}
         AND deleted = 0
     </select>
 
@@ -41,33 +18,21 @@
         ORDER BY start_date DESC
     </select>
     
-    <select id="selectAvailableBalances" resultType="com.leave.system.entity.LeaveRecord">
+    <!--
+      账本流水: 目标年度 1 月 1 日(含)之后发生的所有流水, 不含 CARRY_OVER。
+      · 排除 CARRY_OVER: 结转额度以 leave_account.last_year_balance 为唯一权威值,
+        CARRY_OVER 记录只是历史留痕, 两者都算会重复。
+      · 排除更早年度的流水: 上年及以前的加减(含 ADJUSTMENT_ADD)已经在结转计算中
+        折算进 last_year_balance, 再取一次同样会重复。
+      · 不设上界: 后续年度消耗同一批到期桶的用量必须一并扣除, 否则回填历史假期时会超发。
+    -->
+    <select id="selectLedgerRecords" resultType="com.leave.system.entity.LeaveRecord">
         SELECT * FROM leave_record
         WHERE user_id = #{userId}
-        AND expiry_date &gt;= #{anchorDate}
-        AND type IN ('CARRY_OVER', 'ADJUSTMENT_ADD')
+        AND start_date &gt;= #{from}
+        AND type &lt;&gt; 'CARRY_OVER'
         AND deleted = 0
-        ORDER BY expiry_date ASC
-    </select>
-    
-    <select id="selectUsageRecords" resultType="com.leave.system.entity.LeaveRecord">
-        SELECT * FROM leave_record
-        WHERE user_id = #{userId}
-        AND type IN ('ANNUAL', 'ADJUSTMENT_DEDUCT', 'EXPIRED')
-        AND expiry_date IS NOT NULL
-        AND deleted = 0
-    </select>
-    
-    <select id="selectFloatingRecords" resultType="com.leave.system.entity.LeaveRecord">
-        SELECT * FROM leave_record
-        WHERE user_id = #{userId}
-        AND expiry_date IS NULL
-        AND type != 'CARRY_OVER'
-        AND deleted = 0
-    </select>
-    
-    <select id="findAllRecords" resultType="com.leave.system.entity.LeaveRecord">
-        SELECT * FROM leave_record WHERE deleted = 0 ORDER BY start_date DESC
+        ORDER BY start_date ASC, id ASC
     </select>
     
     <select id="selectHistory" resultType="com.leave.system.entity.LeaveRecord">
@@ -107,27 +72,33 @@
         AND deleted = 0
     </select>
 
+    <!--
+      浮动债务 (透支) 查询, 限定在 from(含) 之后发生的流水。
+      更早年度的透支已经在跨年结转时折算进 last_year_balance, 若再查出来结算一次,
+      同一笔债会被反复从各年度的到期额度里扣, 员工凭空少假。
+      口径必须与 selectLedgerRecords 保持一致。
+    -->
     <select id="selectFloatingRecordsForCleanup" resultType="com.leave.system.entity.LeaveRecord">
         SELECT * FROM leave_record
         WHERE user_id = #{userId}
+        AND start_date &gt;= #{from}
         AND expiry_date IS NULL
         AND type != 'CARRY_OVER'
         AND deleted = 0
     </select>
 
-    <select id="countAnnualLeaveUsage" resultType="long">
-        SELECT COUNT(*) FROM leave_record
-        WHERE user_id = #{userId}
-        AND start_date = #{startDate}
-        AND type = 'ANNUAL'
-        AND days = #{days}
-        AND deleted = 0
-    </select>
-
+    <!--
+      某一天已记录的年假天数 (钉钉增量同步的比对基准)。
+      必须用 start_date &lt;= 日期 &lt;= end_date 覆盖跨天记录: 一条 3/1~3/5 的 5 天记录
+      start_date 只有 3/1, 若只按 start_date 相等匹配, 同步 3/2~3/5 时会查不到本地记录,
+      从而把这 4 天重复扣一遍。
+      跨天记录按自然日均摊 (总天数 / 日历天数)。
+    -->
     <select id="sumAnnualLeaveUsage" resultType="java.math.BigDecimal">
-        SELECT COALESCE(SUM(days), 0) FROM leave_record
+        SELECT COALESCE(SUM(days / (DATEDIFF(end_date, start_date) + 1)), 0)
+        FROM leave_record
         WHERE user_id = #{userId}
-        AND start_date = #{date}
+        AND #{date} BETWEEN start_date AND end_date
         AND type = 'ANNUAL'
         AND deleted = 0
     </select>

@@ -13,10 +13,6 @@ import java.math.BigDecimal;
 @Mapper
 public interface LeaveRecordMapper extends BaseMapper<LeaveRecord> {
 
-        List<LeaveRecord> selectByUserIdAndYear(@Param("userId") Long userId, @Param("year") Integer year);
-
-        List<LeaveRecord> selectRecordsForCarryOver(@Param("userId") Long userId, @Param("year") Integer year);
-
         List<LeaveRecord> selectExpiringRecords(@Param("userId") Long userId,
                         @Param("expiryDate") LocalDate expiryDate);
 
@@ -25,30 +21,20 @@ public interface LeaveRecordMapper extends BaseMapper<LeaveRecord> {
 
         List<LeaveRecord> selectExpiredRecordsByDate(@Param("userId") Long userId, @Param("date") LocalDate date);
 
-        List<LeaveRecord> selectFloatingRecordsForCleanup(@Param("userId") Long userId);
-
-        long countAnnualLeaveUsage(@Param("userId") Long userId, @Param("startDate") LocalDate startDate,
-                        @Param("days") BigDecimal days);
+        List<LeaveRecord> selectFloatingRecordsForCleanup(@Param("userId") Long userId,
+                        @Param("from") LocalDate from);
 
         BigDecimal sumAnnualLeaveUsage(@Param("userId") Long userId, @Param("date") LocalDate date);
 
         LeaveRecord selectCarryOverRecord(@Param("userId") Long userId, @Param("date") LocalDate date);
 
-        long countDuplicateRecord(@Param("userId") Long userId,
-                        @Param("startDate") LocalDate startDate,
-                        @Param("type") String type,
-                        @Param("days") BigDecimal days);
-
         List<LeaveRecord> selectRecordsByYear(@Param("userId") Long userId, @Param("year") Integer year);
 
-        List<LeaveRecord> selectAvailableBalances(@Param("userId") Long userId,
-                        @Param("anchorDate") LocalDate anchorDate);
-
-        List<LeaveRecord> selectUsageRecords(@Param("userId") Long userId);
-
-        List<LeaveRecord> selectFloatingRecords(@Param("userId") Long userId);
-
-        List<LeaveRecord> findAllRecords();
+        /**
+         * 账本流水: from(含) 之后发生的所有非 CARRY_OVER 流水。
+         * 见 LeaveRecordMapper.xml 中该语句的注释。
+         */
+        List<LeaveRecord> selectLedgerRecords(@Param("userId") Long userId, @Param("from") LocalDate from);
 
         List<LeaveRecord> selectHistory(@Param("userId") Long userId, @Param("year") Integer year);
 

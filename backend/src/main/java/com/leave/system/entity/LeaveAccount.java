@@ -109,4 +109,16 @@ public class LeaveAccount {
     public void setTotalBalance(BigDecimal totalBalance) {
         this.totalBalance = totalBalance;
     }
+
+    /**
+     * 年假余额。
+     *
+     * <p>
+     * 这个 getter 必须手写: 本项目的 Lombok 注解处理实际未生效 (类上的 @Data 不产生任何方法,
+     * 所有访问器都是手写的)。此前漏了这个 getter, 导致 Jackson 不会把 totalBalance 序列化进
+     * 接口响应, 前端「总可用余额 / 年假余额」恒为空。
+     */
+    public BigDecimal getTotalBalance() {
+        return totalBalance;
+    }
 }

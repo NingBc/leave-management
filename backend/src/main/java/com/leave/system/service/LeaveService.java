@@ -44,11 +44,6 @@ public interface LeaveService {
     List<LeaveRecord> getHistory(Long userId, Integer year);
 
     /**
-     * Get all leave records.
-     */
-    List<LeaveRecord> getAllRecords();
-
-    /**
      * Update an existing leave record.
      */
     void updateRecord(LeaveRecord record);
