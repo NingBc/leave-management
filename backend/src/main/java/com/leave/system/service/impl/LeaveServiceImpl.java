@@ -268,6 +268,11 @@ public class LeaveServiceImpl implements LeaveService {
         LeaveAccount account = accountMapper.selectAccountByUserIdAndYearIncludeDeleted(userId, year);
         boolean isNew = account == null;
         if (isNew) {
+            // 建号前确认用户真实存在。refreshAccount 接的是调用方传来的 SysUser 对象,
+            // 不校验的话, 一个 id 不存在的对象会在 leave_account 里留下孤儿账户。
+            if (userMapper.selectUserById(userId) == null) {
+                throw new BusinessException("用户不存在, 无法创建年假账户: " + userId);
+            }
             account = new LeaveAccount();
             account.setUserId(userId);
             account.setYear(year);

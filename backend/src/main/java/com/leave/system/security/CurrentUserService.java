@@ -3,6 +3,7 @@ package com.leave.system.security;
 import com.leave.system.entity.SysUser;
 import com.leave.system.exception.BusinessException;
 import com.leave.system.mapper.SysUserMapper;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,7 +62,7 @@ public class CurrentUserService {
      *
      * @param requestedUserId user id supplied by the client (may be null)
      * @return the requested id for administrators, the caller's own id otherwise
-     * @throws BusinessException if a non-admin targets somebody else
+     * @throws AccessDeniedException if a non-admin targets somebody else
      */
     public Long resolveTargetUserId(Long requestedUserId) {
         Long selfId = currentUserId();
@@ -69,7 +70,7 @@ public class CurrentUserService {
             return selfId;
         }
         if (!isAdmin()) {
-            throw new BusinessException("无权查看或操作其他员工的年假数据");
+            throw new AccessDeniedException("无权查看或操作其他员工的年假数据");
         }
         return requestedUserId;
     }

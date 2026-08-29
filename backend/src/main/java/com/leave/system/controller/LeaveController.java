@@ -65,16 +65,16 @@ public class LeaveController {
             @RequestParam(required = false) Integer year) {
         int targetYear = year != null ? year : LocalDate.now().getYear();
 
+        // 员工指定他人 id 直接拒绝, 不静默改成自己 —— 否则调用方以为初始化了别人
+        userId = currentUserService.resolveTargetUserId(userId);
+
         if (!currentUserService.isAdmin()) {
-            userId = currentUserService.currentUserId();
             if (targetYear != LocalDate.now().getYear()) {
                 throw new BusinessException("只能初始化当年度账户");
             }
             if (leaveService.getAccount(userId, targetYear).getId() != null) {
                 throw new BusinessException("账户已存在，如需重算请联系管理员");
             }
-        } else if (userId == null) {
-            throw new BusinessException("用户 ID 不能为空");
         }
 
         leaveService.initYearlyAccount(userId, targetYear);

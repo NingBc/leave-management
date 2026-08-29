@@ -132,6 +132,28 @@
     <build>
         <finalName>leave-management</finalName>
         <plugins>
+            <!--
+              显式声明 Lombok 注解处理器。
+
+              不加这段时, Maven 用 in-process 的 javax.tools 编译器, Lombok 只在 classpath 上
+              而没有被真正激活 —— 编译不报错, 但 @Data 一个方法都不生成。后果是打出来的 jar 里
+              Result / 各实体全都没有 getter, Jackson 无法序列化, 所有接口返回 406。
+              IntelliJ 自己开了注解处理(见 .idea/compiler.xml), 所以 IDE 构建正常,
+              两种构建方式产物不一致, 极难排查。
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
