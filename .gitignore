@@ -10,6 +10,11 @@ backend/*.iml
 # --- 前端 (Vue + Vite) ---
 frontend/node_modules/
 frontend/dist/
+# 前端构建产物, 由 build_all_in_one.sh 生成后拷进来。
+# Vite 的文件名带内容哈希, 纳入版本管理会让每次前端改动都产生大片增删,
+# 而且极易忘记重建 —— 曾经出现过 static 停留在 2026-02 而源码已改到 08 月的脱节。
+# 注意: 发版必须走 build_all_in_one.sh; 单独跑 mvn package 得到的 jar 不含前端。
+backend/src/main/resources/static/
 frontend/.vscode/
 frontend/.DS_Store
 frontend/src/assets/logo.png
