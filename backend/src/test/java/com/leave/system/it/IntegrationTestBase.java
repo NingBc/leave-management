@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -54,6 +55,13 @@ public abstract class IntegrationTestBase {
     protected static final String IT_PREFIX = "__it_";
 
     private static final AtomicLong SEQ = new AtomicLong(System.nanoTime() % 100000);
+
+    /**
+     * 钉钉一律打桩。年终结算内部会先触发一次同步, 真调用会去连 oapi.dingtalk.com,
+     * 集成配置里是占位密钥, 只能干等超时 —— 十几次结算就把测试拖到几分钟。
+     */
+    @MockBean
+    protected com.leave.system.service.DingTalkService dingTalkService;
 
     @Autowired
     protected JdbcTemplate jdbc;
