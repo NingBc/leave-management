@@ -1,0 +1,42 @@
+# 集成测试专用配置。
+#
+# 只连测试库 leave_system_test。IntegrationTestSafety 会在每次运行前校验这个 URL,
+# 一旦指向生产库就直接让测试失败 —— 集成测试是会写数据的。
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.48.0.13:3306/leave_system_test?useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    username: insp_dev
+    password: insp_dev@123
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.leave.system.entity
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+jwt:
+  secret: integration-test-secret-key-not-used-in-production
+  issuer: leave-system
+  expiration: 604800000
+
+# 钉钉在集成测试里不会被真正调用, 给占位值避免启动失败
+dingtalk:
+  app-key: test
+  app-secret: test
+  sync-lookback-days: 7
+dingtalk-app:
+  corp-id: test
+  agent-id: 0
+  app-key: test
+  app-secret: test
+
+logging:
+  level:
+    root: WARN
+    com.leave.system: INFO

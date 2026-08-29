@@ -155,7 +155,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getAllAccounts, updateAccount, addRecord as addLeaveRecordApi } from '../../api/leave'
+import { getAllAccounts, updateAccount, addRecord as addLeaveRecordApi, updateRecord as updateLeaveRecordApi } from '../../api/leave'
 import request from '../../utils/request'
 
 
@@ -252,10 +252,22 @@ const getRecordTypeTag = (type) => {
   return map[type] || 'info'
 }
 
+// 打开弹窗时的记录快照，用于判断哪些已有记录被真正改过
+const originalRecords = ref({})
+
+const isRecordDirty = (record) => {
+  const before = originalRecords.value[record.id]
+  if (!before) return false
+  return ['startDate', 'endDate', 'days', 'remarks', 'type']
+    .some(key => String(before[key] ?? '') !== String(record[key] ?? ''))
+}
+
 const handleEdit = (account) => {
+  const records = (account.records || []).map(r => ({ ...r }))
+  originalRecords.value = Object.fromEntries(records.map(r => [r.id, { ...r }]))
   form.value = {
     ...account,
-    records: account.records || []
+    records
   }
   editDialogVisible.value = true
 }
@@ -278,17 +290,21 @@ const addRecord = () => {
 
 const handleSave = async () => {
   try {
-    // 1. Update account details
+    // 1. 账户信息（目前仅「上年结余」可手工修正）
     await updateAccount(form.value)
 
-    // 2. Add new records
-    if (form.value.records && form.value.records.length > 0) {
-      const newRecords = form.value.records.filter(r => !r.id)
-      for (const record of newRecords) {
-        // Ensure userId is set
-        record.userId = form.value.userId
-        await addLeaveRecordApi(record)
-      }
+    const records = form.value.records || []
+
+    // 2. 新增记录
+    for (const record of records.filter(r => !r.id)) {
+      record.userId = form.value.userId
+      await addLeaveRecordApi(record)
+    }
+
+    // 3. 已有记录的改动
+    //    此前这里被整段跳过，管理员改完点保存会提示成功但改动被丢弃。
+    for (const record of records.filter(r => r.id && isRecordDirty(r))) {
+      await updateLeaveRecordApi(record)
     }
 
     ElMessage.success('保存成功')
@@ -296,7 +312,7 @@ const handleSave = async () => {
     loadAccounts()
   } catch (e) {
     console.error(e)
-    ElMessage.error('保存失败')
+    ElMessage.error(e?.message || '保存失败')
   }
 }
 

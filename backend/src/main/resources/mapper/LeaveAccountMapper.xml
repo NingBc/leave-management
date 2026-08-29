@@ -14,8 +14,8 @@
         SELECT * FROM leave_account WHERE user_id = #{userId} AND year = #{year} - 1 AND deleted = 0
     </select>
 
-    <delete id="deleteByUserId">
-        UPDATE leave_account SET deleted = 1 WHERE user_id = #{userId}
+    <delete id="deleteAccountsAfterYear">
+        UPDATE leave_account SET deleted = 1 WHERE user_id = #{userId} AND year &gt; #{year}
     </delete>
 
     <select id="selectDistinctYears" resultType="java.lang.Integer">
@@ -27,8 +27,8 @@
     </select>
 
     <insert id="insertAccount" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO leave_account (user_id, year, social_seniority, standard_quota, days_employed, actual_quota, last_year_balance, current_year_used, deleted)
-        VALUES (#{userId}, #{year}, #{socialSeniority}, #{standardQuota}, #{daysEmployed}, #{actualQuota}, #{lastYearBalance}, #{currentYearUsed}, #{deleted})
+        INSERT INTO leave_account (user_id, year, social_seniority, standard_quota, days_employed, actual_quota, last_year_balance, deleted)
+        VALUES (#{userId}, #{year}, #{socialSeniority}, #{standardQuota}, #{daysEmployed}, #{actualQuota}, #{lastYearBalance}, #{deleted})
     </insert>
 
     <update id="updateAccount">
@@ -41,7 +41,6 @@
             <if test="daysEmployed != null">days_employed = #{daysEmployed},</if>
             <if test="actualQuota != null">actual_quota = #{actualQuota},</if>
             <if test="lastYearBalance != null">last_year_balance = #{lastYearBalance},</if>
-            <if test="currentYearUsed != null">current_year_used = #{currentYearUsed},</if>
             <if test="deleted != null">deleted = #{deleted},</if>
         </set>
         WHERE id = #{id}

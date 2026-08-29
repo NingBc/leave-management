@@ -24,6 +24,12 @@ public class SysJob {
     private LocalDateTime updateTime;
     private LocalDateTime lastRunTime;
 
+    /** 上次执行结果: 0=成功, 1=失败 */
+    private Integer lastRunStatus;
+
+    /** 上次执行结果说明 (失败原因 / 成功摘要) */
+    private String lastRunResult;
+
     @com.baomidou.mybatisplus.annotation.TableLogic
     private Integer deleted;
 
@@ -105,6 +111,22 @@ public class SysJob {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getLastRunStatus() {
+        return lastRunStatus;
+    }
+
+    public void setLastRunStatus(Integer lastRunStatus) {
+        this.lastRunStatus = lastRunStatus;
+    }
+
+    public String getLastRunResult() {
+        return lastRunResult;
+    }
+
+    public void setLastRunResult(String lastRunResult) {
+        this.lastRunResult = lastRunResult;
     }
 
     public LocalDateTime getLastRunTime() {

@@ -10,7 +10,10 @@ import com.leave.system.service.LeaveService;
 import com.leave.system.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -32,6 +35,14 @@ public class ScheduledTasks {
     private final UserService userService;
     private final DingTalkService dingTalkService;
 
+    /**
+     * 自身代理引用。@Transactional 靠 Spring 代理生效, 直接 this.xxx() 调用会绕过代理,
+     * REQUIRES_NEW 就不会真的开新事务。
+     */
+    @Autowired
+    @Lazy
+    private ScheduledTasks self;
+
     public ScheduledTasks(LeaveRecordMapper recordMapper,
             LeaveAccountMapper accountMapper,
             LeaveService leaveService,
@@ -46,48 +57,76 @@ public class ScheduledTasks {
 
     /**
      * Cleanup expired leave balances
-     * Runs every year on January 1 at 3:00 AM
+     * Runs every year on January 1
      * Defaults to cleaning up balances that expired on Dec 31 of last year
+     *
+     * <p>
+     * 注意: 本方法刻意<b>不加 {@code @Transactional}</b>。它是一个编排方法, 内部会调用
+     * 钉钉同步(含 HTTP 请求)以及逐用户的清理/初始化。若整体包在一个事务里:
+     * 一是网络调用期间长时间持有数据库连接与行锁; 二是内层 {@code @Transactional}
+     * 方法(如 applyLeave / initYearlyAccount)抛出异常并被上层 catch 掉之后, 共享事务
+     * 已被标记为 rollback-only, 提交时抛 UnexpectedRollbackException, 导致
+     * 「日志显示成功、数据全部回滚」。真正的事务边界下沉到单个用户。
      */
-    @Transactional(rollbackFor = Exception.class)
     public void cleanupExpiredLeaveBalances() {
-        log.info("🚀 Triggering DingTalk sync before expiry cleanup...");
-        try {
-            dingTalkService.syncLeaveData();
-        } catch (Exception e) {
-            log.error("❌ DingTalk sync failed during scheduled cleanup, proceeding with cleanup anyway", e);
-        }
-
         int lastYear = LocalDate.now().getYear() - 1;
-        performCleanupForYear(lastYear);
-
-        log.info("🔄 Re-initializing all accounts for the current year to refresh carry-over balances...");
-        initAllAccounts();
+        runYearEndRollover(lastYear);
     }
 
     /**
      * Manual trigger version of expiry cleanup
-     * 
+     *
      * @param year The year to clean balances for (e.g. "2024")
      */
-    @Transactional(rollbackFor = Exception.class)
     public void cleanupExpiredLeaveBalances(String year) {
-        log.info("🚀 Triggering DingTalk sync before manual expiry cleanup...");
+        int targetYear;
+        try {
+            targetYear = Integer.parseInt(year.trim());
+        } catch (RuntimeException e) {
+            log.error("❌ Invalid year parameter for manual cleanup: {}", year);
+            throw new IllegalArgumentException("清理年份参数非法: " + year);
+        }
+        runYearEndRollover(targetYear);
+    }
+
+    /**
+     * 年终结转编排: 同步钉钉 -> 清理 cleanupYear 的过期额度 -> 初始化 cleanupYear+1 账户。
+     * 三个阶段各自独立, 任一阶段失败不影响后续阶段已完成的数据。
+     */
+    private void runYearEndRollover(int cleanupYear) {
+        log.info("🚀 Year-end rollover start: cleanup {} -> init {}", cleanupYear, cleanupYear + 1);
+
+        List<String> problems = new ArrayList<>();
+
+        log.info("🚀 Triggering DingTalk sync before expiry cleanup...");
         try {
             dingTalkService.syncLeaveData();
         } catch (Exception e) {
-            log.error("❌ DingTalk sync failed during manual cleanup, proceeding with cleanup anyway", e);
+            log.error("❌ DingTalk sync failed, proceeding with cleanup anyway", e);
+            problems.add("钉钉同步失败: " + e.getMessage());
         }
 
-        try {
-            int targetYear = Integer.parseInt(year);
-            performCleanupForYear(targetYear);
-
-            log.info("🔄 Re-initializing all accounts for year {} to refresh carry-over balances...", targetYear + 1);
-            initAllAccounts(String.valueOf(targetYear + 1));
-        } catch (NumberFormatException e) {
-            log.error("❌ Invalid year parameter for manual cleanup: {}", year);
+        int cleanupFailures = performCleanupForYear(cleanupYear);
+        if (cleanupFailures > 0) {
+            problems.add(cleanupYear + " 年过期清理有 " + cleanupFailures + " 人失败");
         }
+
+        log.info("🔄 Re-initializing all accounts for year {} to refresh carry-over balances...", cleanupYear + 1);
+        int initFailures = initAllAccounts(String.valueOf(cleanupYear + 1));
+        if (initFailures > 0) {
+            problems.add((cleanupYear + 1) + " 年账户初始化有 " + initFailures + " 人失败");
+        }
+
+        if (!problems.isEmpty()) {
+            // 抛出去, 让 SysJobServiceImpl 把失败原因写进 sys_job.last_run_result。
+            // 年终结算一年只跑一次, 悄悄失败等于全员额度和结转都错到明年 ——
+            // 必须让它在任务列表里显示为红色。本方法幂等, 修完可直接重跑。
+            String summary = String.join("; ", problems);
+            log.error("❌ Year-end rollover finished WITH PROBLEMS: {}", summary);
+            throw new IllegalStateException("年终结算未完全成功 —— " + summary + " (修复后可重跑本任务, 幂等)");
+        }
+
+        log.info("✅ Year-end rollover finished: cleanup {} -> init {}", cleanupYear, cleanupYear + 1);
     }
 
     /**
@@ -95,7 +134,7 @@ public class ScheduledTasks {
      * 
      * @param cleanupYear The year whose Dec 31 expiry balances should be cleaned
      */
-    private void performCleanupForYear(int cleanupYear) {
+    private int performCleanupForYear(int cleanupYear) {
         LocalDate targetExpiryDate = LocalDate.of(cleanupYear, 12, 31);
 
         log.info("🔄 Starting leave expiry cleanup for year: {} (Target Expiry: {})", cleanupYear, targetExpiryDate);
@@ -105,16 +144,55 @@ public class ScheduledTasks {
 
         if (yearAccounts.isEmpty()) {
             log.info("No accounts found for year {}", cleanupYear);
-            return;
+            return 0;
         }
 
         int totalUsersAffected = 0;
+        int failedUsers = 0;
         BigDecimal totalDaysExpired = BigDecimal.ZERO;
 
         for (LeaveAccount account : yearAccounts) {
-            Long userId = account.getUserId();
+            // 每个用户一个独立事务: 单个用户失败不影响其他用户, 也不会把整批标记为 rollback-only
+            try {
+                BigDecimal expired = self.cleanupUserForYear(account, targetExpiryDate);
+                if (expired.compareTo(BigDecimal.ZERO) > 0) {
+                    totalDaysExpired = totalDaysExpired.add(expired);
+                    totalUsersAffected++;
+                }
+            } catch (Exception e) {
+                failedUsers++;
+                log.error("❌ Expiry cleanup failed for user {} (year {})", account.getUserId(), cleanupYear, e);
+            }
+        }
 
-            // Find records for this user that expire on the target date (Bucket credits)
+        if (failedUsers > 0) {
+            log.error("⚠️  Expiry cleanup for year {}: {} user(s) FAILED and were skipped", cleanupYear, failedUsers);
+        }
+        log.info("✅ Expiry cleanup for year {} completed: {} users affected, {} total days expired, {} failed",
+                cleanupYear, totalUsersAffected, totalDaysExpired, failedUsers);
+        return failedUsers;
+    }
+
+    /**
+     * 单个用户的过期清理, 独立事务。
+     *
+     * @return 本次实际过期作废的天数 (正数); 无过期则返回 0
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    public BigDecimal cleanupUserForYear(LeaveAccount account, LocalDate targetExpiryDate) {
+        Long userId = account.getUserId();
+        int cleanupYear = targetExpiryDate.getYear();
+
+        // 年终结算第一步: 按入职/离职日期算定该年度的在职天数与实际额度。
+        // 当年额度是逐日累计的移动靶, 库里的值平时没有意义, 必须在这里算定成
+        // 「这一年最终给了多少天」, 否则结转基数就是年中冻结的残值。
+        // 顺带把还能被额度覆盖的历史透支归位。
+        leaveService.settleYearQuota(userId, cleanupYear);
+        LeaveAccount settled = accountMapper.selectAccountByUserIdAndYear(userId, cleanupYear);
+        if (settled != null) {
+            account = settled;
+        }
+        {
             // Find records for this user that expire on the target date (Bucket credits)
             List<LeaveRecord> userRecords = recordMapper.selectExpiringRecords(userId, targetExpiryDate);
 
@@ -190,7 +268,8 @@ public class ScheduledTasks {
 
             remainingExpiring = remainingExpiring.subtract(alreadyExpiredAmount);
 
-            List<LeaveRecord> floatingRecords = recordMapper.selectFloatingRecordsForCleanup(userId);
+            List<LeaveRecord> floatingRecords = recordMapper.selectFloatingRecordsForCleanup(
+                    userId, LocalDate.of(targetExpiryDate.getYear(), 1, 1));
 
             BigDecimal currentNetDebt = floatingRecords.stream()
                     .map(LeaveRecord::getDays)
@@ -249,23 +328,20 @@ public class ScheduledTasks {
                 expiredRecord.setCreateTime(LocalDateTime.now());
                 recordMapper.insertRecord(expiredRecord);
 
-                totalDaysExpired = totalDaysExpired.add(remainingExpiring);
-                totalUsersAffected++;
                 log.info("⏱️  Expired {} days for user {} (target expiry date: {})",
                         remainingExpiring, userId, targetExpiryDate);
+                return remainingExpiring;
             }
         }
-
-        log.info("✅ Expiry cleanup for year {} completed: {} users affected, {} total days expired", cleanupYear,
-                totalUsersAffected, totalDaysExpired);
-
+        return BigDecimal.ZERO;
     }
 
     public void initAllAccounts() {
         initAllAccounts(null);
     }
 
-    public void initAllAccounts(String year) {
+    /** @return 初始化失败的用户数 */
+    public int initAllAccounts(String year) {
         Integer targetYear;
         if (year == null || year.trim().isEmpty() || "DEFAULT".equalsIgnoreCase(year)) {
             targetYear = LocalDate.now().getYear();
@@ -275,7 +351,7 @@ public class ScheduledTasks {
                 targetYear = Integer.parseInt(year);
             } catch (NumberFormatException e) {
                 log.error("Invalid year parameter: {}", year);
-                return;
+                return 0;
             }
         }
 
@@ -305,7 +381,9 @@ public class ScheduledTasks {
                     successCount, failCount, users.size());
         } catch (Exception e) {
             log.error("❌ Batch initialization failed", e);
+            failCount++;
         }
+        return failCount;
     }
 
 }

@@ -180,13 +180,43 @@ public class SysJobServiceImpl implements SysJobService, InitializingBean {
             Method method = findMethod(bean.getClass(), methodName, params.length);
             method.invoke(bean, params);
 
-            // Update last run time
-            updateLastRunTime(job.getId());
-
+            recordRunResult(job.getId(), 0, "执行成功");
             log.info("Job executed successfully: {}", job.getJobName());
         } catch (Exception e) {
-            log.error("Failed to execute job: {}", job.getJobName(), e);
+            // 反射调用把业务异常包在 InvocationTargetException 里, 取真实原因才有意义
+            Throwable cause = (e instanceof java.lang.reflect.InvocationTargetException && e.getCause() != null)
+                    ? e.getCause()
+                    : e;
+            log.error("Failed to execute job: {}", job.getJobName(), cause);
+            recordRunResult(job.getId(), 1, describe(cause));
         }
+    }
+
+    /**
+     * 把执行结果写回 sys_job, 让任务列表能直接看出上次跑成功没有。
+     *
+     * <p>
+     * 此前失败只进日志。年终结算一年只跑一次, 悄悄失败等于全员额度和结转都错到明年,
+     * 而没有任何地方能看出来。
+     */
+    private void recordRunResult(Long jobId, int status, String result) {
+        try {
+            SysJob job = jobMapper.selectJobById(jobId);
+            if (job == null) {
+                return;
+            }
+            job.setLastRunTime(LocalDateTime.now());
+            job.setLastRunStatus(status);
+            job.setLastRunResult(result);
+            jobMapper.updateJob(job);
+        } catch (Exception e) {
+            log.error("Failed to record run result for job {}", jobId, e);
+        }
+    }
+
+    private String describe(Throwable t) {
+        String msg = t.getMessage() != null ? t.getMessage() : t.getClass().getSimpleName();
+        return msg.length() > 480 ? msg.substring(0, 480) + "..." : msg;
     }
 
     @Override

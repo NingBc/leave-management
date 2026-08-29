@@ -64,7 +64,7 @@
       <div v-else class="empty-state">
         <el-empty description="本年度暂无账户信息" />
         <div class="action-btn">
-          <el-button type="primary" @click="initAccount" round>初始化 2026 账户</el-button>
+          <el-button type="primary" @click="initAccount" round>初始化 {{ currentYear }} 账户</el-button>
         </div>
       </div>
     </el-card>
@@ -114,7 +114,6 @@ const selectedHistoryYear = ref(currentYear)
 const screenWidth = ref(window.innerWidth)
 
 const isMobile = computed(() => screenWidth.value < 768)
-const descColumn = computed(() => isMobile.value ? 1 : 2)
 
 const totalAvailable = computed(() => {
   if (!account.value) return 0

@@ -2,7 +2,10 @@ package com.leave.system.exception;
 
 import com.leave.system.common.Result;
 import com.leave.system.common.ResultCode;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLSyntaxErrorException;
@@ -28,6 +31,22 @@ public class GlobalExceptionHandler {
     public Result<?> handleIllegalArgument(IllegalArgumentException e) {
         log.warn("Illegal Argument: {}", e.getMessage());
         return Result.error(ResultCode.BAD_REQUEST, e.getMessage());
+    }
+
+    /**
+     * 处理权限不足异常。
+     *
+     * <p>
+     * 必须显式声明, 否则会被下面的 Exception 兜底处理器吞成 500。
+     * 同时要回真正的 HTTP 403 —— 本项目其他错误走「HTTP 200 + body.code」的约定,
+     * 但鉴权失败若也返回 200, 监控、网关、非浏览器客户端都无法识别。
+     * 前端 request.js 的错误拦截器本来就处理 403 ("权限不足: ...")。
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public Result<?> handleAccessDenied(AccessDeniedException e) {
+        log.warn("Access Denied: {}", e.getMessage());
+        return Result.error(ResultCode.FORBIDDEN, "无权访问该资源");
     }
 
     /**

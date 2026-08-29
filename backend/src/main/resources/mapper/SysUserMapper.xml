@@ -23,7 +23,7 @@
     </select>
 
     <select id="selectActiveUsers" resultType="SysUser">
-        SELECT * FROM sys_user WHERE status != 'RESIGNED' AND deleted = 0
+        SELECT * FROM sys_user WHERE (status != 'RESIGNED' OR status IS NULL) AND deleted = 0
     </select>
 
     <select id="selectActiveUsersPage" resultType="SysUser">
