@@ -66,6 +66,11 @@ public class LeaveServiceImpl implements LeaveService {
      */
     private BigDecimal calculateCarryOverBalance(Long userId, Integer year) {
         int lastYear = year - 1;
+        // 结转是「截至上年 12/31」的快照, 流水扫描必须就此打住。
+        // 不设上界的话, 目标年度已经发生的请假会被从上年度的额度桶里减掉一次、
+        // 再在目标年度的账本里减掉一次 —— 员工凭空少假。年终结算延迟补跑,
+        // 或管理员手工重算账户时, 这条路径每次都会重复扣。
+        LocalDate lastYearEnd = LocalDate.of(lastYear, 12, 31);
 
         log.info("🔍 Calculating carry-over for user {} from year {} to {}", userId, lastYear, year);
 
@@ -86,10 +91,11 @@ public class LeaveServiceImpl implements LeaveService {
         }
 
         // 2. 年终兜底: 把上年度还能被额度覆盖的透支归位, 留下可追溯的冲抵流水
-        normalizeFloatingDebt(lastYearAccount, lastYear, LocalDate.of(lastYear, 1, 1));
+        normalizeFloatingDebt(lastYearAccount, lastYear, LocalDate.of(lastYear, 1, 1), lastYearEnd);
 
         // 3. 上年度桶账本 + 债务冲抵
-        TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(lastYearAccount, lastYear, LocalDate.of(lastYear, 1, 1));
+        TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(lastYearAccount, lastYear,
+                LocalDate.of(lastYear, 1, 1), lastYearEnd);
         log.info("📊 Year {} buckets before expiry: {}", lastYear, buckets);
         settleNegativeBuckets(buckets);
 
@@ -407,6 +413,17 @@ public class LeaveServiceImpl implements LeaveService {
      * @return 有序桶账本, null 桶排在最后
      */
     private TreeMap<LocalDate, BigDecimal> buildBuckets(LeaveAccount account, int year, LocalDate asOfDate) {
+        return buildBuckets(account, year, asOfDate, null);
+    }
+
+    /**
+     * @param ledgerThrough 流水扫描的上界(含)。传 null 表示「到此刻为止」, 用于请假扣减与页面展示;
+     *                      传该年度 12/31 表示「截至年底的快照」, 用于跨年结转与年终结算 ——
+     *                      结转值会存进下一年度的 last_year_balance, 若把下一年度的流水也算进来,
+     *                      下一年度的账本会把同一笔假再扣一遍。
+     */
+    private TreeMap<LocalDate, BigDecimal> buildBuckets(LeaveAccount account, int year, LocalDate asOfDate,
+            LocalDate ledgerThrough) {
         // null 排最后: 浮动债务没有到期日, 排序时永远靠后
         TreeMap<LocalDate, BigDecimal> buckets = new TreeMap<>(
                 Comparator.nullsLast(Comparator.naturalOrder()));
@@ -421,7 +438,8 @@ public class LeaveServiceImpl implements LeaveService {
         buckets.merge(quotaExpiry, actualQuota, BigDecimal::add);
         buckets.merge(carryOverExpiry, lastYearBalance, BigDecimal::add);
 
-        for (LeaveRecord record : recordMapper.selectLedgerRecords(account.getUserId(), LocalDate.of(year, 1, 1))) {
+        for (LeaveRecord record : recordMapper.selectLedgerRecords(account.getUserId(),
+                LocalDate.of(year, 1, 1), ledgerThrough)) {
             BigDecimal days = record.getDays() != null ? record.getDays() : BigDecimal.ZERO;
             LocalDate expiry = record.getExpiryDate();
 
@@ -563,7 +581,7 @@ public class LeaveServiceImpl implements LeaveService {
 
         // 先还债再放款。这里落库归位: 账户在每次请假时自愈, 历史透支不会一直挂着,
         // 也不会跨年参与结转冲抵。归位不改变总余额, 只是把消耗记到正确的到期桶上。
-        normalizeFloatingDebt(account, year, startDate);
+        normalizeFloatingDebt(account, year, startDate, null);
 
         TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, startDate);
         // 额度不足以完全覆盖的部分仍是浮动债务, 在内存里冲抵掉, 避免超发
@@ -653,7 +671,10 @@ public class LeaveServiceImpl implements LeaveService {
             accountMapper.updateAccount(account);
         }
 
-        BigDecimal settled = normalizeFloatingDebt(account, year, LocalDate.of(year, 1, 1));
+        // 年终算定同样是「截至年底」的口径: 归位流水记的是该年度 12/31 的事实,
+        // 不能把下一年度的消耗算进来, 否则延迟补跑的结果与准点跑不一致。
+        BigDecimal settled = normalizeFloatingDebt(account, year, LocalDate.of(year, 1, 1),
+                LocalDate.of(year, 12, 31));
         return changed || settled.compareTo(BigDecimal.ZERO) > 0;
     }
 
@@ -672,8 +693,9 @@ public class LeaveServiceImpl implements LeaveService {
      *
      * @return 本次实际归位的天数
      */
-    private BigDecimal normalizeFloatingDebt(LeaveAccount account, int year, LocalDate asOfDate) {
-        TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, asOfDate);
+    private BigDecimal normalizeFloatingDebt(LeaveAccount account, int year, LocalDate asOfDate,
+            LocalDate ledgerThrough) {
+        TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, asOfDate, ledgerThrough);
 
         // 欠账 = 所有负数桶之和 (浮动透支 + 被超额消耗的到期桶)
         BigDecimal debt = BigDecimal.ZERO;
@@ -828,8 +850,10 @@ public class LeaveServiceImpl implements LeaveService {
         LeaveAccount account = accountMapper.selectAccountByUserIdAndYear(userId, year);
 
         // 当年额度按天累计, 展示前先在内存里补算到今天。
-        // 这里刻意不落库: 读接口不应该写数据库(列表一页就是 10 次写, 还没有事务),
-        // 库里的值由每日任务 refreshCurrentYearQuota 负责保持新鲜。
+        // 这里刻意不落库: 读接口不应该写数据库(列表一页就是 10 次写, 还没有事务)。
+        // 库里的 actual_quota 因此对「今年还没请过假的人」是陈旧值, 由请假扣减
+        // (deductLeaveDays) 和年终结算 (settleYearQuota) 负责算定。
+        // 直接查库做报表会拿到偏小的数, 要取当前额度请走接口。
         if (account != null && year == LocalDate.now().getYear()) {
             recalcQuotaFields(account, user, year);
         }

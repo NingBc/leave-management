@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -547,6 +548,310 @@ class YearEndSettlementTest {
             assertNotNull(db.account(USER, 2023), "离职当年的账户必须保留");
             org.junit.jupiter.api.Assertions.assertNull(db.account(USER, 2024),
                     "离职年度之后的账户应当清理");
+        }
+    }
+
+    // ==================================================================
+    @Nested
+    @DisplayName("任务合并: 清理任务已包含初始化任务")
+    class JobMerge {
+
+        /**
+         * 两个定时任务原本都定在 1 月 1 日 (清理 01:00, 初始化 02:00)。
+         * 清理任务的编排第三步就是 {@code initAllAccounts(cleanupYear + 1)},
+         * 而 1 月 1 日执行时 {@code cleanupYear + 1 == LocalDate.now().getYear()} ——
+         * 与初始化任务的目标年度完全重合, 调的还是同一个方法。
+         *
+         * <p>
+         * 下面三个用例锁住这个结论。任何一次改动若把编排里的初始化步骤删掉或改了年份,
+         * 这里就会红 —— 因为那时初始化任务已经不在了, 没有任何东西兜底。
+         */
+        private static final int CLEANUP_YEAR = 2024;
+        private static final int INIT_YEAR = CLEANUP_YEAR + 1;
+
+        private static final long VETERAN = 1L;
+        private static final long NEW_HIRE = 2L;
+        private static final long RESIGNED = 3L;
+
+        @BeforeEach
+        void seedTeam() {
+            // 老员工: 有上年度账户, 清理阶段能遍历到
+            db.addUser(VETERAN, "veteran", LocalDate.of(2010, 1, 1), LocalDate.of(2015, 6, 1));
+            leaveService.initYearlyAccount(VETERAN, CLEANUP_YEAR);
+            leaveService.applyLeave(VETERAN, LocalDate.of(CLEANUP_YEAR, 3, 1),
+                    LocalDate.of(CLEANUP_YEAR, 3, 1), new BigDecimal("3.0"));
+
+            // 新员工: INIT_YEAR 才入职, 没有上年度账户。performCleanupForYear 按上年度账户
+            // 遍历, 遍历不到他 —— 他的账户只能靠编排的第三步建出来。
+            db.addUser(NEW_HIRE, "newhire", LocalDate.of(2018, 3, 1), LocalDate.of(INIT_YEAR, 2, 10));
+
+            // 离职员工: 两条路径都应跳过
+            SysUser quit = db.addUser(RESIGNED, "quit", LocalDate.of(2012, 1, 1), LocalDate.of(2016, 1, 1));
+            leaveService.initYearlyAccount(RESIGNED, CLEANUP_YEAR);
+            quit.setStatus("RESIGNED");
+            quit.setResignationDate(LocalDate.of(CLEANUP_YEAR, 6, 30));
+        }
+
+        @Test
+        @DisplayName("清理任务会给没有上年度账户的新员工建号 —— 这正是初始化任务的活")
+        void cleanupJobAlsoCreatesAccountsForNewHires() {
+            assertNull(db.account(NEW_HIRE, INIT_YEAR), "前置: 新员工此时还没有账户");
+
+            tasks.cleanupExpiredLeaveBalances(String.valueOf(CLEANUP_YEAR));
+
+            assertNotNull(db.account(NEW_HIRE, INIT_YEAR),
+                    "清理任务必须为没有上年度账户的新员工建立 " + INIT_YEAR + " 年账户");
+            assertNotNull(db.account(VETERAN, INIT_YEAR), "老员工同样要有新年度账户");
+            assertNull(db.account(RESIGNED, INIT_YEAR), "离职员工不应建号");
+        }
+
+        @Test
+        @DisplayName("清理任务跑完再跑初始化任务: 账户与流水零变化")
+        void initJobChangesNothingAfterCleanupJob() {
+            tasks.cleanupExpiredLeaveBalances(String.valueOf(CLEANUP_YEAR));
+
+            String accountsBefore = snapshotAccounts();
+            String recordsBefore = snapshotRecords();
+
+            // 初始化任务的入口。1 月 1 日执行时无参版本解析出的年度就是 INIT_YEAR,
+            // 这里显式传年份, 免得用例结果随系统时间变化。
+            tasks.initAllAccounts(String.valueOf(INIT_YEAR));
+
+            assertEquals(accountsBefore, snapshotAccounts(),
+                    "初始化任务不应改动任何账户 —— 它的活清理任务已经做完了");
+            assertEquals(recordsBefore, snapshotRecords(),
+                    "初始化任务不应新增或改动任何流水");
+        }
+
+        @Test
+        @DisplayName("反过来: 单独跑初始化任务, 建出的账户与清理任务第三步一致")
+        void standaloneInitProducesTheSameAccounts() {
+            tasks.cleanupExpiredLeaveBalances(String.valueOf(CLEANUP_YEAR));
+            String fromCleanupJob = snapshotAccounts();
+
+            // 把新年度账户抹掉, 只跑初始化任务
+            db.dropAccounts(INIT_YEAR);
+            tasks.initAllAccounts(String.valueOf(INIT_YEAR));
+
+            assertEquals(fromCleanupJob, snapshotAccounts(),
+                    "两条路径建出的账户必须逐字段一致");
+        }
+
+        private String snapshotAccounts() {
+            StringBuilder sb = new StringBuilder();
+            for (long uid : List.of(VETERAN, NEW_HIRE, RESIGNED)) {
+                for (int y = CLEANUP_YEAR; y <= INIT_YEAR; y++) {
+                    LeaveAccount a = db.account(uid, y);
+                    sb.append(uid).append('/').append(y).append('=')
+                            .append(a == null ? "none"
+                                    : a.getSocialSeniority() + "|" + a.getStandardQuota() + "|"
+                                            + a.getDaysEmployed() + "|" + a.getActualQuota() + "|"
+                                            + a.getLastYearBalance())
+                            .append('\n');
+                }
+            }
+            return sb.toString();
+        }
+
+        private String snapshotRecords() {
+            StringBuilder sb = new StringBuilder();
+            for (long uid : List.of(VETERAN, NEW_HIRE, RESIGNED)) {
+                for (LeaveRecord r : db.allRecords(uid)) {
+                    sb.append(r.getId()).append('|').append(uid).append('|').append(r.getStartDate())
+                            .append('|').append(r.getDays()).append('|').append(r.getType())
+                            .append('|').append(r.getExpiryDate()).append('|').append(r.getRemarks())
+                            .append('\n');
+                }
+            }
+            return sb.toString();
+        }
+    }
+
+    // ==================================================================
+    @Nested
+    @DisplayName("延迟补跑: 结果必须与准点跑一致")
+    class DelayedRollover {
+
+        /**
+         * 结转是「截至上年 12/31」的快照。若算结转时把目标年度已经发生的请假也扫进来,
+         * 那笔假会被扣两次 —— 一次减在 last_year_balance 里, 一次算在目标年度自己的账本里。
+         *
+         * <p>
+         * 三条路径都会踩到:
+         * <ul>
+         * <li>服务器 1 月 1 日没运行, 管理员事后手动补跑年终结算;</li>
+         * <li>管理员点 {@code /admin/init-all-accounts?year=YYYY} 重算账户;</li>
+         * <li>准点跑也有窄缝: 编排第一步先同步钉钉, 同步窗口含 1 月 1 日当天。</li>
+         * </ul>
+         */
+        private static final long ONTIME = 1L;
+        private static final long DELAYED = 2L;
+
+        @BeforeEach
+        void twoIdenticalEmployees() {
+            for (long uid : new long[] { ONTIME, DELAYED }) {
+                db.addUser(uid, "emp" + uid, LocalDate.of(2010, 1, 1), LocalDate.of(2015, 6, 1));
+                leaveService.initYearlyAccount(uid, 2024);
+                leaveService.applyLeave(uid, LocalDate.of(2024, 3, 1), LocalDate.of(2024, 3, 1),
+                        new BigDecimal("4.0"));
+            }
+        }
+
+        @Test
+        @DisplayName("服务器 1/1 没跑, 员工先请了假, 事后补跑不会把这笔假重复扣掉")
+        void delayedRolloverDoesNotDoubleCountNewYearLeave() {
+            // 准点: 先结算, 再请假
+            tasks.cleanupExpiredLeaveBalances("2024");
+            leaveService.applyLeave(ONTIME, LocalDate.of(2025, 1, 15), LocalDate.of(2025, 1, 15),
+                    new BigDecimal("2.0"));
+
+            // 延迟: 先请假, 事后才补跑结算
+            leaveService.applyLeave(DELAYED, LocalDate.of(2025, 1, 15), LocalDate.of(2025, 1, 15),
+                    new BigDecimal("2.0"));
+            BigDecimal beforeRollover = leaveService.getAccount(DELAYED, 2025).getTotalBalance();
+            tasks.cleanupExpiredLeaveBalances("2024");
+
+            assertDays(beforeRollover, leaveService.getAccount(DELAYED, 2025).getTotalBalance());
+            assertDays(leaveService.getAccount(ONTIME, 2025).getTotalBalance(),
+                    leaveService.getAccount(DELAYED, 2025).getTotalBalance());
+            // 2024 额度 10 - 已休 4 = 6 结转, 2025 额度 10, 已休 2 → 14
+            assertDays("14.0", leaveService.getAccount(DELAYED, 2025).getTotalBalance());
+        }
+
+        @Test
+        @DisplayName("管理员年中重算账户 (/admin/init-all-accounts), 不会吃掉已休的假")
+        void manualReinitDoesNotEatUsedDays() {
+            tasks.cleanupExpiredLeaveBalances("2024");
+            leaveService.applyLeave(DELAYED, LocalDate.of(2025, 5, 20), LocalDate.of(2025, 5, 20),
+                    new BigDecimal("3.0"));
+            BigDecimal before = leaveService.getAccount(DELAYED, 2025).getTotalBalance();
+
+            leaveService.initYearlyAccount(DELAYED, 2025);
+            assertDays(before, leaveService.getAccount(DELAYED, 2025).getTotalBalance());
+
+            // 连点三次也一样
+            leaveService.initYearlyAccount(DELAYED, 2025);
+            leaveService.initYearlyAccount(DELAYED, 2025);
+            assertDays(before, leaveService.getAccount(DELAYED, 2025).getTotalBalance());
+        }
+
+        @Test
+        @DisplayName("结转值本身与请假顺序无关")
+        void carryOverIsIndependentOfRolloverTiming() {
+            tasks.cleanupExpiredLeaveBalances("2024");
+            leaveService.applyLeave(ONTIME, LocalDate.of(2025, 2, 1), LocalDate.of(2025, 2, 1),
+                    new BigDecimal("5.0"));
+
+            leaveService.applyLeave(DELAYED, LocalDate.of(2025, 2, 1), LocalDate.of(2025, 2, 1),
+                    new BigDecimal("5.0"));
+            tasks.cleanupExpiredLeaveBalances("2024");
+
+            assertDays(db.account(ONTIME, 2025).getLastYearBalance(),
+                    db.account(DELAYED, 2025).getLastYearBalance());
+            assertDays("6.0", db.account(DELAYED, 2025).getLastYearBalance());
+        }
+
+        @Test
+        @DisplayName("考勤周期口径: 年终结算改到 1 月 25 日执行")
+        void settlementOnDay25OfJanuary() {
+            // 考勤周期是上月 26 到当月 25, 所以 12/26~12/31 的假往往在 1 月才录进来。
+            // 把年终结算推到 1/25, 等这批迟到的假落地之后再算定上年度 —— 前提是
+            // 这 25 天里已经发生的新年度请假不能被重复扣掉。
+
+            // 1/10: 员工请了 2 天。此时账户还没建, applyLeave 按需建号,
+            //       算出来的结转是 6.0 (12/28 那笔还没录进来)
+            leaveService.applyLeave(DELAYED, LocalDate.of(2025, 1, 10), LocalDate.of(2025, 1, 10),
+                    new BigDecimal("2.0"));
+            assertDays("6.0", db.account(DELAYED, 2025).getLastYearBalance());
+            assertDays("14.0", leaveService.getAccount(DELAYED, 2025).getTotalBalance());
+
+            // 1/15: 钉钉同步补进一笔 12/28 的假 (回溯窗口 27 天覆盖得到)
+            leaveService.applyLeave(DELAYED, LocalDate.of(2024, 12, 28), LocalDate.of(2024, 12, 28),
+                    new BigDecimal("1.0"));
+
+            // 1/25: 年终结算执行
+            tasks.cleanupExpiredLeaveBalances("2024");
+
+            // 结转被修正: 2024 额度 10 - 3/1 的 4 天 - 12/28 的 1 天 = 5
+            assertDays("5.0", db.account(DELAYED, 2025).getLastYearBalance());
+            // 2025 余额: 结转 5 + 额度 10 - 1/10 已休 2 = 13。1/10 那 2 天只扣一次
+            assertDays("13.0", leaveService.getAccount(DELAYED, 2025).getTotalBalance());
+
+            // 守恒: 两年共发放 20 天, 流水净额 -7 天
+            assertDays("20.0", db.account(DELAYED, 2024).getActualQuota()
+                    .add(db.account(DELAYED, 2025).getActualQuota()));
+            assertDays("-7.0", db.netRecords(DELAYED).subtract(db.sumRecords(DELAYED, "CARRY_OVER")));
+        }
+
+        @Test
+        @DisplayName("1 月 25 日执行也必须幂等: 补跑当天点两次不会变")
+        void settlementOnDay25IsIdempotent() {
+            leaveService.applyLeave(DELAYED, LocalDate.of(2025, 1, 10), LocalDate.of(2025, 1, 10),
+                    new BigDecimal("2.0"));
+            leaveService.applyLeave(DELAYED, LocalDate.of(2024, 12, 28), LocalDate.of(2024, 12, 28),
+                    new BigDecimal("1.0"));
+
+            tasks.cleanupExpiredLeaveBalances("2024");
+            BigDecimal once = leaveService.getAccount(DELAYED, 2025).getTotalBalance();
+            int recordsOnce = db.recordCount(DELAYED);
+
+            tasks.cleanupExpiredLeaveBalances("2024");
+            tasks.cleanupExpiredLeaveBalances("2024");
+
+            assertDays(once, leaveService.getAccount(DELAYED, 2025).getTotalBalance());
+            assertEquals(recordsOnce, db.recordCount(DELAYED), "重复执行不应产生新流水");
+        }
+
+        @Test
+        @DisplayName("过期额度还没被清理任务作废时请假, 扣的必须是新一年的额度")
+        void expiredBucketIsNeverDeductedEvenBeforeCleanupRuns() {
+            // 场景: 2023 年发的额度结转到 2024, 2024-12-31 到期。
+            // 清理任务还没跑 (排到 1/25), 员工 1/10 就请了假 —— 不能扣到那笔已过期的额度上。
+            long uid = 9L;
+            db.addUser(uid, "expiry", LocalDate.of(2010, 1, 1), LocalDate.of(2015, 6, 1));
+            leaveService.initYearlyAccount(uid, 2023);
+            leaveService.initYearlyAccount(uid, 2024);
+
+            // 2024 年的两个桶: 结转来的 10 天 12/31 到期, 当年额度 10 天 2025/12/31 到期
+            assertDays("10.0", db.account(uid, 2024).getLastYearBalance());
+            assertDays("10.0", db.account(uid, 2024).getActualQuota());
+            assertDays("20.0", leaveService.getAccount(uid, 2024).getTotalBalance());
+
+            // 清理任务没跑, 直接 2025-01-10 请 3 天
+            leaveService.applyLeave(uid, LocalDate.of(2025, 1, 10), LocalDate.of(2025, 1, 10),
+                    new BigDecimal("3.0"));
+
+            // 结转进 2025 的只有没过期的那 10 天, 2024-12-31 那桶已经作废
+            assertDays("10.0", db.account(uid, 2025).getLastYearBalance());
+            // 余额 = 结转 10 + 2025 额度 10 - 已休 3 = 17 (不是 20+10-3=27)
+            assertDays("17.0", leaveService.getAccount(uid, 2025).getTotalBalance());
+
+            // 关键: 这 3 天挂在 2025-12-31 那个桶上 (2024 年发的额度), 不是已过期的 2024-12-31
+            LeaveRecord leave = db.allRecords(uid).stream()
+                    .filter(r -> "ANNUAL".equals(r.getType()))
+                    .findFirst().orElseThrow();
+            assertEquals(LocalDate.of(2025, 12, 31), leave.getExpiryDate(),
+                    "请假必须扣在未过期的桶上, 实际挂在 " + leave.getExpiryDate());
+
+            // 1/25 清理任务补跑: 补写作废流水, 但余额一分不动
+            tasks.cleanupExpiredLeaveBalances("2024");
+            assertDays("-10.0", db.sumRecords(uid, "EXPIRED"));
+            assertDays("17.0", leaveService.getAccount(uid, 2025).getTotalBalance());
+            assertDays("10.0", db.account(uid, 2025).getLastYearBalance());
+        }
+
+        @Test
+        @DisplayName("补录上年度假期仍然扣得到 —— 上界没有把历史流水挡在外面")
+        void backfillingLastYearLeaveStillCounts() {
+            tasks.cleanupExpiredLeaveBalances("2024");
+            assertDays("6.0", db.account(DELAYED, 2025).getLastYearBalance());
+
+            // 2025 年才补录一笔 2024 年的假
+            leaveService.applyLeave(DELAYED, LocalDate.of(2024, 11, 1), LocalDate.of(2024, 11, 1),
+                    new BigDecimal("2.0"));
+            leaveService.initYearlyAccount(DELAYED, 2025);
+
+            assertDays("4.0", db.account(DELAYED, 2025).getLastYearBalance());
         }
     }
 }

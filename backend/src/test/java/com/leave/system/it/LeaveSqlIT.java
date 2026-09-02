@@ -68,7 +68,7 @@ class LeaveSqlIT extends IntegrationTestBase {
         insert("ANNUAL", "-2.0", LocalDate.of(2025, 12, 31), LocalDate.of(2024, 6, 1), LocalDate.of(2024, 6, 1));
         insert("ANNUAL", "-0.5", null, LocalDate.of(2024, 2, 1), LocalDate.of(2024, 2, 1));
 
-        List<LeaveRecord> ledger = recordMapper.selectLedgerRecords(user().getId(), LocalDate.of(2024, 1, 1));
+        List<LeaveRecord> ledger = recordMapper.selectLedgerRecords(user().getId(), LocalDate.of(2024, 1, 1), null);
 
         assertEquals(2, ledger.size(), "应排除 2023 年的流水和 CARRY_OVER");
         assertTrue(ledger.stream().noneMatch(r -> "CARRY_OVER".equals(r.getType())));
@@ -79,17 +79,46 @@ class LeaveSqlIT extends IntegrationTestBase {
     }
 
     @Test
+    @DisplayName("selectLedgerRecords: to 设上界后, 下一年度的流水扫不进来")
+    void ledgerRecordsRespectUpperBound() {
+        insert("ANNUAL", "-2.0", LocalDate.of(2025, 12, 31), LocalDate.of(2024, 6, 1), LocalDate.of(2024, 6, 1));
+        insert("ANNUAL", "-3.0", LocalDate.of(2025, 12, 31), LocalDate.of(2025, 1, 15), LocalDate.of(2025, 1, 15));
+
+        // 不设上界 = 「到此刻为止」, 请假扣减与页面展示用这个口径
+        assertEquals(2, recordMapper.selectLedgerRecords(
+                user().getId(), LocalDate.of(2024, 1, 1), null).size());
+
+        // 上界 = 2024/12/31, 结转与年终结算用这个口径: 2025 年的假不算进 2024 的账
+        List<LeaveRecord> snapshot = recordMapper.selectLedgerRecords(
+                user().getId(), LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31));
+        assertEquals(1, snapshot.size(), "2025-01-15 的流水不应落进 2024 年底的快照");
+        assertEquals(LocalDate.of(2024, 6, 1), snapshot.get(0).getStartDate());
+    }
+
+    @Test
+    @DisplayName("selectFloatingRecordsForCleanup: to 设上界后, 下一年度的透支不参与本年度清理")
+    void floatingRecordsRespectUpperBound() {
+        insert("ANNUAL", "-2.0", null, LocalDate.of(2024, 3, 1), LocalDate.of(2024, 3, 1));
+        insert("ANNUAL", "-1.0", null, LocalDate.of(2025, 2, 1), LocalDate.of(2025, 2, 1));
+
+        assertEquals(2, recordMapper.selectFloatingRecordsForCleanup(
+                user().getId(), LocalDate.of(2024, 1, 1), null).size());
+        assertEquals(1, recordMapper.selectFloatingRecordsForCleanup(
+                user().getId(), LocalDate.of(2024, 1, 1), LocalDate.of(2024, 12, 31)).size());
+    }
+
+    @Test
     @DisplayName("selectLedgerRecords: 逻辑删除的流水不参与账本")
     void ledgerRecordsSkipDeleted() {
         LeaveRecord r = insert("ANNUAL", "-2.0", null, LocalDate.of(2024, 6, 1), LocalDate.of(2024, 6, 1));
-        assertEquals(1, recordMapper.selectLedgerRecords(user().getId(), LocalDate.of(2024, 1, 1)).size());
+        assertEquals(1, recordMapper.selectLedgerRecords(user().getId(), LocalDate.of(2024, 1, 1), null).size());
 
         LeaveRecord del = new LeaveRecord();
         del.setId(r.getId());
         del.setDeleted(1);
         recordMapper.updateRecord(del);
 
-        assertTrue(recordMapper.selectLedgerRecords(user().getId(), LocalDate.of(2024, 1, 1)).isEmpty());
+        assertTrue(recordMapper.selectLedgerRecords(user().getId(), LocalDate.of(2024, 1, 1), null).isEmpty());
     }
 
     @Test
@@ -100,12 +129,12 @@ class LeaveSqlIT extends IntegrationTestBase {
         insert("CARRY_OVER", "-1.0", null, LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 1));
 
         List<LeaveRecord> f2024 = recordMapper.selectFloatingRecordsForCleanup(
-                user().getId(), LocalDate.of(2024, 1, 1));
+                user().getId(), LocalDate.of(2024, 1, 1), null);
         assertEquals(1, f2024.size(), "只应看到 2024 年产生的透支, CARRY_OVER 排除在外");
         assertEquals(0, new BigDecimal("-2.0").compareTo(f2024.get(0).getDays()));
 
         List<LeaveRecord> all = recordMapper.selectFloatingRecordsForCleanup(
-                user().getId(), LocalDate.of(2023, 1, 1));
+                user().getId(), LocalDate.of(2023, 1, 1), null);
         assertEquals(2, all.size());
     }
 

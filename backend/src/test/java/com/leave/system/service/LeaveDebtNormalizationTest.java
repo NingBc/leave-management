@@ -75,7 +75,7 @@ class LeaveDebtNormalizationTest {
             return 1;
         });
         when(jobMapper.selectAllJobs()).thenReturn(Collections.emptyList());
-        when(recordMapper.selectLedgerRecords(eq(USER_ID), eq(LocalDate.of(year, 1, 1))))
+        when(recordMapper.selectLedgerRecords(eq(USER_ID), eq(LocalDate.of(year, 1, 1)), any()))
                 .thenAnswer(call -> new ArrayList<>(ledger));
         when(recordMapper.selectRecordsByYear(anyLong(), any())).thenReturn(Collections.emptyList());
 

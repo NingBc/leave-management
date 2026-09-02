@@ -22,7 +22,7 @@ public interface LeaveRecordMapper extends BaseMapper<LeaveRecord> {
         List<LeaveRecord> selectExpiredRecordsByDate(@Param("userId") Long userId, @Param("date") LocalDate date);
 
         List<LeaveRecord> selectFloatingRecordsForCleanup(@Param("userId") Long userId,
-                        @Param("from") LocalDate from);
+                        @Param("from") LocalDate from, @Param("to") LocalDate to);
 
         BigDecimal sumAnnualLeaveUsage(@Param("userId") Long userId, @Param("date") LocalDate date);
 
@@ -31,10 +31,11 @@ public interface LeaveRecordMapper extends BaseMapper<LeaveRecord> {
         List<LeaveRecord> selectRecordsByYear(@Param("userId") Long userId, @Param("year") Integer year);
 
         /**
-         * 账本流水: from(含) 之后发生的所有非 CARRY_OVER 流水。
-         * 见 LeaveRecordMapper.xml 中该语句的注释。
+         * 账本流水: from(含) 到 to(含) 之间发生的所有非 CARRY_OVER 流水。
+         * to 传 null 表示不设上界。见 LeaveRecordMapper.xml 中该语句的注释。
          */
-        List<LeaveRecord> selectLedgerRecords(@Param("userId") Long userId, @Param("from") LocalDate from);
+        List<LeaveRecord> selectLedgerRecords(@Param("userId") Long userId, @Param("from") LocalDate from,
+                        @Param("to") LocalDate to);
 
         List<LeaveRecord> selectHistory(@Param("userId") Long userId, @Param("year") Integer year);
 
