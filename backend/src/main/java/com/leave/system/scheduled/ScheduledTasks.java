@@ -106,9 +106,17 @@ public class ScheduledTasks {
             problems.add("钉钉同步失败: " + e.getMessage());
         }
 
-        int cleanupFailures = performCleanupForYear(cleanupYear);
-        if (cleanupFailures > 0) {
-            problems.add(cleanupYear + " 年过期清理有 " + cleanupFailures + " 人失败");
+        // 清理阶段整体失败(取账户列表时数据库抖动等)也不能中断编排 ——
+        // 第三步的账户初始化才是「全员新年度额度」的唯一来源, 它一旦被跳过,
+        // 所有人整年都没有账户, 页面显示为空, 而且没有任何任务会补跑。
+        try {
+            int cleanupFailures = performCleanupForYear(cleanupYear);
+            if (cleanupFailures > 0) {
+                problems.add(cleanupYear + " 年过期清理有 " + cleanupFailures + " 人失败");
+            }
+        } catch (Exception e) {
+            log.error("❌ Expiry cleanup for year {} aborted, proceeding to account init anyway", cleanupYear, e);
+            problems.add(cleanupYear + " 年过期清理整体失败: " + e.getMessage());
         }
 
         log.info("🔄 Re-initializing all accounts for year {} to refresh carry-over balances...", cleanupYear + 1);
@@ -269,7 +277,7 @@ public class ScheduledTasks {
             remainingExpiring = remainingExpiring.subtract(alreadyExpiredAmount);
 
             List<LeaveRecord> floatingRecords = recordMapper.selectFloatingRecordsForCleanup(
-                    userId, LocalDate.of(targetExpiryDate.getYear(), 1, 1));
+                    userId, LocalDate.of(targetExpiryDate.getYear(), 1, 1), targetExpiryDate);
 
             BigDecimal currentNetDebt = floatingRecords.stream()
                     .map(LeaveRecord::getDays)

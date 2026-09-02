@@ -19,17 +19,25 @@
     </select>
     
     <!--
-      账本流水: 目标年度 1 月 1 日(含)之后发生的所有流水, 不含 CARRY_OVER。
+      账本流水: from(含) 到 to(含) 之间发生的所有流水, 不含 CARRY_OVER。
       · 排除 CARRY_OVER: 结转额度以 leave_account.last_year_balance 为唯一权威值,
         CARRY_OVER 记录只是历史留痕, 两者都算会重复。
       · 排除更早年度的流水: 上年及以前的加减(含 ADJUSTMENT_ADD)已经在结转计算中
         折算进 last_year_balance, 再取一次同样会重复。
-      · 不设上界: 后续年度消耗同一批到期桶的用量必须一并扣除, 否则回填历史假期时会超发。
+      · to 传 null 时不设上界 —— 请假扣减与页面展示要的是「桶到此刻为止的状态」,
+        后续年度消耗同一批到期桶的用量必须一并扣除, 否则补录历史假期时会超发。
+      · to 传该年度 12/31 时是「截至年底的快照」—— 跨年结转与年终结算必须用这个口径。
+        结转值会存进下一年度的 last_year_balance, 而下一年度的账本自己还会再扫一遍
+        它自己的流水; 若结转时把下一年度的流水也算进来, 同一笔假会被扣两次
+        (员工凭空少假)。加上界之后, 延迟补跑年终结算与 1 月 1 日准点跑结果完全一致。
     -->
     <select id="selectLedgerRecords" resultType="com.leave.system.entity.LeaveRecord">
         SELECT * FROM leave_record
         WHERE user_id = #{userId}
         AND start_date &gt;= #{from}
+        <if test="to != null">
+            AND start_date &lt;= #{to}
+        </if>
         AND type &lt;&gt; 'CARRY_OVER'
         AND deleted = 0
         ORDER BY start_date ASC, id ASC
@@ -73,15 +81,20 @@
     </select>
 
     <!--
-      浮动债务 (透支) 查询, 限定在 from(含) 之后发生的流水。
+      浮动债务 (透支) 查询, 限定在 from(含) 到 to(含) 之间发生的流水。
       更早年度的透支已经在跨年结转时折算进 last_year_balance, 若再查出来结算一次,
       同一笔债会被反复从各年度的到期额度里扣, 员工凭空少假。
+      上界同理: 用本年度到期的额度去冲抵下一年度才产生的透支, 写出来的冲抵流水记在
+      本年 12/31, 下一年度的账本扫不到它, 于是那笔债在下一年度又被算了一次。
       口径必须与 selectLedgerRecords 保持一致。
     -->
     <select id="selectFloatingRecordsForCleanup" resultType="com.leave.system.entity.LeaveRecord">
         SELECT * FROM leave_record
         WHERE user_id = #{userId}
         AND start_date &gt;= #{from}
+        <if test="to != null">
+            AND start_date &lt;= #{to}
+        </if>
         AND expiry_date IS NULL
         AND type != 'CARRY_OVER'
         AND deleted = 0

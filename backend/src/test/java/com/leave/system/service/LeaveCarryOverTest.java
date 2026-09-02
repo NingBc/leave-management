@@ -65,7 +65,7 @@ class LeaveCarryOverTest {
             inserted.add(call.getArgument(0));
             return 1;
         });
-        when(recordMapper.selectLedgerRecords(anyLong(), any())).thenReturn(Collections.emptyList());
+        when(recordMapper.selectLedgerRecords(anyLong(), any(), any())).thenReturn(Collections.emptyList());
         when(jobMapper.selectAllJobs()).thenReturn(Collections.emptyList());
 
         // 工龄 9 年 -> 标准额度 5 天; 入职很早 -> 上年度整年在职
@@ -92,7 +92,7 @@ class LeaveCarryOverTest {
     }
 
     private void givenLastYearRecords(LeaveRecord... records) {
-        when(recordMapper.selectLedgerRecords(eq(USER_ID), eq(LocalDate.of(lastYear, 1, 1))))
+        when(recordMapper.selectLedgerRecords(eq(USER_ID), eq(LocalDate.of(lastYear, 1, 1)), any()))
                 .thenReturn(List.of(records));
     }
 

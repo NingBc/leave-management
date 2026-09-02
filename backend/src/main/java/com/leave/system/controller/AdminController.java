@@ -47,7 +47,13 @@ public class AdminController {
             log.info("📋 Admin manually triggered expiry cleanup for year: {}",
                     year != null ? year : "current-1");
 
-            scheduledTasks.cleanupExpiredLeaveBalances();
+            // 传了年份就按年份跑。此前这里一律调无参版本, 参数收了、日志也打了, 却被丢掉 ——
+            // 管理员要求清理 2024, 实际清理的是「去年」。
+            if (year != null) {
+                scheduledTasks.cleanupExpiredLeaveBalances(String.valueOf(year));
+            } else {
+                scheduledTasks.cleanupExpiredLeaveBalances();
+            }
 
             return Result.success("过期清理执行成功！请查看系统日志获取详细结果。");
         } catch (Exception e) {

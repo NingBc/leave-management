@@ -96,7 +96,7 @@ class LeaveLedgerTest {
     }
 
     private void givenLedgerRecords(LeaveRecord... records) {
-        when(recordMapper.selectLedgerRecords(eq(USER_ID), eq(LocalDate.of(YEAR, 1, 1))))
+        when(recordMapper.selectLedgerRecords(eq(USER_ID), eq(LocalDate.of(YEAR, 1, 1)), any()))
                 .thenReturn(List.of(records));
     }
 

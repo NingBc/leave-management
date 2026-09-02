@@ -116,6 +116,11 @@ class InMemoryLeaveDb {
                 .findFirst().map(InMemoryLeaveDb::copy).orElse(null);
     }
 
+    /** 抹掉某个年度的全部账户 (给「只跑初始化」这类对照场景用) */
+    void dropAccounts(int year) {
+        accounts.removeIf(a -> a.getYear() != null && a.getYear() == year);
+    }
+
     List<LeaveRecord> allRecords(long userId) {
         return records.stream()
                 .filter(r -> r.getUserId() == userId && notDeleted(r.getDeleted()))
@@ -255,12 +260,14 @@ class InMemoryLeaveDb {
             return 1;
         });
 
-        // start_date >= from AND type <> 'CARRY_OVER'
-        when(recordMapper.selectLedgerRecords(anyLong(), any())).thenAnswer(c -> {
+        // start_date >= from [AND start_date <= to] AND type <> 'CARRY_OVER'
+        when(recordMapper.selectLedgerRecords(anyLong(), any(), any())).thenAnswer(c -> {
             Long userId = c.getArgument(0);
             LocalDate from = c.getArgument(1);
+            LocalDate to = c.getArgument(2);
             return live(userId)
                     .filter(r -> !r.getStartDate().isBefore(from))
+                    .filter(r -> to == null || !r.getStartDate().isAfter(to))
                     .filter(r -> !"CARRY_OVER".equals(r.getType()))
                     .sorted(Comparator.comparing(LeaveRecord::getStartDate).thenComparing(LeaveRecord::getId))
                     .map(InMemoryLeaveDb::copy).collect(Collectors.toList());
@@ -314,14 +321,16 @@ class InMemoryLeaveDb {
                     .map(InMemoryLeaveDb::copy).collect(Collectors.toList());
         });
 
-        // start_date >= from AND expiry_date IS NULL AND type != 'CARRY_OVER'
-        when(recordMapper.selectFloatingRecordsForCleanup(anyLong(), any())).thenAnswer(c -> {
+        // start_date >= from [AND start_date <= to] AND expiry_date IS NULL AND type != 'CARRY_OVER'
+        when(recordMapper.selectFloatingRecordsForCleanup(anyLong(), any(), any())).thenAnswer(c -> {
             Long userId = c.getArgument(0);
             LocalDate from = c.getArgument(1);
+            LocalDate to = c.getArgument(2);
             return live(userId)
                     .filter(r -> r.getExpiryDate() == null)
                     .filter(r -> !"CARRY_OVER".equals(r.getType()))
                     .filter(r -> !r.getStartDate().isBefore(from))
+                    .filter(r -> to == null || !r.getStartDate().isAfter(to))
                     .map(InMemoryLeaveDb::copy).collect(Collectors.toList());
         });
 
