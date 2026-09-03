@@ -12,8 +12,13 @@ echo "=================================================="
 # 1. Build Frontend
 echo "[1/4] Building Frontend..."
 cd $FRONTEND_DIR
-npm install
-npm run build
+# 用 npm ci 而不是 npm install。install 的职责本来就包含"必要时改写 lock",
+# 而不同 npm 版本对 peer 依赖的标注规则不一样(package.json 里也没有
+# engines / packageManager 约束), 于是每跑一次构建, package-lock.json
+# 上就多出一片只改 "peer": true、与依赖版本毫无关系的噪音 diff,
+# 谁的 npm 版本不同就来回翻烙饼。
+# ci 严格按 lock 安装, 从不回写, 跨机器产物一致。
+npm ci
 if [ $? -ne 0 ]; then
     echo "Error: Frontend build failed."
     exit 1
