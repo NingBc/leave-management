@@ -48,6 +48,14 @@
             <span class="bd-value num">{{ fmtDays(account.currentYearUsed) }}</span>
           </div>
         </div>
+
+        <!-- 余额只算到上次同步为止。不写这一句, 员工看到「还能休 3 天」就去请假,
+             而这周已经请掉的假还没同步进来, 等于按偏大的数字做决定。 -->
+        <p class="cutoff">
+          <el-icon><Clock /></el-icon>
+          <span v-if="sync.ok">已同步至 {{ sync.date }}，之后请的假尚未扣减</span>
+          <span v-else>休假记录尚未从钉钉同步，余额可能偏大</span>
+        </p>
       </section>
 
       <!-- 「已累积」比「全年应享」少不是被扣了假, 这条提示就是为了消除这个误会 -->
@@ -84,11 +92,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ArrowRight, InfoFilled } from '@element-plus/icons-vue'
+import { ArrowRight, InfoFilled, Clock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import request from '../utils/request'
 import { useUserStore } from '../stores/user'
-import { FIELD, fmtDays } from '../constants/leave'
+import { FIELD, fmtDays, parseSyncTime } from '../constants/leave'
 import { daysSince, humanizeDuration } from '../utils/date'
 import FieldHint from '../components/FieldHint.vue'
 
@@ -101,6 +109,8 @@ const account = ref(null)
 const userMenus = ref([])
 const loading = ref(true)
 const creating = ref(false)
+
+const sync = computed(() => parseSyncTime(account.value?.lastSyncTime))
 
 const displayName = computed(() => userInfo.value.realName || userStore.username || '同事')
 
@@ -306,6 +316,18 @@ onMounted(async () => {
   flex-shrink: 0;
   font-size: 14px;
   color: var(--text-placeholder);
+}
+
+.cutoff {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-annotation);
 }
 
 /* ---- 累积说明 ---- */

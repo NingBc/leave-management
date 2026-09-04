@@ -15,7 +15,8 @@
     </div>
 
     <p class="sync-note">
-      每周一从钉钉同步<span v-if="lastSyncTime"> · 上次 {{ lastSyncTime }}</span>
+      每周一从钉钉同步<span v-if="sync.ok"> · 上次 {{ sync.full }}</span>
+      <span v-else-if="sync.note"> · {{ sync.note }}</span>
     </p>
 
     <!-- 桌面: 表格 -->
@@ -61,7 +62,7 @@ import { ElMessage } from 'element-plus'
 import request from '../../utils/request'
 import { useUserStore } from '../../stores/user'
 import { useBreakpoint } from '../../composables/useBreakpoint'
-import { fmtDays, formatRecordType, recordTypeTag } from '../../constants/leave'
+import { fmtDays, formatRecordType, recordTypeTag, parseSyncTime } from '../../constants/leave'
 
 const userStore = useUserStore()
 const { isMobile } = useBreakpoint()
@@ -70,7 +71,7 @@ const currentYear = new Date().getFullYear()
 const history = ref([])
 const availableYears = ref([])
 const selectedHistoryYear = ref(currentYear)
-const lastSyncTime = ref('')
+const sync = ref(parseSyncTime(null))
 const loading = ref(true)
 
 /** 一天的假不用写成「8-11 ~ 8-11」 */
@@ -105,7 +106,7 @@ const loadSyncTime = async () => {
   if (!userId) return
   try {
     const account = await request.get('/leave/account', { params: { userId, year: currentYear } })
-    lastSyncTime.value = account?.lastSyncTime || ''
+    sync.value = parseSyncTime(account?.lastSyncTime)
   } catch (e) {
     console.error(e)
   }

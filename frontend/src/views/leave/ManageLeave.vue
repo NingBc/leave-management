@@ -10,6 +10,14 @@
       <span class="count num">共 {{ total }} 名员工</span>
     </div>
 
+    <!-- 整表的口径说明: 「今年已休」「当前可休」都只算到上次同步为止。
+         表格每行都有余额, 没法逐行标注, 所以放在这里管整张表。 -->
+    <p class="cutoff">
+      <el-icon><Clock /></el-icon>
+      <span v-if="sync.ok">已同步至 {{ sync.date }}，之后请的假尚未扣减</span>
+      <span v-else>休假记录尚未从钉钉同步，余额可能偏大</span>
+    </p>
+
     <!-- ===== 桌面: 表格 ===== -->
     <el-table v-if="!isMobile" :data="accounts" v-loading="loading" class="surface account-table">
       <el-table-column prop="employeeNumber" label="工号" min-width="104" />
@@ -278,7 +286,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Lock, Plus } from '@element-plus/icons-vue'
+import { Lock, Plus, Clock } from '@element-plus/icons-vue'
 import {
   getAllAccounts, updateAccount,
   addRecord as addLeaveRecordApi, updateRecord as updateLeaveRecordApi
@@ -286,7 +294,7 @@ import {
 import request from '../../utils/request'
 import { useBreakpoint } from '../../composables/useBreakpoint'
 import {
-  FIELD, MANUAL_RECORD_TYPES, fmtDays, formatRecordType, recordTypeTag
+  FIELD, MANUAL_RECORD_TYPES, fmtDays, formatRecordType, recordTypeTag, parseSyncTime
 } from '../../constants/leave'
 import FieldHint from '../../components/FieldHint.vue'
 
@@ -335,6 +343,9 @@ const loadAvailableYears = async () => {
     yearOptions.value = [currentYear, currentYear - 1, currentYear - 2]
   }
 }
+
+/** 列表每行都带同一个 lastSyncTime(后端在循环外查一次), 取第一行即可 */
+const sync = computed(() => parseSyncTime(accounts.value[0]?.lastSyncTime))
 
 const loadAccounts = async () => {
   try {
@@ -469,6 +480,16 @@ onMounted(() => {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+}
+
+.cutoff {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-annotation);
 }
 
 .th {
