@@ -1,0 +1,347 @@
+/**
+ * 全站设计令牌。
+ *
+ * 只在这里定义颜色/圆角/间距, 页面里一律引用变量, 不写死色值 ——
+ * 改版前每个页面各写一套 scoped 样式, 同一个「卡片」在四个页面有四种圆角和阴影。
+ *
+ * 色板取 Open Color, 主色 indigo, 状态色同族, 保证放在一起不打架。
+ */
+
+:root {
+  /* ---- 品牌色 ---- */
+  --brand:            #3b5bdb;
+  --brand-hover:      #364fc7;
+  --brand-active:     #2f44ad;
+  --brand-subtle:     #edf0fd;  /* 选中态底色 */
+  --brand-border:     #d3dafa;
+
+  /* ---- 中性色 ---- */
+  --bg-page:          #f7f8fa;
+  --bg-surface:       #ffffff;
+  --bg-sunken:        #f1f3f5;  /* 表头、只读区 */
+  --bg-hover:         #f8f9fa;
+
+  --border:           #e5e7eb;
+  --border-strong:    #dee2e6;
+
+  --text-primary:     #212529;
+  --text-secondary:   #495057;
+  --text-muted:       #868e96;
+  --text-placeholder: #adb5bd;
+  --text-inverse:     #ffffff;
+
+  /* ---- 状态色 ---- */
+  --success:          #2f9e44;
+  --success-subtle:   #ebfbee;
+  --warning:          #e8590c;
+  --warning-subtle:   #fff4e6;
+  --danger:           #e03131;
+  --danger-subtle:    #fff5f5;
+  --info:             #868e96;
+  --info-subtle:      #f1f3f5;
+
+  /* ---- 圆角 ---- */
+  --radius-sm:  6px;
+  --radius:     8px;
+  --radius-lg:  12px;
+  --radius-pill: 999px;
+
+  /* ---- 阴影: 克制, 结构主要靠边框 ---- */
+  --shadow-sm:  0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow:     0 2px 8px rgba(16, 24, 40, 0.06);
+  --shadow-lg:  0 8px 24px rgba(16, 24, 40, 0.10);
+
+  /* ---- 排版 ---- */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+               "Hiragino Sans GB", "Microsoft YaHei", Roboto, Helvetica, Arial, sans-serif;
+  /* 数字等宽: 年假天数成列时能对齐 */
+  --font-num: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* ---- 布局 ---- */
+  --header-h:  56px;
+  --sidebar-w: 216px;
+  --tabbar-h:  56px;
+
+  /* ---- 动效: 只留颜色/透明度过渡, 不做位移 ---- */
+  --ease: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   Element Plus 变量覆盖
+   ========================================================================== */
+
+:root {
+  --el-color-primary: var(--brand);
+  --el-color-primary-light-3: #768ce6;
+  --el-color-primary-light-5: #9daded;
+  --el-color-primary-light-7: #c4cef4;
+  --el-color-primary-light-8: #d8def8;
+  --el-color-primary-light-9: #edf0fd;
+  --el-color-primary-dark-2: var(--brand-hover);
+
+  --el-color-success: var(--success);
+  --el-color-success-light-9: var(--success-subtle);
+  --el-color-warning: var(--warning);
+  --el-color-warning-light-9: var(--warning-subtle);
+  --el-color-danger:  var(--danger);
+  --el-color-danger-light-9: var(--danger-subtle);
+  --el-color-error:   var(--danger);
+  --el-color-info:    var(--info);
+  --el-color-info-light-9: var(--info-subtle);
+
+  --el-text-color-primary:     var(--text-primary);
+  --el-text-color-regular:     var(--text-secondary);
+  --el-text-color-secondary:   var(--text-muted);
+  --el-text-color-placeholder: var(--text-placeholder);
+
+  --el-border-color:        var(--border);
+  --el-border-color-light:  var(--border);
+  --el-border-color-lighter: var(--border);
+  --el-border-color-extra-light: var(--bg-sunken);
+  --el-fill-color-blank:    var(--bg-surface);
+  --el-fill-color-light:    var(--bg-hover);
+  --el-bg-color-page:       var(--bg-page);
+
+  --el-border-radius-base:  var(--radius-sm);
+  --el-border-radius-round: var(--radius-pill);
+
+  --el-font-family: var(--font-sans);
+  --el-box-shadow-light: var(--shadow-sm);
+  --el-box-shadow:       var(--shadow);
+}
+
+/* ==========================================================================
+   全局基础
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  touch-action: manipulation;   /* 关掉双击缩放, 移动端点击不再有 300ms 延迟 */
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   通用类
+   ========================================================================== */
+
+/* 页面标题区 */
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.page-desc {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* 卡片: 边框优先, 阴影只是极轻的一层 */
+.surface {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 分区标题 */
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 等宽数字 */
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* 工具栏 */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+/* ==========================================================================
+   Element Plus 组件微调
+   ========================================================================== */
+
+/* 表格: 表头浅底, 去掉默认的粗分隔感 */
+.el-table {
+  --el-table-header-bg-color: var(--bg-sunken);
+  --el-table-header-text-color: var(--text-secondary);
+  --el-table-border-color: var(--border);
+  --el-table-row-hover-bg-color: var(--bg-hover);
+  font-variant-numeric: tabular-nums;
+}
+
+.el-table th.el-table__cell {
+  font-weight: 600;
+}
+
+/* 按钮: 去掉 Element 默认的过亮 hover */
+.el-button {
+  font-weight: 500;
+}
+
+.el-button--primary {
+  --el-button-hover-bg-color: var(--brand-hover);
+  --el-button-hover-border-color: var(--brand-hover);
+  --el-button-active-bg-color: var(--brand-active);
+  --el-button-active-border-color: var(--brand-active);
+}
+
+/* 弹窗 */
+.el-dialog {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.el-dialog__header {
+  margin-right: 0;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.el-dialog__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.el-dialog__body {
+  padding: 20px;
+}
+
+.el-dialog__footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* 提示条: 左侧色条 + 浅底, 不用 Element 的满色 */
+.el-alert {
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.el-alert__title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.el-alert__description {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* 标签 */
+.el-tag {
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+/* 输入框 */
+.el-input__wrapper,
+.el-textarea__inner {
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 1px var(--border) inset;
+}
+
+.el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--border-strong) inset;
+}
+
+/* 描述列表 */
+.el-descriptions {
+  --el-descriptions-item-bordered-label-background: var(--bg-sunken);
+}
+
+.el-descriptions__label {
+  font-weight: 500 !important;
+  color: var(--text-secondary) !important;
+}
+
+/* 分页 */
+.el-pagination {
+  --el-pagination-font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   移动端
+   ========================================================================== */
+
+@media screen and (max-width: 767px) {
+  .page-head {
+    margin-bottom: 16px;
+  }
+
+  .page-title {
+    font-size: 18px;
+  }
+
+  /* 触控目标不小于 40px */
+  .el-button {
+    min-height: 36px;
+  }
+
+  .el-dialog {
+    --el-dialog-width: calc(100vw - 24px) !important;
+    margin: 0 auto;
+  }
+
+  .el-dialog__body {
+    padding: 16px;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  /* 移动端表单标签改为顶部对齐, 140px 的 label 在手机上挤没了输入框 */
+  .el-form--label-top .el-form-item__label {
+    padding-bottom: 4px;
+  }
+}

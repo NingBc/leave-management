@@ -1,379 +1,415 @@
 <template>
-  <div class="home-container">
-    <div class="welcome-section">
-      <div class="welcome-card">
-        <div class="greeting">
-          <h1>你好，{{ userInfo.realName || userStore.username || '用户' }}！</h1>
+  <div class="home">
+    <div class="greeting">
+      <h1>{{ greetingText }}，{{ displayName }}</h1>
+      <p>{{ todayText }}</p>
+    </div>
+
+    <template v-if="account">
+      <!-- 员工进来最想知道的就一件事: 还剩几天假 -->
+      <section class="balance surface">
+        <div class="balance-head">
+          <div>
+            <div class="balance-label">
+              {{ FIELD.totalBalance.label }}
+              <FieldHint :label="FIELD.totalBalance.label" :text="FIELD.totalBalance.hint" />
+            </div>
+            <div class="balance-value num">
+              {{ fmtDays(account.totalBalance) }}<span class="unit">天</span>
+            </div>
+          </div>
+          <el-button v-if="canViewMyLeave" text type="primary" @click="router.push('/leave/my')">
+            休假记录<el-icon><ArrowRight /></el-icon>
+          </el-button>
         </div>
-        <div v-if="dailyQuote" class="daily-quote">
-          🍵 {{ dailyQuote }}
+
+        <div class="breakdown">
+          <div class="bd-item">
+            <span class="bd-label">
+              {{ FIELD.lastYearBalance.short }}
+              <FieldHint :label="FIELD.lastYearBalance.label" :text="FIELD.lastYearBalance.hint" />
+            </span>
+            <span class="bd-value num">{{ fmtDays(account.lastYearBalance) }}</span>
+          </div>
+          <div class="bd-op">+</div>
+          <div class="bd-item">
+            <span class="bd-label">
+              {{ FIELD.actualQuota.short }}
+              <FieldHint :label="FIELD.actualQuota.label" :text="FIELD.actualQuota.hint" />
+            </span>
+            <span class="bd-value num">{{ fmtDays(account.actualQuota) }}</span>
+          </div>
+          <div class="bd-op">−</div>
+          <div class="bd-item">
+            <span class="bd-label">
+              {{ FIELD.currentYearUsed.short }}
+              <FieldHint :label="FIELD.currentYearUsed.label" :text="FIELD.currentYearUsed.hint" />
+            </span>
+            <span class="bd-value num">{{ fmtDays(account.currentYearUsed) }}</span>
+          </div>
         </div>
+      </section>
+
+      <!-- 「已累积」比「全年应享」少不是被扣了假, 这条提示就是为了消除这个误会 -->
+      <div class="accrual-tip">
+        <el-icon><InfoFilled /></el-icon>
+        <p>年假逐日累积，年底满 <b class="num">{{ fmtDays(account.standardQuota) }}</b> 天</p>
       </div>
-    </div>
 
-    <div class="stats-section">
-      <el-row :gutter="isMobile ? 12 : 20">
-        <el-col :span="isMobile ? 24 : 8">
-          <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-              <el-icon :size="28"><Calendar /></el-icon>
-            </div>
-            <div class="stat-content">
-              <div class="stat-value">{{ daysInCompany }}</div>
-              <div class="stat-label">在职天数</div>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="isMobile ? 24 : 8">
-          <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-              <el-icon :size="28"><Clock /></el-icon>
-            </div>
-            <div class="stat-content">
-              <div class="stat-value">{{ formatDate(userInfo.entryDate) }}</div>
-              <div class="stat-label">入职日期</div>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="isMobile ? 24 : 8">
-          <div class="stat-card">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-              <el-icon :size="28"><TrophyBase /></el-icon>
-            </div>
-            <div class="stat-content">
-              <div class="stat-value">{{ userInfo.socialSeniority || 0 }} 年</div>
-              <div class="stat-label">社会工龄</div>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+      <h3 class="section-title">{{ currentYear }} 年明细</h3>
+      <section class="detail surface">
+        <div v-for="row in detailRows" :key="row.key" class="row">
+          <span class="row-label">
+            {{ row.label }}
+            <FieldHint :label="row.label" :text="row.hint" />
+          </span>
+          <span class="row-value num">{{ row.value }}</span>
+        </div>
+      </section>
+    </template>
 
-    <div class="quick-actions" v-if="quickActions.length > 0">
-      <h3 class="section-title">快捷操作</h3>
-      <el-row :gutter="isMobile ? 12 : 20">
-        <el-col :span="isMobile ? 12 : 6" v-for="action in quickActions" :key="action.path">
-          <div class="action-card" @click="navigateTo(action.path)">
-            <el-icon :size="32" :style="{ color: action.color }">
-              <component :is="action.icon" />
-            </el-icon>
-            <div class="action-title">{{ action.title }}</div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+    <section v-else-if="!loading" class="surface empty-account">
+      <el-icon :size="20"><InfoFilled /></el-icon>
+      <div class="empty-body">
+        <div class="empty-title">还没有 {{ currentYear }} 年年假账户</div>
+        <div class="empty-desc">按入职日期和累计工龄自动算出年假</div>
+        <el-button type="primary" :loading="creating" @click="createAccount">
+          建立 {{ currentYear }} 年账户
+        </el-button>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { 
-  Calendar, User, Clock, TrophyBase,
-  DocumentCopy, Tickets, Setting, DataAnalysis
-} from '@element-plus/icons-vue'
+import { ArrowRight, InfoFilled } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 import request from '../utils/request'
 import { useUserStore } from '../stores/user'
+import { FIELD, fmtDays } from '../constants/leave'
+import { daysSince, humanizeDuration } from '../utils/date'
+import FieldHint from '../components/FieldHint.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
+
+const currentYear = new Date().getFullYear()
 const userInfo = ref({})
-const dailyQuote = ref('')
+const account = ref(null)
 const userMenus = ref([])
-const screenWidth = ref(window.innerWidth)
+const loading = ref(true)
+const creating = ref(false)
 
-const isMobile = computed(() => screenWidth.value < 768)
+const displayName = computed(() => userInfo.value.realName || userStore.username || '同事')
 
-const handleResize = () => {
-  screenWidth.value = window.innerWidth
-}
-
-const allQuickActions = [
-  { title: '我的休假', icon: Tickets, path: '/leave/my', color: '#667eea' },
-  { title: '年假管理', icon: DocumentCopy, path: '/leave/manage', color: '#f093fb' },
-  { title: '用户管理', icon: User, path: '/system/user', color: '#4facfe' },
-  { title: '系统设置', icon: Setting, path: '/system/role', color: '#43e97b' }
-]
-
-// 根据用户菜单权限过滤快捷操作
-const quickActions = computed(() => {
-  if (!userMenus.value || userMenus.value.length === 0) {
-    return []
-  }
-  
-  // 收集所有用户有权访问的路径
-  const allowedPaths = new Set()
-  const collectPaths = (menus) => {
-    menus.forEach(menu => {
-      if (menu.path) {
-        allowedPaths.add(menu.path)
-      }
-      if (menu.children && menu.children.length > 0) {
-        collectPaths(menu.children)
-      }
-    })
-  }
-  collectPaths(userMenus.value)
-  
-  // 只显示用户有权限的快捷操作
-  return allQuickActions.filter(action => allowedPaths.has(action.path))
+const greetingText = computed(() => {
+  const h = new Date().getHours()
+  if (h < 6) return '夜深了'
+  if (h < 12) return '早上好'
+  if (h < 14) return '中午好'
+  if (h < 18) return '下午好'
+  return '晚上好'
 })
 
-const daysInCompany = computed(() => {
-  if (!userInfo.value.entryDate) return 0
-  const entryDate = new Date(userInfo.value.entryDate)
-  const today = new Date()
-  const diffTime = Math.abs(today - entryDate)
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  return diffDays
+const todayText = computed(() => {
+  const d = new Date()
+  const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][d.getDay()]
+  return `${d.getMonth() + 1} 月 ${d.getDate()} 日 ${week}`
 })
 
-const formatDate = (dateStr) => {
-  if (!dateStr) return '-'
-  const date = new Date(dateStr)
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-}
+/**
+ * 明细只放「背景字段」, 不重复余额卡里的算式三项
+ * (上年结转 / 已累积 / 今年已休 就在上方的构成里, 同屏再列一遍没有意义)。
+ * 这四项正好解释了「已累积」是怎么算出来的: 工龄定档位, 档位按在职天数折算。
+ */
+const detailRows = computed(() => {
+  const a = account.value
+  if (!a) return []
+  const totalDays = daysSince(a.entryDate)
+  return [
+    // 前三项讲「我是谁」, 后两项讲「今年的假怎么算出来的」
+    { key: 'seniority', label: FIELD.socialSeniority.label, hint: FIELD.socialSeniority.hint, value: `${a.socialSeniority ?? 0} 年` },
+    { key: 'entry', label: FIELD.entryDate.label, hint: FIELD.entryDate.hint, value: a.entryDate || '—' },
+    { key: 'totalDays', label: FIELD.totalDaysEmployed.label, hint: FIELD.totalDaysEmployed.hint,
+      value: totalDays == null ? '—' : `${totalDays} 天（${humanizeDuration(totalDays)}）` },
+    { key: 'standard', label: FIELD.standardQuota.label, hint: FIELD.standardQuota.hint, value: `${fmtDays(a.standardQuota)} 天` },
+    { key: 'employed', label: FIELD.daysEmployed.label, hint: FIELD.daysEmployed.hint, value: `${a.daysEmployed ?? 0} 天` }
+  ]
+})
 
-const navigateTo = (path) => {
-  router.push(path)
-}
+const canViewMyLeave = computed(() => {
+  const walk = (list) => (list || []).some(m =>
+    m.path === '/leave/my' || (m.children?.length && walk(m.children))
+  )
+  return walk(userMenus.value)
+})
+
+/* ---------- 数据 ---------- */
 
 const loadUserInfo = async () => {
   try {
     const userId = userStore.userId
     if (!userId) return
-    
-    const res = await request.get(`/system/user/${userId}`)
-    userInfo.value = res
+    userInfo.value = await request.get(`/system/user/${userId}`)
   } catch (e) {
     console.error('Failed to load user info:', e)
   }
 }
 
-const getDailyQuote = async () => {
+const loadAccount = async () => {
   try {
     const userId = userStore.userId
-    const apiUrl = userId == 6
-      ? 'https://api.oick.cn/api/dog?apikey=4fb8e9f4b65be468e0cdbe226701a370'
-      : 'https://api.oick.cn/api/dutang?apikey=4ca862840fce3181c75d8d029f0876ec'
-    
-    const response = await fetch(apiUrl)
-    if (response.ok) {
-      const data = await response.json()
-      dailyQuote.value = data
-    }
+    if (!userId) return
+    account.value = await request.get('/leave/account', {
+      params: { userId, year: currentYear }
+    })
   } catch (e) {
-    console.error('Failed to fetch daily quote:', e)
+    console.error('Failed to load leave account:', e)
   }
 }
 
 const loadUserMenus = async () => {
-  // 直接从Store获取菜单数据，不再发起请求
-  if (userStore.userMenus && userStore.userMenus.length > 0) {
+  if (userStore.userMenus?.length) {
     userMenus.value = userStore.userMenus
-  } else {
-    try {
-      const userId = userStore.userId
-      if (!userId) return
-      
-      const menus = await request.get('/system/menu/user-menus', {
-        params: { userId }
-      })
-      userStore.setUserMenus(menus)
-      userMenus.value = menus
-    } catch (e) {
-      console.error('Failed to load user menus:', e)
-    }
+    return
+  }
+  try {
+    const userId = userStore.userId
+    if (!userId) return
+    const menus = await request.get('/system/menu/user-menus', { params: { userId } })
+    userStore.setUserMenus(menus)
+    userMenus.value = menus
+  } catch (e) {
+    console.error('Failed to load user menus:', e)
   }
 }
 
+/** 新员工自助建号: 后端只允许普通员工建「当年且不存在」的账户 */
+const createAccount = async () => {
+  const userId = userStore.userId
+  if (!userId) return
+  try {
+    creating.value = true
+    await request.post(`/leave/init?userId=${userId}&year=${currentYear}`)
+    ElMessage.success('账户已建立')
+    await loadAccount()
+  } catch (e) {
+    console.error(e)
+  } finally {
+    creating.value = false
+  }
+}
 
-onMounted(() => {
-  loadUserInfo()
-  loadUserMenus()
-  getDailyQuote()
-  window.addEventListener('resize', handleResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
+onMounted(async () => {
+  await Promise.all([loadUserInfo(), loadAccount(), loadUserMenus()])
+  loading.value = false
 })
 </script>
 
 <style scoped>
-.home-container {
-  max-width: 1200px;
+.home {
+  max-width: 760px;
   margin: 0 auto;
 }
 
-.welcome-section {
-  margin-bottom: 30px;
-}
-
-.welcome-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
-  padding: 40px;
-  color: white;
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 30px;
-}
-
-.welcome-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-  border-radius: 50%;
-}
-
 .greeting {
-  position: relative;
-  z-index: 1;
+  margin-bottom: 20px;
 }
 
 .greeting h1 {
-  margin: 0 0 8px 0;
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.welcome-text {
-  margin: 0;
-  font-size: 16px;
-  opacity: 0.9;
+.greeting p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
-.daily-quote {
-  margin-top: 16px;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-  font-style: italic;
-  font-size: 14px;
-  line-height: 1.6;
-  opacity: 0.95;
+/* ---- 余额 ---- */
+
+.balance {
+  padding: 20px;
 }
 
-.stats-section {
-  margin-bottom: 30px;
+.balance-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.stat-card {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
+.balance-label {
   display: flex;
   align-items: center;
-  gap: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.stat-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  flex-shrink: 0;
-}
-
-.stat-content {
-  flex: 1;
-}
-
-.stat-value {
-  font-size: 20px;
+.balance-value {
+  margin-top: 2px;
+  font-size: 40px;
   font-weight: 600;
-  color: #303133;
-  margin-bottom: 4px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
-.stat-label {
-  font-size: 14px;
-  color: #909399;
-}
-
-.quick-actions {
-  margin-top: 30px;
-}
-
-.section-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #303133;
-  margin: 0 0 20px 0;
-}
-
-.action-card {
-  background: white;
-  border-radius: 12px;
-  padding: 30px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
-
-.action-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
-
-.action-title {
-  margin-top: 12px;
+.unit {
+  margin-left: 4px;
   font-size: 15px;
   font-weight: 500;
-  color: #303133;
+  color: var(--text-muted);
 }
 
-@media screen and (max-width: 768px) {
-  .home-container {
-    padding: 0 5px;
-  }
-  
-  .welcome-card {
-    padding: 24px 20px;
-    margin-bottom: 20px;
-  }
-  
+.breakdown {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.bd-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.bd-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.bd-value {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 对齐到数值那一行, 不然运算符会浮在数字左上角, 看着像正负号 */
+.bd-op {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 2px;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--text-placeholder);
+}
+
+/* ---- 累积说明 ---- */
+
+.accrual-tip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 28px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--brand-subtle);
+  color: var(--brand);
+}
+
+.accrual-tip p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.accrual-tip b {
+  color: var(--brand);
+}
+
+/* ---- 明细 ---- */
+
+.detail {
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-secondary);
+}
+
+.row-value {
+  font-weight: 500;
+}
+
+/* ---- 空账户 ---- */
+
+.empty-account {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 20px;
+  color: var(--text-muted);
+}
+
+.empty-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.empty-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.empty-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+@media screen and (max-width: 767px) {
   .greeting h1 {
-    font-size: 22px;
+    font-size: 19px;
   }
-  
-  .stat-card {
-    padding: 16px;
-    margin-bottom: 12px;
+
+  .balance {
+    padding: 18px 16px;
   }
-  
-  .stat-icon {
-    width: 48px;
-    height: 48px;
+
+  .balance-value {
+    font-size: 36px;
   }
-  
-  .stat-value {
-    font-size: 18px;
+
+  .bd-label {
+    font-size: 11px;
   }
-  
-  .action-card {
-    padding: 20px 10px;
-  }
-  
-  .action-title {
-    font-size: 13px;
+
+  .bd-value {
+    font-size: 16px;
   }
 }
 </style>

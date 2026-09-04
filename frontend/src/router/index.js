@@ -19,6 +19,12 @@ const routes = [
                 component: () => import('../views/Home.vue')
             },
             {
+                // 移动端底栏的「我的」。不挂在后台菜单上, 所有登录用户都可访问
+                path: 'profile',
+                name: 'Profile',
+                component: () => import('../views/Profile.vue')
+            },
+            {
                 path: 'system/user',
                 name: 'UserManagement',
                 component: () => import('../views/system/User.vue')
