@@ -222,6 +222,11 @@ h1, h2, h3, h4 {
   font-weight: 600;
 }
 
+/* 鼠标/触摸操作后不留焦点环, 按 Tab 时照常显示 —— 见 utils/focusRing.js */
+body.using-mouse :focus-visible {
+  outline: none;
+}
+
 /* 按钮: 去掉 Element 默认的过亮 hover */
 .el-button {
   font-weight: 500;

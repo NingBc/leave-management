@@ -9,6 +9,8 @@ import router from './router'
 // 必须排在 element-plus 的样式之后, 否则变量覆盖不生效
 import './styles/theme.scss'
 
+import { setupFocusRing } from './utils/focusRing'
+
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 const app = createApp(App)
@@ -23,4 +25,5 @@ app.use(ElementPlus, {
     locale: zhCn,
 })
 
+setupFocusRing()
 app.mount('#app')

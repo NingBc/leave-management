@@ -14,9 +14,9 @@
 
     <!-- ===== 桌面: 表格 ===== -->
     <el-table v-if="!isMobile" :data="tableData" v-loading="loading" class="surface user-table">
-      <el-table-column prop="realName" label="姓名" min-width="120" fixed />
       <el-table-column prop="employeeNumber" label="工号" width="100" />
-      <el-table-column prop="username" label="登录名" width="120" />
+      <el-table-column prop="username" label="登录名" width="130" />
+      <el-table-column prop="realName" label="姓名" min-width="110" />
       <el-table-column label="状态" width="90">
         <template #default="{ row }">
           <el-tag :type="isActive(row) ? 'success' : 'info'" size="small" effect="light">
@@ -56,6 +56,7 @@
       </el-table-column>
       <el-table-column label="操作" width="150" fixed="right">
         <template #default="{ row }">
+          <div class="row-actions">
           <el-button link type="primary" @click="openDialog('edit', row)">编辑</el-button>
           <el-dropdown trigger="click" @command="(cmd) => handleRowCommand(cmd, row)">
             <el-button link type="primary">更多<el-icon><ArrowDown /></el-icon></el-button>
@@ -67,6 +68,7 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
+          </div>
         </template>
       </el-table-column>
       <template #empty><span class="empty-text">没有用户</span></template>
@@ -496,6 +498,14 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+/* el-dropdown 的 vertical-align 是 top, el-button 是 middle, 并排会错开约 3px。
+   交给 flex 对齐, 不依赖行内基线。 */
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 /* 缺了首次参加工作日期就等于年假档位算错, 值得标出来 */
