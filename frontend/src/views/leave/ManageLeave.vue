@@ -14,7 +14,9 @@
          表格每行都有余额, 没法逐行标注, 所以放在这里管整张表。 -->
     <p class="cutoff">
       <el-icon><Clock /></el-icon>
-      <span v-if="sync.ok">已同步至 {{ sync.date }}，之后请的假尚未扣减</span>
+      <span v-if="sync.ok">
+        已同步至 <b>{{ sync.date }}</b><template v-if="sync.daysAgo > 0">（{{ sync.daysAgo }} 天前）</template>，之后请的假尚未扣减
+      </span>
       <span v-else>休假记录尚未从钉钉同步，余额可能偏大</span>
     </p>
 

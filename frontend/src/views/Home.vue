@@ -17,6 +17,16 @@
             <div class="balance-value num">
               {{ fmtDays(account.totalBalance) }}<span class="unit">天</span>
             </div>
+
+            <!-- 紧贴数字, 不能塞到卡片最底下: 员工看到「还能休 3 天」就去请假了,
+                 而这周已经请掉的假还没同步进来, 等于按偏大的数字做决定。 -->
+            <p class="cutoff">
+              <el-icon><Clock /></el-icon>
+              <span v-if="sync.ok">
+                已同步至 <b>{{ sync.date }}</b><template v-if="sync.daysAgo > 0">（{{ sync.daysAgo }} 天前）</template>，之后请的假尚未扣减
+              </span>
+              <span v-else>休假记录尚未从钉钉同步，余额可能偏大</span>
+            </p>
           </div>
           <el-button v-if="canViewMyLeave" text type="primary" @click="router.push('/leave/my')">
             休假记录<el-icon><ArrowRight /></el-icon>
@@ -48,14 +58,6 @@
             <span class="bd-value num">{{ fmtDays(account.currentYearUsed) }}</span>
           </div>
         </div>
-
-        <!-- 余额只算到上次同步为止。不写这一句, 员工看到「还能休 3 天」就去请假,
-             而这周已经请掉的假还没同步进来, 等于按偏大的数字做决定。 -->
-        <p class="cutoff">
-          <el-icon><Clock /></el-icon>
-          <span v-if="sync.ok">已同步至 {{ sync.date }}，之后请的假尚未扣减</span>
-          <span v-else>休假记录尚未从钉钉同步，余额可能偏大</span>
-        </p>
       </section>
 
       <!-- 「已累积」比「全年应享」少不是被扣了假, 这条提示就是为了消除这个误会 -->
@@ -321,13 +323,17 @@ onMounted(async () => {
 .cutoff {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin: 14px 0 0;
-  padding-top: 12px;
-  border-top: 1px dashed var(--border);
-  font-size: 12px;
-  line-height: 1.6;
+  gap: 5px;
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
   color: var(--text-annotation);
+}
+
+/* 日期是这句话里唯一需要记住的信息 */
+.cutoff b {
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 /* ---- 累积说明 ---- */
