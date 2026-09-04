@@ -12,10 +12,18 @@
 
     <!-- ===== 桌面: 表格 ===== -->
     <el-table v-if="!isMobile" :data="accounts" v-loading="loading" class="surface account-table">
-      <el-table-column prop="realName" label="姓名" min-width="120" fixed />
-      <el-table-column prop="employeeNumber" label="工号" width="96" />
+      <el-table-column prop="employeeNumber" label="工号" min-width="104" />
+      <el-table-column prop="realName" label="姓名" min-width="104" />
 
-      <el-table-column v-for="col in numericColumns" :key="col.key" :prop="col.key" width="106">
+      <!-- 单位放列头, 单元格只留数字并右对齐: 一列数字右边缘对齐才好上下比对 -->
+      <el-table-column
+        v-for="col in numericColumns"
+        :key="col.key"
+        :prop="col.key"
+        :min-width="col.colWidth"
+        align="right"
+        header-align="right"
+      >
         <template #header>
           <span class="th">
             {{ col.short }}
@@ -23,11 +31,13 @@
           </span>
         </template>
         <template #default="{ row }">
-          <span class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}</span>
+          <span class="num">
+            {{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}<i class="cell-unit">{{ col.unit.trim() }}</i>
+          </span>
         </template>
       </el-table-column>
 
-      <el-table-column width="112" fixed="right">
+      <el-table-column min-width="112" align="right" header-align="right">
         <template #header>
           <span class="th">
             {{ FIELD.totalBalance.short }}
@@ -35,7 +45,7 @@
           </span>
         </template>
         <template #default="{ row }">
-          <strong class="num balance-cell">{{ fmtDays(row.totalBalance) }}</strong>
+          <strong class="num balance-cell">{{ fmtDays(row.totalBalance) }}<i class="cell-unit">天</i></strong>
         </template>
       </el-table-column>
 
@@ -69,7 +79,7 @@
         <dl class="acct-grid">
           <div v-for="col in numericColumns" :key="col.key">
             <dt>{{ col.short }}</dt>
-            <dd class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}</dd>
+            <dd class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}{{ col.unit }}</dd>
           </div>
         </dl>
 
@@ -297,12 +307,12 @@ const total = ref(0)
 
 /** 表格数值列 / 编辑弹窗只读区共用一份定义, 保证两处口径和叫法一致 */
 const numericColumns = [
-  { key: 'socialSeniority', ...FIELD.socialSeniority, raw: true, unit: ' 年' },
-  { key: 'standardQuota', ...FIELD.standardQuota, unit: ' 天' },
-  { key: 'daysEmployed', ...FIELD.daysEmployed, raw: true, unit: ' 天' },
-  { key: 'actualQuota', ...FIELD.actualQuota, unit: ' 天' },
-  { key: 'lastYearBalance', ...FIELD.lastYearBalance, unit: ' 天' },
-  { key: 'currentYearUsed', ...FIELD.currentYearUsed, unit: ' 天' }
+  { key: 'socialSeniority', ...FIELD.socialSeniority, raw: true, unit: ' 年', colWidth: 106 },
+  { key: 'standardQuota', ...FIELD.standardQuota, unit: ' 天', colWidth: 106 },
+  { key: 'daysEmployed', ...FIELD.daysEmployed, raw: true, unit: ' 天', colWidth: 106 },
+  { key: 'actualQuota', ...FIELD.actualQuota, unit: ' 天', colWidth: 100 },
+  { key: 'lastYearBalance', ...FIELD.lastYearBalance, unit: ' 天', colWidth: 106 },
+  { key: 'currentYearUsed', ...FIELD.currentYearUsed, unit: ' 天', colWidth: 106 }
 ]
 
 /** 编辑弹窗里的只读项: 上年结转可改, 所以不在其中 */
@@ -467,6 +477,18 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+/* 单位固定占一个字宽并靠左, 这样右对齐时各行数字的右边缘仍然对齐 */
+.cell-unit {
+  display: inline-block;
+  width: 15px;
+  margin-left: 3px;
+  text-align: left;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 .balance-cell {
