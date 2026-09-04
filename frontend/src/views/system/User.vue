@@ -14,9 +14,9 @@
 
     <!-- ===== 桌面: 表格 ===== -->
     <el-table v-if="!isMobile" :data="tableData" v-loading="loading" class="surface user-table">
-      <el-table-column prop="employeeNumber" label="工号" width="100" />
-      <el-table-column prop="username" label="登录名" width="130" />
-      <el-table-column prop="realName" label="姓名" min-width="110" />
+      <el-table-column prop="employeeNumber" label="工号" min-width="104" />
+      <el-table-column prop="username" label="登录名" min-width="126" />
+      <el-table-column prop="realName" label="姓名" min-width="100" />
       <el-table-column label="状态" width="90">
         <template #default="{ row }">
           <el-tag :type="isActive(row) ? 'success' : 'info'" size="small" effect="light">
@@ -24,8 +24,8 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="entryDate" label="入职日期" width="115" />
-      <el-table-column width="140">
+      <el-table-column prop="entryDate" label="入职日期" min-width="118" />
+      <el-table-column min-width="134">
         <template #header>
           <span class="th">
             {{ FIELD.firstWorkDate.short }}
@@ -38,7 +38,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column width="106" align="right">
+      <el-table-column min-width="112" align="right" header-align="right">
         <template #header>
           <span class="th">
             {{ FIELD.socialSeniority.short }}
@@ -46,10 +46,10 @@
           </span>
         </template>
         <template #default="{ row }">
-          <span class="num">{{ row.socialSeniority ?? 0 }} 年</span>
+          <span class="num">{{ row.socialSeniority ?? 0 }}<i class="cell-unit">年</i></span>
         </template>
       </el-table-column>
-      <el-table-column label="角色" width="110">
+      <el-table-column label="角色" min-width="104">
         <template #default="{ row }">
           <el-tag size="small" effect="plain">{{ getRoleName(row.roleId) }}</el-tag>
         </template>
@@ -498,6 +498,17 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+
+.cell-unit {
+  display: inline-block;
+  width: 15px;
+  margin-left: 3px;
+  text-align: left;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  color: var(--text-muted);
 }
 
 /* el-dropdown 的 vertical-align 是 top, el-button 是 middle, 并排会错开约 3px。
