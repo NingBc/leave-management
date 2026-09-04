@@ -23,6 +23,20 @@ export const daysSince = (dateStr) => {
   return days >= 0 ? days : null
 }
 
+/**
+ * 从某天到今天的在职天数, 含首尾两端。
+ *
+ * 与后端 calculateDaysEmployed 的口径一致 —— 那边是
+ * `ChronoUnit.DAYS.between(start, end) + 1`, 入职当天就算在职 1 天。
+ * 别拿 daysSince 顶替: 它算的是「距今隔了多少天」, 会少一天,
+ * 于是首页出现「总共在职 95 天 / 今年在职 96 天」这种对不上的数。
+ * daysSince 留给「已同步至 X（N 天前）」那类间隔语义。
+ */
+export const daysInclusive = (dateStr) => {
+  const n = daysSince(dateStr)
+  return n == null ? null : n + 1
+}
+
 /** 把天数说成「6 年 8 个月」这类人话 */
 export const humanizeDuration = (days) => {
   if (days == null) return '—'
