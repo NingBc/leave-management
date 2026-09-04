@@ -1,220 +1,350 @@
 <template>
-  <div>
-    <h3>年假管理 ({{ selectedYear }})</h3>
-    <div class="toolbar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-      <div style="display: flex; align-items: center;">
-        <span style="margin-right: 10px;">查看年份：</span>
-        <el-select v-model="selectedYear" @change="loadAccounts" style="width: 120px">
-          <el-option v-for="year in yearOptions" :key="year" :label="year + '年'" :value="year" />
+  <div class="manage">
+    <div class="toolbar">
+      <div class="year-picker">
+        <span class="year-label">年度</span>
+        <el-select v-model="selectedYear" style="width: 120px" @change="onYearChange">
+          <el-option v-for="year in yearOptions" :key="year" :label="`${year} 年`" :value="year" />
         </el-select>
       </div>
-
+      <span class="count num">共 {{ total }} 名员工</span>
     </div>
 
-    <el-table :data="accounts" style="width: 100%" border stripe>
-      <el-table-column prop="employeeNumber" label="工号" width="100" />
-      <el-table-column prop="realName" label="姓名" width="120" />
-      <el-table-column prop="socialSeniority" label="工龄(年)" width="120" />
-      <el-table-column prop="standardQuota" label="标准额度" width="100" />
-      <el-table-column prop="daysEmployed" label="在职天数" width="120" />
-      <el-table-column prop="actualQuota" label="实际额度" width="100" />
-      <el-table-column prop="lastYearBalance" label="上年结余" width="100" />
-      <el-table-column prop="currentYearUsed" label="今年已用" width="100" />
-      <el-table-column prop="totalBalance" label="年假余额" width="100">
-        <template #default="scope">
-          <el-tag type="success">{{ scope.row.totalBalance }}</el-tag>
+    <!-- ===== 桌面: 表格 ===== -->
+    <el-table v-if="!isMobile" :data="accounts" v-loading="loading" class="surface account-table">
+      <el-table-column prop="realName" label="姓名" min-width="120" fixed />
+      <el-table-column prop="employeeNumber" label="工号" width="96" />
+
+      <el-table-column v-for="col in numericColumns" :key="col.key" :prop="col.key" width="106">
+        <template #header>
+          <span class="th">
+            {{ col.short }}
+            <FieldHint :label="col.label" :text="col.hint" />
+          </span>
+        </template>
+        <template #default="{ row }">
+          <span class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="使用记录" min-width="150">
-        <template #default="scope">
-          <el-popover placement="right" :width="800" trigger="click">
-          <template #reference>
-            <el-button type="primary" link>查看详情</el-button>
-          </template>
-          <el-table :data="scope.row.records" border size="small">
-            <el-table-column prop="startDate" label="开始日期" width="120" />
-            <el-table-column prop="endDate" label="结束日期" width="120" />
-            <el-table-column prop="days" label="天数" width="80" />
-            <el-table-column prop="remarks" label="备注" min-width="150" />
-            <el-table-column prop="type" label="类型" width="120">
-              <template #default="{ row }">
-                <el-tag v-if="row.type === 'ANNUAL'" type="success">年假</el-tag>
-                <el-tag v-else-if="row.type === 'ADJUSTMENT_ADD'" type="warning">额度增加</el-tag>
-                <el-tag v-else-if="row.type === 'ADJUSTMENT_DEDUCT'" type="danger">额度扣除</el-tag>
-                <el-tag v-else-if="row.type === 'CARRY_OVER'" type="info">年假结转</el-tag>
-                <el-tag v-else-if="row.type === 'EXPIRED'" type="danger">过期清理</el-tag>
-                <el-tag v-else>{{ row.type }}</el-tag>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-popover>
+
+      <el-table-column width="112" fixed="right">
+        <template #header>
+          <span class="th">
+            {{ FIELD.totalBalance.short }}
+            <FieldHint :label="FIELD.totalBalance.label" :text="FIELD.totalBalance.hint" />
+          </span>
+        </template>
+        <template #default="{ row }">
+          <strong class="num balance-cell">{{ fmtDays(row.totalBalance) }}</strong>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100" fixed="right">
-        <template #default="scope">
-          <el-button type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+
+      <el-table-column label="操作" width="140" fixed="right">
+        <template #default="{ row }">
+          <el-button link type="primary" @click="openRecords(row)">
+            记录 ({{ row.records?.length || 0 }})
+          </el-button>
+          <el-button link type="primary" @click="handleEdit(row)">编辑</el-button>
         </template>
       </el-table-column>
+
+      <template #empty>
+        <span class="empty-text">{{ selectedYear }} 年没有年假账户</span>
+      </template>
     </el-table>
+
+    <!-- ===== 移动: 卡片流 ===== -->
+    <div v-else v-loading="loading" class="card-list">
+      <article v-for="row in accounts" :key="row.userId" class="acct-card surface">
+        <header class="acct-head">
+          <span class="acct-name">{{ row.realName }}</span>
+          <span class="acct-no num">工号 {{ row.employeeNumber || '—' }}</span>
+        </header>
+
+        <div class="acct-balance">
+          <span class="acct-balance-label">{{ FIELD.totalBalance.short }}</span>
+          <span class="acct-balance-value num">{{ fmtDays(row.totalBalance) }} 天</span>
+        </div>
+
+        <dl class="acct-grid">
+          <div v-for="col in numericColumns" :key="col.key">
+            <dt>{{ col.short }}</dt>
+            <dd class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}</dd>
+          </div>
+        </dl>
+
+        <footer class="acct-foot">
+          <el-button size="small" @click="openRecords(row)">
+            记录 ({{ row.records?.length || 0 }})
+          </el-button>
+          <el-button size="small" type="primary" @click="handleEdit(row)">编辑</el-button>
+        </footer>
+      </article>
+
+      <p v-if="!loading && !accounts.length" class="empty-text list-empty">
+        {{ selectedYear }} 年没有年假账户
+      </p>
+    </div>
 
     <el-pagination
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
       :page-sizes="[10, 20, 50, 100]"
       :total="total"
-      layout="total, sizes, prev, pager, next, jumper"
+      :layout="isMobile ? 'prev, pager, next' : 'total, sizes, prev, pager, next, jumper'"
+      :pager-count="isMobile ? 5 : 7"
+      class="pager"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      style="margin-top: 20px; justify-content: flex-end"
     />
 
-    <!-- Edit Dialog -->
-    <el-dialog v-model="editDialogVisible" title="编辑年假账户" width="900px">
-      <el-alert
-        title="基础数据由系统自动计算"
-        type="info"
-        description="工龄、额度等数据根据员工档案自动生成，不可直接修改。如需调整余额（例如奖励或惩罚），请在下方添加'额度增加'或'额度扣除'记录。"
-        show-icon
-        :closable="false"
-        style="margin-bottom: 20px"
-      />
-      <el-form :model="form" label-width="140px">
-        <el-form-item label="员工">
-          <el-input v-model="form.realName" disabled />
-        </el-form-item>
-        <el-form-item label="工龄(年)">
-          <el-input-number v-model="form.socialSeniority" disabled />
-        </el-form-item>
-        <el-form-item label="标准额度">
-          <el-input-number v-model="form.standardQuota" :precision="1" :step="0.5" disabled />
-        </el-form-item>
-        <el-form-item label="在职天数">
-          <el-input-number v-model="form.daysEmployed" disabled />
-        </el-form-item>
-        <el-form-item label="实际额度">
-          <el-input-number v-model="form.actualQuota" :precision="1" :step="0.5" disabled />
-        </el-form-item>
-        <el-form-item label="上年结余">
-          <el-input-number v-model="form.lastYearBalance" :precision="1" :step="0.5" />
-          <span style="margin-left: 10px; color: #999; font-size: 12px">（可手动修正）</span>
-        </el-form-item>
-        <el-form-item label="今年已用">
-          <el-input-number v-model="form.currentYearUsed" :precision="1" :step="0.5" disabled />
-          <span style="margin-left: 10px; color: #999; font-size: 12px">（由休假记录自动计算）</span>
-        </el-form-item>
-        
-        <el-divider>休假记录管理</el-divider>
-        <el-button type="primary" size="small" @click="addRecord" style="margin-bottom: 10px">添加记录</el-button>
-        <el-table :data="form.records" border size="small" style="width: 100%">
-            <el-table-column prop="startDate" label="开始日期" width="140">
-              <template #default="scope">
-                <el-date-picker v-model="scope.row.startDate" type="date" placeholder="选择日期" size="small" value-format="YYYY-MM-DD" style="width: 100%"/>
-              </template>
-            </el-table-column>
-            <el-table-column prop="endDate" label="结束日期" width="140">
-              <template #default="scope">
-                <el-date-picker v-model="scope.row.endDate" type="date" placeholder="选择日期" size="small" value-format="YYYY-MM-DD" style="width: 100%"/>
-              </template>
-            </el-table-column>
-            <el-table-column prop="days" label="天数" width="110">
-              <template #default="scope">
-                <el-input-number v-model="scope.row.days" :step="0.5" :precision="1" size="small" style="width: 100%" />
-              </template>
-            </el-table-column>
-            <el-table-column prop="remarks" label="备注" min-width="150">
-              <template #default="scope">
-                <el-input v-model="scope.row.remarks" placeholder="请输入备注" size="small" clearable />
-              </template>
-            </el-table-column>
-            <el-table-column prop="type" label="类型" width="150">
-              <template #default="scope">
-                <el-select v-if="scope.row.id === null" v-model="scope.row.type" placeholder="请选择" size="small" style="width: 100%">
-                  <el-option label="年假 (补录)" value="ANNUAL" />
-                  <el-option label="额度增加 (奖励/恢复)" value="ADJUSTMENT_ADD" />
-                  <el-option label="额度扣除 (惩罚/冲销)" value="ADJUSTMENT_DEDUCT" />
-                </el-select>
-                <el-tag v-else :type="getRecordTypeTag(scope.row.type)" size="small">
-                  {{ formatRecordType(scope.row.type) }}
-                </el-tag>
-              </template>
-            </el-table-column>
-        </el-table>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="editDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleSave">保存</el-button>
-        </span>
-      </template>
+    <!-- ===== 只读: 查看记录 ===== -->
+    <el-dialog
+      v-model="recordsVisible"
+      :title="`${viewing?.realName || ''} 的休假记录`"
+      :width="isMobile ? '92%' : '760px'"
+    >
+      <el-table v-if="!isMobile" :data="viewing?.records || []" size="small" border>
+        <el-table-column prop="startDate" label="开始日期" width="120" />
+        <el-table-column prop="endDate" label="结束日期" width="120" />
+        <el-table-column prop="days" label="天数" width="80">
+          <template #default="{ row }">{{ fmtDays(row.days) }}</template>
+        </el-table-column>
+        <el-table-column prop="type" label="类型" width="110">
+          <template #default="{ row }">
+            <el-tag :type="recordTypeTag(row.type)" size="small" effect="light">
+              {{ formatRecordType(row.type) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="remarks" label="备注" min-width="150" show-overflow-tooltip />
+        <template #empty><span class="empty-text">暂无记录</span></template>
+      </el-table>
+
+      <div v-else class="rec-list">
+        <div v-for="(r, i) in viewing?.records || []" :key="r.id ?? i" class="rec-card">
+          <div class="rec-top">
+            <span class="num">{{ dateRange(r) }}</span>
+            <el-tag :type="recordTypeTag(r.type)" size="small" effect="light">
+              {{ formatRecordType(r.type) }}
+            </el-tag>
+          </div>
+          <div class="rec-days num">{{ fmtDays(r.days) }} 天</div>
+          <div v-if="r.remarks" class="rec-remarks">{{ r.remarks }}</div>
+        </div>
+        <p v-if="!viewing?.records?.length" class="empty-text">暂无记录</p>
+      </div>
     </el-dialog>
 
+    <!-- ===== 编辑 ===== -->
+    <el-dialog
+      v-model="editDialogVisible"
+      :title="`编辑 ${form.realName || ''} 的 ${selectedYear} 年账户`"
+      :width="isMobile ? '94%' : '860px'"
+      :close-on-click-modal="false"
+      top="6vh"
+    >
+      <!-- 只读字段用纯文本展示: 改版前是一排 disabled 的数字输入框,
+           看着像能填, 管理员反复试都改不动 -->
+      <section class="readonly">
+        <div class="readonly-head">
+          <el-icon><Lock /></el-icon>
+          <span>以下由系统按档案自动计算，不可修改</span>
+        </div>
+        <dl class="readonly-grid">
+          <div v-for="col in readonlyFields" :key="col.key">
+            <dt>
+              {{ col.short }}
+              <FieldHint :label="col.label" :text="col.hint" />
+            </dt>
+            <dd class="num">{{ col.raw ? (form[col.key] ?? 0) : fmtDays(form[col.key]) }}{{ col.unit }}</dd>
+          </div>
+        </dl>
+        <p class="readonly-note">调整余额请在下方添加记录，改动才不被重算覆盖</p>
+      </section>
 
+      <el-form :model="form" :label-position="isMobile ? 'top' : 'right'" label-width="110px">
+        <el-form-item>
+          <template #label>
+            {{ FIELD.lastYearBalance.label }}
+            <FieldHint :label="FIELD.lastYearBalance.label" :text="FIELD.lastYearBalance.hint" />
+          </template>
+          <el-input-number v-model="form.lastYearBalance" :precision="1" :step="0.5" />
+          <span class="field-note">自动结转，可手工更正</span>
+        </el-form-item>
+      </el-form>
+
+      <div class="records-head">
+        <h4>休假记录</h4>
+        <el-button type="primary" size="small" plain @click="addRecord">
+          <el-icon><Plus /></el-icon>添加记录
+        </el-button>
+      </div>
+
+      <!-- 桌面: 可编辑表格 -->
+      <el-table v-if="!isMobile" :data="form.records" size="small" border>
+        <el-table-column label="开始日期" width="150">
+          <template #default="{ row }">
+            <el-date-picker
+              v-model="row.startDate" type="date" size="small"
+              placeholder="选择日期" value-format="YYYY-MM-DD" style="width: 100%"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="结束日期" width="150">
+          <template #default="{ row }">
+            <el-date-picker
+              v-model="row.endDate" type="date" size="small"
+              placeholder="选择日期" value-format="YYYY-MM-DD" style="width: 100%"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="天数" width="110">
+          <template #default="{ row }">
+            <el-input-number v-model="row.days" :step="0.5" :precision="1" size="small" style="width: 100%" />
+          </template>
+        </el-table-column>
+        <el-table-column label="类型" width="180">
+          <template #default="{ row }">
+            <el-select v-if="row.id === null" v-model="row.type" size="small" style="width: 100%">
+              <el-option
+                v-for="opt in MANUAL_RECORD_TYPES"
+                :key="opt.value" :label="opt.label" :value="opt.value"
+              />
+            </el-select>
+            <el-tag v-else :type="recordTypeTag(row.type)" size="small" effect="light">
+              {{ formatRecordType(row.type) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="备注" min-width="160">
+          <template #default="{ row }">
+            <el-input v-model="row.remarks" size="small" placeholder="调整原因" clearable />
+          </template>
+        </el-table-column>
+        <template #empty><span class="empty-text">还没有记录</span></template>
+      </el-table>
+
+      <!-- 移动: 卡片表单 -->
+      <div v-else class="edit-rec-list">
+        <div v-for="(row, i) in form.records" :key="row.id ?? `new-${i}`" class="edit-rec surface">
+          <div class="edit-rec-head">
+            <el-select v-if="row.id === null" v-model="row.type" size="small" style="width: 160px">
+              <el-option
+                v-for="opt in MANUAL_RECORD_TYPES"
+                :key="opt.value" :label="opt.label" :value="opt.value"
+              />
+            </el-select>
+            <el-tag v-else :type="recordTypeTag(row.type)" size="small" effect="light">
+              {{ formatRecordType(row.type) }}
+            </el-tag>
+          </div>
+          <div class="edit-rec-field">
+            <label>开始日期</label>
+            <el-date-picker v-model="row.startDate" type="date" size="small" value-format="YYYY-MM-DD" style="width: 100%" />
+          </div>
+          <div class="edit-rec-field">
+            <label>结束日期</label>
+            <el-date-picker v-model="row.endDate" type="date" size="small" value-format="YYYY-MM-DD" style="width: 100%" />
+          </div>
+          <div class="edit-rec-field">
+            <label>天数</label>
+            <el-input-number v-model="row.days" :step="0.5" :precision="1" size="small" style="width: 100%" />
+          </div>
+          <div class="edit-rec-field">
+            <label>备注</label>
+            <el-input v-model="row.remarks" size="small" placeholder="调整原因" clearable />
+          </div>
+        </div>
+        <p v-if="!form.records?.length" class="empty-text">还没有记录</p>
+      </div>
+
+      <template #footer>
+        <el-button @click="editDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="saving" @click="handleSave">保存</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { getAllAccounts, updateAccount, addRecord as addLeaveRecordApi, updateRecord as updateLeaveRecordApi } from '../../api/leave'
+import { ref, computed, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { Lock, Plus } from '@element-plus/icons-vue'
+import {
+  getAllAccounts, updateAccount,
+  addRecord as addLeaveRecordApi, updateRecord as updateLeaveRecordApi
+} from '../../api/leave'
 import request from '../../utils/request'
+import { useBreakpoint } from '../../composables/useBreakpoint'
+import {
+  FIELD, MANUAL_RECORD_TYPES, fmtDays, formatRecordType, recordTypeTag
+} from '../../constants/leave'
+import FieldHint from '../../components/FieldHint.vue'
 
-
+const { isMobile } = useBreakpoint()
 const currentYear = new Date().getFullYear()
-const accounts = ref([])
-const editDialogVisible = ref(false)
-const form = ref({
-  userId: null,
-  year: currentYear,
-  realName: '',
-  socialSeniority: 0,
-  standardQuota: 0,
-  daysEmployed: 0,
-  actualQuota: 0,
-  lastYearBalance: 0,
-  currentYearUsed: 0,
-  totalBalance: 0,
-  records: []
-})
 
-// Year selection
-const selectedYear = ref(new Date().getFullYear())
+const accounts = ref([])
+const loading = ref(false)
+const saving = ref(false)
+const selectedYear = ref(currentYear)
 const yearOptions = ref([])
 
-// Pagination
 const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 
-// Load available years from backend
+/** 表格数值列 / 编辑弹窗只读区共用一份定义, 保证两处口径和叫法一致 */
+const numericColumns = [
+  { key: 'socialSeniority', ...FIELD.socialSeniority, raw: true, unit: ' 年' },
+  { key: 'standardQuota', ...FIELD.standardQuota, unit: ' 天' },
+  { key: 'daysEmployed', ...FIELD.daysEmployed, raw: true, unit: ' 天' },
+  { key: 'actualQuota', ...FIELD.actualQuota, unit: ' 天' },
+  { key: 'lastYearBalance', ...FIELD.lastYearBalance, unit: ' 天' },
+  { key: 'currentYearUsed', ...FIELD.currentYearUsed, unit: ' 天' }
+]
+
+/** 编辑弹窗里的只读项: 上年结转可改, 所以不在其中 */
+const readonlyFields = numericColumns.filter(c => c.key !== 'lastYearBalance')
+
+const dateRange = (r) => {
+  if (!r.endDate || r.endDate === r.startDate) return r.startDate
+  return `${r.startDate} ~ ${r.endDate}`
+}
+
+/* ---------- 列表 ---------- */
+
 const loadAvailableYears = async () => {
   try {
     const res = await request.get('/leave/available-years')
     yearOptions.value = res || []
-    
-    // Always include current year even if no data yet
-    const currentYear = new Date().getFullYear()
     if (!yearOptions.value.includes(currentYear)) {
       yearOptions.value.unshift(currentYear)
     }
   } catch (e) {
     console.error('Failed to load available years', e)
-    // Fallback: use last 3 years
-    const current = new Date().getFullYear()
-    yearOptions.value = [current, current - 1, current - 2]
+    yearOptions.value = [currentYear, currentYear - 1, currentYear - 2]
   }
 }
 
-
-
 const loadAccounts = async () => {
   try {
+    loading.value = true
     const res = await getAllAccounts(selectedYear.value, currentPage.value, pageSize.value)
     accounts.value = res.records || []
     total.value = res.total || 0
   } catch (e) {
     console.error(e)
     ElMessage.error('数据加载失败')
+  } finally {
+    loading.value = false
   }
+}
+
+const onYearChange = () => {
+  currentPage.value = 1
+  loadAccounts()
 }
 
 const handleSizeChange = (newSize) => {
@@ -228,31 +358,22 @@ const handleCurrentChange = (newPage) => {
   loadAccounts()
 }
 
+/* ---------- 查看记录 ---------- */
 
+const recordsVisible = ref(false)
+const viewing = ref(null)
 
-const formatRecordType = (type) => {
-  const map = {
-    'ANNUAL': '年假',
-    'ADJUSTMENT_ADD': '额度增加',
-    'ADJUSTMENT_DEDUCT': '额度扣除',
-    'CARRY_OVER': '年假结转',
-    'EXPIRED': '过期清理'
-  }
-  return map[type] || type
+const openRecords = (row) => {
+  viewing.value = row
+  recordsVisible.value = true
 }
 
-const getRecordTypeTag = (type) => {
-  const map = {
-    'ANNUAL': 'primary',
-    'ADJUSTMENT_ADD': 'warning',
-    'ADJUSTMENT_DEDUCT': 'danger',
-    'EXPIRED': 'info',
-    'CARRY_OVER': 'success'
-  }
-  return map[type] || 'info'
-}
+/* ---------- 编辑 ---------- */
 
-// 打开弹窗时的记录快照，用于判断哪些已有记录被真正改过
+const editDialogVisible = ref(false)
+const form = ref({ records: [] })
+
+// 打开弹窗时的记录快照, 用于判断哪些已有记录被真正改过
 const originalRecords = ref({})
 
 const isRecordDirty = (record) => {
@@ -265,32 +386,27 @@ const isRecordDirty = (record) => {
 const handleEdit = (account) => {
   const records = (account.records || []).map(r => ({ ...r }))
   originalRecords.value = Object.fromEntries(records.map(r => [r.id, { ...r }]))
-  form.value = {
-    ...account,
-    records
-  }
+  form.value = { ...account, records }
   editDialogVisible.value = true
 }
 
-const newRecord = () => ({
-  id: null,
-  startDate: '',
-  endDate: '',
-  days: 1.0, // Keep original default days
-  type: 'ANNUAL', // Default to ANNUAL
-  remarks: ''
-})
-
 const addRecord = () => {
   if (!form.value.records) form.value.records = []
-  form.value.records.push(newRecord())
+  form.value.records.unshift({
+    id: null,
+    startDate: '',
+    endDate: '',
+    days: 1.0,
+    type: 'ANNUAL',
+    remarks: ''
+  })
 }
-
-
 
 const handleSave = async () => {
   try {
-    // 1. 账户信息（目前仅「上年结余」可手工修正）
+    saving.value = true
+
+    // 1. 账户信息(目前仅「上年结转」可手工修正)
     await updateAccount(form.value)
 
     const records = form.value.records || []
@@ -302,7 +418,7 @@ const handleSave = async () => {
     }
 
     // 3. 已有记录的改动
-    //    此前这里被整段跳过，管理员改完点保存会提示成功但改动被丢弃。
+    //    此前这里被整段跳过, 管理员改完点保存会提示成功但改动被丢弃。
     for (const record of records.filter(r => r.id && isRecordDirty(r))) {
       await updateLeaveRecordApi(record)
     }
@@ -313,11 +429,10 @@ const handleSave = async () => {
   } catch (e) {
     console.error(e)
     ElMessage.error(e?.message || '保存失败')
+  } finally {
+    saving.value = false
   }
 }
-
-
-
 
 onMounted(() => {
   loadAvailableYears()
@@ -326,7 +441,272 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.toolbar {
+.year-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.year-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.count {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.account-table {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.th {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.balance-cell {
+  color: var(--brand);
+  font-size: 14px;
+}
+
+.empty-text {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.list-empty {
+  padding: 32px 0;
+  text-align: center;
+}
+
+.pager {
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+
+/* ---- 移动端账户卡 ---- */
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.acct-card {
+  padding: 14px;
+}
+
+.acct-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.acct-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.acct-no {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.acct-balance {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 10px 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--brand-subtle);
+}
+
+.acct-balance-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.acct-balance-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+.acct-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 8px;
+  margin: 0;
+}
+
+.acct-grid dt {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.acct-grid dd {
+  margin: 2px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.acct-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- 编辑弹窗只读区 ---- */
+
+.readonly {
+  padding: 14px;
   margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-sunken);
+}
+
+.readonly-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.readonly-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 12px;
+  margin: 12px 0 0;
+}
+
+.readonly-grid dt {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.readonly-grid dd {
+  margin: 2px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.readonly-note {
+  margin: 14px 0 0;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-strong);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.readonly-note strong {
+  color: var(--text-secondary);
+}
+
+.field-note {
+  margin-left: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.records-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-top: 4px;
+}
+
+.records-head h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ---- 记录卡片(只读 / 编辑) ---- */
+
+.rec-list,
+.edit-rec-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rec-card {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.rec-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.rec-days {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.rec-remarks {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.edit-rec {
+  padding: 12px;
+}
+
+.edit-rec-head {
+  margin-bottom: 10px;
+}
+
+.edit-rec-field {
+  margin-bottom: 8px;
+}
+
+.edit-rec-field label {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@media screen and (max-width: 767px) {
+  .toolbar {
+    margin-bottom: 12px;
+  }
+
+  .pager {
+    justify-content: center;
+  }
+
+  .field-note {
+    display: block;
+    margin: 4px 0 0;
+  }
 }
 </style>

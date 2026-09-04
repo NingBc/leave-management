@@ -1,185 +1,139 @@
 <template>
-  <div class="common-layout">
-    <!-- Mobile Drawer -->
-    <el-drawer
-      v-model="drawerVisible"
-      direction="ltr"
-      size="240px"
-      :with-header="false"
-      class="mobile-drawer"
-    >
-      <div class="drawer-content">
-        <div class="logo-section">
-          <h3>年假管理</h3>
+  <div class="layout">
+    <!-- ===== 桌面端侧栏 ===== -->
+    <aside v-if="!isMobile" class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark">
+          <el-icon :size="16"><Calendar /></el-icon>
         </div>
-        <el-menu
-          router
-          :default-active="$route.path"
-          class="el-menu-vertical-demo"
-          background-color="#2c3e50"
-          text-color="#ecf0f1"
-          active-text-color="#409eff"
-          @select="drawerVisible = false"
-        >
-          <template v-for="menu in userMenus" :key="menu.id">
-            <el-menu-item v-if="!menu.children || menu.children.length === 0" :index="menu.path">
+        <span>年假管理</span>
+      </div>
+
+      <el-menu
+        router
+        :default-active="route.path"
+        class="sidebar-menu"
+        :default-openeds="openedMenuIds"
+      >
+        <template v-for="menu in userMenus" :key="menu.id">
+          <el-menu-item v-if="!menu.children || !menu.children.length" :index="menu.path">
+            <el-icon v-if="menu.icon"><component :is="menu.icon" /></el-icon>
+            <span>{{ menu.menuName }}</span>
+          </el-menu-item>
+          <el-sub-menu v-else :index="String(menu.id)">
+            <template #title>
               <el-icon v-if="menu.icon"><component :is="menu.icon" /></el-icon>
               <span>{{ menu.menuName }}</span>
+            </template>
+            <el-menu-item v-for="child in menu.children" :key="child.id" :index="child.path">
+              {{ child.menuName }}
             </el-menu-item>
-            <el-sub-menu v-else :index="menu.id.toString()">
-              <template #title>
-                <el-icon v-if="menu.icon"><component :is="menu.icon" /></el-icon>
-                <span>{{ menu.menuName }}</span>
-              </template>
-              <el-menu-item v-for="child in menu.children" :key="child.id" :index="child.path">
-                {{ child.menuName }}
-              </el-menu-item>
-            </el-sub-menu>
+          </el-sub-menu>
+        </template>
+      </el-menu>
+    </aside>
+
+    <!-- ===== 主区 ===== -->
+    <div class="main">
+      <header v-if="showTopbar" class="topbar">
+        <h2 class="topbar-title">{{ currentTitle }}</h2>
+
+        <el-dropdown v-if="!isMobile" trigger="click" @command="handleCommand">
+          <button class="user-btn" type="button">
+            <span class="user-avatar">{{ avatarText }}</span>
+            <span class="user-name">{{ displayName }}</span>
+            <el-icon :size="12"><ArrowDown /></el-icon>
+          </button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="changePassword">
+                <el-icon><Lock /></el-icon>修改密码
+              </el-dropdown-item>
+              <el-dropdown-item divided command="logout">
+                <el-icon><SwitchButton /></el-icon>退出登录
+              </el-dropdown-item>
+            </el-dropdown-menu>
           </template>
-        </el-menu>
+        </el-dropdown>
+      </header>
+
+      <main class="content" :class="{ 'has-tabbar': isMobile }">
+        <router-view />
+      </main>
+    </div>
+
+    <!-- ===== 移动端底部标签栏 ===== -->
+    <nav v-if="isMobile" class="tabbar">
+      <button
+        v-for="tab in tabs"
+        :key="tab.key"
+        type="button"
+        class="tab"
+        :class="{ active: isTabActive(tab) }"
+        @click="onTabClick(tab)"
+      >
+        <el-icon :size="20"><component :is="tab.icon" /></el-icon>
+        <span>{{ tab.label }}</span>
+      </button>
+    </nav>
+
+    <!-- 移动端「更多」: 菜单项超过底栏容量时的兜底 -->
+    <el-drawer
+      v-model="moreVisible"
+      direction="btt"
+      size="auto"
+      title="全部功能"
+      class="more-drawer"
+    >
+      <div class="more-grid">
+        <button
+          v-for="item in overflowMenus"
+          :key="item.path"
+          type="button"
+          class="more-item"
+          @click="goto(item.path)"
+        >
+          <el-icon :size="20"><component :is="item.icon || 'Document'" /></el-icon>
+          <span>{{ item.menuName }}</span>
+        </button>
       </div>
     </el-drawer>
 
-    <el-container>
-      <el-aside v-if="!isMobile" width="200px">
-        <div class="logo-section">
-          <h3>年假管理</h3>
-        </div>
-        <el-menu
-          router
-          :default-active="$route.path"
-          class="el-menu-vertical-demo"
-          background-color="#2c3e50"
-          text-color="#ecf0f1"
-          active-text-color="#409eff"
-        >
-          <template v-for="menu in userMenus" :key="menu.id">
-            <!-- 一级菜单 -->
-            <el-menu-item v-if="!menu.children || menu.children.length === 0" :index="menu.path">
-              <el-icon v-if="menu.icon"><component :is="menu.icon" /></el-icon>
-              <span>{{ menu.menuName }}</span>
-            </el-menu-item>
-            
-            <!-- 有子菜单的一级菜单 -->
-            <el-sub-menu v-else :index="menu.id.toString()">
-              <template #title>
-                <el-icon v-if="menu.icon"><component :is="menu.icon" /></el-icon>
-                <span>{{ menu.menuName }}</span>
-              </template>
-              <el-menu-item v-for="child in menu.children" :key="child.id" :index="child.path">
-                {{ child.menuName }}
-              </el-menu-item>
-            </el-sub-menu>
-          </template>
-        </el-menu>
-      </el-aside>
-      <el-container>
-        <el-header>
-          <div class="header-content">
-            <div class="header-left">
-              <el-icon v-if="isMobile" @click="drawerVisible = true" class="menu-trigger">
-                <Menu />
-              </el-icon>
-            </div>
-            <div class="header-right">
-              <el-dropdown @command="handleCommand">
-                <div class="user-section">
-                  <el-avatar :size="36" class="user-avatar">
-                    <el-icon><UserFilled /></el-icon>
-                  </el-avatar>
-                  <span class="username">{{ userStore.username || '用户' }}</span>
-                  <el-icon class="dropdown-icon"><ArrowDown /></el-icon>
-                </div>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item disabled>
-                      <el-icon><User /></el-icon>
-                      <span>{{ userStore.username }}</span>
-                    </el-dropdown-item>
-                    <el-dropdown-item divided command="changePassword">
-                      <el-icon><Lock /></el-icon>
-                      <span>修改密码</span>
-                    </el-dropdown-item>
-                    <el-dropdown-item divided command="logout">
-                      <el-icon><SwitchButton /></el-icon>
-                      <span>退出登录</span>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </div>
-          </div>
-        </el-header>
-        <el-main>
-          <router-view />
-        </el-main>
-      </el-container>
-    </el-container>
-
-    <!-- 修改密码对话框 -->
-    <el-dialog v-model="passwordDialogVisible" title="修改密码" width="450px">
-      <el-form :model="passwordForm" ref="passwordFormRef" :rules="passwordRules" label-width="100px">
-        <el-form-item label="旧密码" prop="oldPassword">
-          <el-input v-model="passwordForm.oldPassword" type="password" show-password />
-        </el-form-item>
-        <el-form-item label="新密码" prop="newPassword">
-          <el-input v-model="passwordForm.newPassword" type="password" show-password />
-        </el-form-item>
-        <el-form-item label="密码确认" prop="confirmPassword">
-          <el-input v-model="passwordForm.confirmPassword" type="password" show-password />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="passwordDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="submitPasswordChange">确认</el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <ChangePasswordDialog v-model="passwordDialogVisible" @success="logout" />
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { UserFilled, User, SwitchButton, ArrowDown, Lock, Menu, Expand } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import {
+  ArrowDown, Lock, SwitchButton, Calendar,
+  HomeFilled, User, Grid, Document
+} from '@element-plus/icons-vue'
 import request from '../utils/request'
 import { useUserStore } from '../stores/user'
+import { useBreakpoint } from '../composables/useBreakpoint'
+import ChangePasswordDialog from '../components/ChangePasswordDialog.vue'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
+const { isMobile } = useBreakpoint()
+
 const userMenus = ref([])
-const drawerVisible = ref(false)
-const screenWidth = ref(window.innerWidth)
+const moreVisible = ref(false)
 
-const isMobile = computed(() => screenWidth.value < 768)
+/* ---------- 菜单 ---------- */
 
-const handleResize = () => {
-  screenWidth.value = window.innerWidth
-  if (!isMobile.value) {
-    drawerVisible.value = false
-  }
-}
 const loadUserMenus = async () => {
-  // 如果Store中已经有菜单数据，直接使用
-  if (userStore.userMenus && userStore.userMenus.length > 0) {
+  if (userStore.userMenus?.length) {
     userMenus.value = userStore.userMenus
     return
   }
-
   try {
     const userId = userStore.userId
-    if (!userId) {
-      console.warn('No user ID found, skipping menu load')
-      return
-    }
-    const menus = await request.get('/system/menu/user-menus', {
-      params: { userId }
-    })
-    
-    // 后端现在直接返回树形结构
+    if (!userId) return
+    const menus = await request.get('/system/menu/user-menus', { params: { userId } })
     userStore.setUserMenus(menus)
     userMenus.value = menus
   } catch (e) {
@@ -188,275 +142,387 @@ const loadUserMenus = async () => {
   }
 }
 
+/** 展平成可跳转的叶子菜单 */
+const leafMenus = computed(() => {
+  const out = []
+  const walk = (list) => {
+    for (const m of list || []) {
+      if (m.children?.length) walk(m.children)
+      else if (m.path) out.push(m)
+    }
+  }
+  walk(userMenus.value)
+  return out
+})
+
+/** 默认展开所有分组, 免得管理员每次进来都要点开二级菜单 */
+const openedMenuIds = computed(() =>
+  userMenus.value.filter(m => m.children?.length).map(m => String(m.id))
+)
+
+const currentTitle = computed(() => {
+  const hit = leafMenus.value.find(m => m.path === route.path)
+  if (hit) return hit.menuName
+  return { '/dashboard': '首页', '/profile': '我的' }[route.path] || '年假管理'
+})
+
+/* ---------- 移动端底栏 ----------
+   位置有限, 排布规则: 首页 + 主业务 + (第三项 或 更多) + 我 */
+
+const businessMenus = computed(() =>
+  leafMenus.value.filter(m => m.path && m.path !== '/dashboard')
+)
+
+const primaryMenu = computed(() =>
+  businessMenus.value.find(m => m.path === '/leave/my') || businessMenus.value[0] || null
+)
+
+const restMenus = computed(() =>
+  businessMenus.value.filter(m => m.path !== primaryMenu.value?.path)
+)
+
+const overflowMenus = computed(() => restMenus.value)
+
+const tabs = computed(() => {
+  const list = [{ key: 'home', label: '首页', icon: HomeFilled, path: '/dashboard' }]
+
+  if (primaryMenu.value) {
+    list.push({
+      key: primaryMenu.value.path,
+      label: shortLabel(primaryMenu.value.menuName),
+      icon: primaryMenu.value.icon || Document,
+      path: primaryMenu.value.path
+    })
+  }
+
+  if (restMenus.value.length === 1) {
+    const only = restMenus.value[0]
+    list.push({
+      key: only.path,
+      label: shortLabel(only.menuName),
+      icon: only.icon || Document,
+      path: only.path
+    })
+  } else if (restMenus.value.length > 1) {
+    list.push({ key: 'more', label: '更多', icon: Grid })
+  }
+
+  list.push({ key: 'profile', label: '我的', icon: User, path: '/profile' })
+  return list
+})
+
+/** 底栏一格四个字放得下, 更长的(如「钉钉同步任务」)才截 */
+const shortLabel = (name = '') => (name.length > 4 ? name.slice(0, 4) : name)
+
+/**
+ * 移动端底栏已经高亮出当前页名, 顶栏再写一遍纯属重复(钉钉容器自己还有一层标题栏)。
+ * 只有走「更多」进来的页面 —— 底栏那格只显示「更多」—— 才需要顶栏点出当前位置。
+ * 桌面端顶栏还挂着用户菜单, 始终保留。
+ */
+const showTopbar = computed(() => {
+  if (!isMobile.value) return true
+  return !tabs.value.some(t => t.path && t.path === route.path)
+})
+
+const isTabActive = (tab) => {
+  if (tab.key === 'more') return restMenus.value.some(m => m.path === route.path)
+  return route.path === tab.path
+}
+
+const onTabClick = (tab) => {
+  if (tab.key === 'more') {
+    moreVisible.value = true
+    return
+  }
+  if (route.path !== tab.path) router.push(tab.path)
+}
+
+const goto = (path) => {
+  moreVisible.value = false
+  if (route.path !== path) router.push(path)
+}
+
+// 走底栏、后退键等其它方式换页时也要收起抽屉, 否则它会盖在新页面上
+watch(() => route.path, () => {
+  moreVisible.value = false
+})
+
+/* ---------- 用户 ---------- */
+
+const displayName = computed(() => userStore.username || '用户')
+const avatarText = computed(() => displayName.value.slice(0, 1).toUpperCase())
 
 const handleCommand = (command) => {
-  if (command === 'logout') {
-    logout()
-  } else if (command === 'changePassword') {
-    openPasswordDialog()
-  }
+  if (command === 'logout') logout()
+  else if (command === 'changePassword') openPasswordDialog()
 }
 
-// 修改密码相关
 const passwordDialogVisible = ref(false)
-const passwordFormRef = ref(null)
-const passwordForm = reactive({
-  oldPassword: '',
-  newPassword: '',
-  confirmPassword: ''
-})
-
-const passwordRules = reactive({
-  oldPassword: [{ required: true, message: '请输入旧密码', trigger: 'blur' }],
-  newPassword: [
-    { required: true, message: '请输入新密码', trigger: 'blur' },
-    { min: 6, message: '密码长度至少为 6 位', trigger: 'blur' }
-  ],
-  confirmPassword: [
-    { required: true, message: '请确认新密码', trigger: 'blur' },
-    {
-      validator: (rule, value, callback) => {
-        if (value !== passwordForm.newPassword) {
-          callback(new Error('两次输入密码不一致'))
-        } else {
-          callback()
-        }
-      },
-      trigger: 'blur'
-    }
-  ]
-})
-
-const openPasswordDialog = () => {
-  passwordForm.oldPassword = ''
-  passwordForm.newPassword = ''
-  passwordForm.confirmPassword = ''
-  passwordDialogVisible.value = true
-}
-
-const submitPasswordChange = async () => {
-  if (!passwordFormRef.value) return
-  
-  await passwordFormRef.value.validate(async (valid) => {
-    if (valid) {
-      try {
-        await request.post('/system/user/change-password', passwordForm)
-        ElMessage.success('密码修改成功，请重新登录')
-        passwordDialogVisible.value = false
-        logout()
-      } catch (e) {
-        console.error(e)
-      }
-    }
-  })
-}
+const openPasswordDialog = () => { passwordDialogVisible.value = true }
 
 const logout = () => {
   userStore.logout()
-  ElMessage.success('已退出登录')
   router.push('/login')
 }
 
-onMounted(() => {
-  loadUserMenus()
-  window.addEventListener('resize', handleResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
-})
+onMounted(loadUserMenus)
 </script>
 
 <style scoped>
-.common-layout {
-  height: 100vh;
-}
-
-.el-container {
-  height: 100%;
-}
-
-.el-aside {
-  background-color: #2c3e50;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-}
-
-.logo-section {
-  height: 60px;
+/* 桌面端: 外壳不滚, 只有内容区滚 —— 侧栏和顶栏始终可见。
+   移动端在文件末尾改回整页滚动, 配合 fixed 底栏。 */
+.layout {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-page);
 }
 
-.logo-section h3 {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.95);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
+/* ===== 侧栏 ===== */
 
-.logo-section p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 12px;
-  font-weight: 300;
-}
-
-.el-menu {
-  border-right: none;
-}
-
-.el-menu-item, .el-sub-menu {
-  transition: all 0.3s;
-}
-
-.el-menu-item:hover,
-.el-sub-menu:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.el-menu-item.is-active {
-  background-color: rgba(64, 158, 255, 0.2) !important;
-  border-right: 3px solid #409eff;
-  font-weight: 500;
-}
-
-.menu-trigger {
-  font-size: 24px;
-  cursor: pointer;
-  color: #303133;
-  margin-right: 15px;
-  transition: color 0.3s;
-}
-
-.menu-trigger:hover {
-  color: #409eff;
-}
-
-.drawer-content {
-  height: 100%;
-  background-color: #2c3e50;
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
 }
 
-:deep(.mobile-drawer) {
-  --el-drawer-padding-primary: 0;
-}
-
-.el-header {
-  background-color: #fff;
-  border-bottom: 1px solid #e4e7ed;
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.header-left h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #303133;
-  font-weight: 500;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-}
-
-.user-section {
+.sidebar-brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-  background-color: #f5f7fa;
+  height: var(--header-h);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex-shrink: 0;
 }
 
-.user-section:hover {
-  background-color: #e4e7ed;
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  background: var(--brand);
+  color: var(--text-inverse);
+  flex-shrink: 0;
 }
 
-.user-avatar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.username {
-  font-size: 14px;
-  color: #303133;
-  font-weight: 500;
-}
-
-.dropdown-icon {
-  color: #909399;
-  font-size: 12px;
-  transition: transform 0.3s;
-}
-
-.user-section:hover .dropdown-icon {
-  transform: rotate(180deg);
-}
-
-.el-main {
-  background-color: #f5f7fa;
-  padding: 24px;
+.sidebar-menu {
+  flex: 1;
+  padding: 8px;
+  border-right: none;
   overflow-y: auto;
 }
 
-:deep(.el-dropdown-menu__item) {
-  padding: 10px 20px;
+.sidebar-menu :deep(.el-menu-item),
+.sidebar-menu :deep(.el-sub-menu__title) {
+  height: 40px;
+  line-height: 40px;
+  margin-bottom: 2px;
+  padding-left: 12px !important;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-secondary);
+  transition: background var(--ease), color var(--ease);
+}
+
+.sidebar-menu :deep(.el-menu-item:hover),
+.sidebar-menu :deep(.el-sub-menu__title:hover) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* 选中态: 浅底 + 左侧色条, 不用满色块 */
+.sidebar-menu :deep(.el-menu-item.is-active) {
+  position: relative;
+  background: var(--brand-subtle);
+  color: var(--brand);
+  font-weight: 500;
+}
+
+.sidebar-menu :deep(.el-menu-item.is-active)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--brand);
+}
+
+.sidebar-menu :deep(.el-sub-menu .el-menu-item) {
+  padding-left: 34px !important;
+}
+
+/* ===== 主区 ===== */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topbar {
+  height: var(--header-h);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 24px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+
+.topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.user-btn {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 5px 10px 5px 5px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--ease), border-color var(--ease);
 }
 
-:deep(.el-dropdown-menu__item .el-icon) {
-  font-size: 16px;
+.user-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border);
 }
 
-@media screen and (max-width: 768px) {
-  .el-header {
-    padding: 0 15px;
-    height: 56px !important;
-  }
-  
-  .el-main {
-    padding: 15px;
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--brand-subtle);
+  color: var(--brand);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.user-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ===== 移动端底栏 ===== */
+
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  display: flex;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: var(--tabbar-h);
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--ease);
+}
+
+.tab.active {
+  color: var(--brand);
+}
+
+.more-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.more-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 4px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--bg-sunken);
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+  /* 手机上交还给整页滚动: 内嵌滚动容器会和钉钉容器的下拉刷新打架 */
+  .layout {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
   }
 
-  .user-section {
-    padding: 4px 8px;
-    gap: 5px;
+  .main {
+    height: auto;
+    overflow: visible;
   }
 
-  .username {
-    display: none;
+  .topbar {
+    position: sticky;
+    top: 0;
+    padding: 0 16px;
   }
-  
-  .logo-section {
-    height: 56px;
-    padding: 0;
-    justify-content: center;
+
+  .content {
+    padding: 16px;
+    overflow: visible;
   }
-  
-  .logo-section h3 {
-    font-size: 18px;
+
+  /* 给底栏让位, 否则最后一行内容被挡住 */
+  .content.has-tabbar {
+    overflow: visible;
+    padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 16px);
   }
 }
 </style>

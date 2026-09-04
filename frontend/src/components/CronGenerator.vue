@@ -2,7 +2,7 @@
   <div class="cron-generator">
     <el-form :inline="true" size="small">
       <el-form-item label="执行周期">
-        <el-select v-model="frequencyType" @change="handleFrequencyChange" style="width: 120px">
+        <el-select v-model="frequencyType" style="width: 120px">
           <el-option label="每天" value="daily" />
           <el-option label="每周" value="weekly" />
           <el-option label="每月" value="monthly" />
@@ -17,14 +17,14 @@
           format="HH:mm"
           value-format="HH:mm"
           placeholder="选择时间"
-          @change="generateCron"
+         
         />
       </el-form-item>
 
       <!-- 每周：选择星期几和时间 -->
       <template v-if="frequencyType === 'weekly'">
         <el-form-item label="星期">
-          <el-select v-model="weekDay" @change="generateCron" style="width: 100px">
+          <el-select v-model="weekDay" style="width: 100px">
             <el-option label="周一" value="MON" />
             <el-option label="周二" value="TUE" />
             <el-option label="周三" value="WED" />
@@ -40,7 +40,7 @@
             format="HH:mm"
             value-format="HH:mm"
             placeholder="选择时间"
-            @change="generateCron"
+           
           />
         </el-form-item>
       </template>
@@ -48,7 +48,7 @@
       <!-- 每月：选择日期和时间 -->
       <template v-if="frequencyType === 'monthly'">
         <el-form-item label="日期">
-          <el-input-number v-model="monthDay" :min="1" :max="31" @change="generateCron" style="width: 80px" />
+          <el-input-number v-model="monthDay" :min="1" :max="31" style="width: 80px" />
         </el-form-item>
         <el-form-item label="执行时间">
           <el-time-picker
@@ -56,20 +56,20 @@
             format="HH:mm"
             value-format="HH:mm"
             placeholder="选择时间"
-            @change="generateCron"
+           
           />
         </el-form-item>
       </template>
 
       <!-- 自定义：手动输入 -->
       <el-form-item v-if="frequencyType === 'custom'" label="Cron表达式">
-        <el-input v-model="customCron" @input="handleCustomInput" style="width: 200px" placeholder="0 0 10 ? * MON" />
+        <el-input v-model="customCron" style="width: 200px" placeholder="0 0 10 ? * MON" />
       </el-form-item>
     </el-form>
 
     <div class="cron-result">
-      <el-tag>{{ cronExpression }}</el-tag>
-      <span style="margin-left: 10px; color: #999; font-size: 12px">{{ cronDescription }}</span>
+      <span class="cron-desc">{{ cronDescription }}</span>
+      <code class="cron-code">{{ cronExpression }}</code>
     </div>
   </div>
 </template>
@@ -194,31 +194,62 @@ watch(() => props.modelValue, (newVal) => {
   }
 }, { immediate: true })
 
-const generateCron = () => {
-  // The computed property will auto-update
-}
-
-const handleFrequencyChange = () => {
-  // Reset values to defaults when switching types if needed, 
-  // or just let generateCronExpression take care of it
-}
-
-const handleCustomInput = () => {
-  // Custom input is handled via customCron ref which triggers computed cronExpression
-}
 </script>
 
 <style scoped>
 .cron-generator {
-  padding: 10px;
-  background: #f5f5f5;
-  border-radius: 4px;
+  width: 100%;
+  padding: 12px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.cron-generator :deep(.el-form-item) {
+  margin-bottom: 8px;
 }
 
 .cron-result {
-  margin-top: 10px;
-  padding: 10px;
-  background: white;
-  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  padding: 10px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.cron-desc {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.cron-code {
+  font-family: var(--font-num);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@media screen and (max-width: 767px) {
+  /* inline 表单在手机上会把选择器挤成一条缝 */
+  .cron-generator :deep(.el-form--inline .el-form-item) {
+    display: flex;
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .cron-generator :deep(.el-form-item__content) {
+    flex: 1;
+  }
+
+  .cron-generator :deep(.el-select),
+  .cron-generator :deep(.el-input),
+  .cron-generator :deep(.el-date-editor) {
+    width: 100% !important;
+  }
 }
 </style>

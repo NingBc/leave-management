@@ -5,7 +5,9 @@ import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from './App.vue'
 import router from './router'
-import './style.css'
+
+// 必须排在 element-plus 的样式之后, 否则变量覆盖不生效
+import './styles/theme.scss'
 
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
