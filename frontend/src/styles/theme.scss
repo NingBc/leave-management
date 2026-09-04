@@ -337,9 +337,18 @@ body.using-mouse :focus-visible {
     min-height: 36px;
   }
 
+  /* 弹窗垂直居中。手机屏幕矮, Element Plus 默认的 15vh、以及组件自己设的 top
+     (休假管理的编辑弹窗是 6vh) 都会让弹窗明显贴在顶部。
+     这里用 flex + margin:auto 而不是 align-items:center —— 后者在内容比视口高时
+     会把顶部裁掉滚不到, margin:auto 则会正常留出滚动空间。
+     !important 是为了盖掉 top 属性生成的行内 margin-top。 */
+  .el-overlay-dialog {
+    display: flex;
+  }
+
   .el-dialog {
     --el-dialog-width: calc(100vw - 24px) !important;
-    margin: 0 auto;
+    margin: auto !important;
   }
 
   .el-dialog__body {
