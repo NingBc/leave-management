@@ -1,3 +1,5 @@
+import { daysSince } from '../utils/date'
+
 /**
  * 年假相关的字段文案与枚举。
  *
@@ -143,11 +145,13 @@ export const fmtDays = (v) => {
 const SYNC_TS = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/
 
 export function parseSyncTime(raw) {
-  if (!raw) return { ok: false, date: '', full: '', note: '' }
+  if (!raw) return { ok: false, date: '', full: '', note: '', daysAgo: null }
   const text = String(raw).trim()
   if (SYNC_TS.test(text)) {
-    return { ok: true, date: text.slice(0, 10), full: text, note: '' }
+    const date = text.slice(0, 10)
+    // 「已同步至 08-31」还得自己数几天前, 直接把天数算出来更有感知
+    return { ok: true, date, full: text, note: '', daysAgo: daysSince(date) ?? 0 }
   }
   // 后端给的是说明性文案, 原样透出, 不要套进时间的句式里
-  return { ok: false, date: '', full: '', note: text }
+  return { ok: false, date: '', full: '', note: text, daysAgo: null }
 }
