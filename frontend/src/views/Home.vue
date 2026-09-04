@@ -99,7 +99,7 @@ import { ElMessage } from 'element-plus'
 import request from '../utils/request'
 import { useUserStore } from '../stores/user'
 import { FIELD, fmtDays, parseSyncTime } from '../constants/leave'
-import { daysSince, humanizeDuration } from '../utils/date'
+import { daysInclusive, humanizeDuration } from '../utils/date'
 import FieldHint from '../components/FieldHint.vue'
 
 const router = useRouter()
@@ -139,13 +139,13 @@ const todayText = computed(() => {
 const detailRows = computed(() => {
   const a = account.value
   if (!a) return []
-  const totalDays = daysSince(a.entryDate)
+  const totalDays = daysInclusive(a.entryDate)
   return [
     // 前三项讲「我是谁」, 后两项讲「今年的假怎么算出来的」
     { key: 'seniority', label: FIELD.socialSeniority.label, hint: FIELD.socialSeniority.hint, value: `${a.socialSeniority ?? 0} 年` },
     { key: 'entry', label: FIELD.entryDate.label, hint: FIELD.entryDate.hint, value: a.entryDate || '—' },
     { key: 'totalDays', label: FIELD.totalDaysEmployed.label, hint: FIELD.totalDaysEmployed.hint,
-      value: totalDays == null ? '—' : `${totalDays} 天（${humanizeDuration(totalDays)}）` },
+      value: totalDays == null ? '—' : `${totalDays} 天 (${humanizeDuration(totalDays)})` },
     { key: 'standard', label: FIELD.standardQuota.label, hint: FIELD.standardQuota.hint, value: `${fmtDays(a.standardQuota)} 天` },
     { key: 'employed', label: FIELD.daysEmployed.label, hint: FIELD.daysEmployed.hint, value: `${a.daysEmployed ?? 0} 天` }
   ]

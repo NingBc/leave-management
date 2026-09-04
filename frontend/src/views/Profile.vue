@@ -69,7 +69,7 @@ import { ElMessageBox } from 'element-plus'
 import request from '../utils/request'
 import { useUserStore } from '../stores/user'
 import { FIELD } from '../constants/leave'
-import { daysSince, humanizeDuration } from '../utils/date'
+import { daysInclusive, humanizeDuration } from '../utils/date'
 import ChangePasswordDialog from '../components/ChangePasswordDialog.vue'
 import FieldHint from '../components/FieldHint.vue'
 
@@ -84,7 +84,7 @@ const avatarText = computed(() => {
 })
 
 /** 司龄: 入职本公司至今。和年假账户里的「今年在职天数」不是一回事, 所以单列一行 */
-const tenureText = computed(() => humanizeDuration(daysSince(user.value.entryDate)))
+const tenureText = computed(() => humanizeDuration(daysInclusive(user.value.entryDate)))
 
 const loadUser = async () => {
   try {
