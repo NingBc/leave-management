@@ -9,7 +9,11 @@
         <span>年假管理</span>
       </div>
 
+      <!-- key 跟着分组 id 走: 菜单是异步拉回来的, el-menu 只在初始化时读一次
+           default-openeds, 首次渲染时 openedMenuIds 还是空数组, 分组就全折叠了。
+           数据到位后 key 变化, 组件重建, 展开态才生效。 -->
       <el-menu
+        :key="`menu-${openedMenuIds.join('-')}`"
         router
         :default-active="route.path"
         class="sidebar-menu"
