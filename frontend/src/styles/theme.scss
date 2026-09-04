@@ -28,6 +28,9 @@
   --text-secondary:   #495057;
   --text-muted:       #868e96;
   --text-placeholder: #adb5bd;
+  /* 表头里的单位等次要标注: 在 --bg-sunken 上 5.48:1, 过 AA,
+     又比 7.35:1 的字段名弱一档。别退回 --text-muted, 那只有 2.99:1。 */
+  --text-annotation:  #5c636a;
   --text-inverse:     #ffffff;
 
   /* ---- 状态色 ---- */
