@@ -100,13 +100,13 @@ export const FIELD = {
     short: '今年已休',
     label: '今年已休',
     unit: '天',
-    hint: '本年度已休掉的年假，每周一从钉钉同步。'
+    hint: '本年度已休掉的年假，每周一从钉钉审批单同步。最近几天请的假可能还没同步进来，所以余额会偏大。'
   },
   totalBalance: {
     short: '当前可休',
     label: '当前可休',
     unit: '天',
-    hint: '此刻还能休的天数 = 上年结转 + 已累积 − 今年已休 ± 手工调整。'
+    hint: '此刻还能休的天数 = 上年结转 + 已累积 − 今年已休 ± 手工调整。其中「今年已休」来自钉钉同步，同步之后请的假还没扣减。'
   },
   entryDate: {
     short: '入职日期',
@@ -131,4 +131,23 @@ export const balanceFormula = (account) => {
 export const fmtDays = (v) => {
   const n = Number(v ?? 0)
   return Number.isInteger(n) ? String(n) : n.toFixed(1)
+}
+
+/**
+ * 解析账户上的 lastSyncTime。
+ *
+ * 后端 resolveLastSyncTime() 在查不到同步任务或出异常时, 返回的是「暂无同步记录」
+ * 「获取失败」这类中文文案而不是时间戳 —— 直接拼进「上次 XXX」会读成
+ * 「上次 暂无同步记录」。所以这里先判格式, 由调用方按 ok 分支渲染。
+ */
+const SYNC_TS = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/
+
+export function parseSyncTime(raw) {
+  if (!raw) return { ok: false, date: '', full: '', note: '' }
+  const text = String(raw).trim()
+  if (SYNC_TS.test(text)) {
+    return { ok: true, date: text.slice(0, 10), full: text, note: '' }
+  }
+  // 后端给的是说明性文案, 原样透出, 不要套进时间的句式里
+  return { ok: false, date: '', full: '', note: text }
 }
