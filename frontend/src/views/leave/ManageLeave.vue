@@ -26,26 +26,24 @@
       >
         <template #header>
           <span class="th">
-            {{ col.short }}
+            {{ col.short }}<i class="th-unit">{{ col.unit.trim() }}</i>
             <FieldHint :label="col.label" :text="col.hint" />
           </span>
         </template>
         <template #default="{ row }">
-          <span class="num">
-            {{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}<i class="cell-unit">{{ col.unit.trim() }}</i>
-          </span>
+          <span class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}</span>
         </template>
       </el-table-column>
 
       <el-table-column min-width="112" align="right" header-align="right">
         <template #header>
           <span class="th">
-            {{ FIELD.totalBalance.short }}
+            {{ FIELD.totalBalance.short }}<i class="th-unit">天</i>
             <FieldHint :label="FIELD.totalBalance.label" :text="FIELD.totalBalance.hint" />
           </span>
         </template>
         <template #default="{ row }">
-          <strong class="num balance-cell">{{ fmtDays(row.totalBalance) }}<i class="cell-unit">天</i></strong>
+          <strong class="num balance-cell">{{ fmtDays(row.totalBalance) }}</strong>
         </template>
       </el-table-column>
 
@@ -479,16 +477,13 @@ onMounted(() => {
   gap: 4px;
 }
 
-/* 单位固定占一个字宽并靠左, 这样右对齐时各行数字的右边缘仍然对齐 */
-.cell-unit {
-  display: inline-block;
-  width: 15px;
+/* 单位只在列头出现一次。小一号 + 弱化字重, 免得像两个并列的词, 也不至于把列头撑折行 */
+.th-unit {
   margin-left: 3px;
-  text-align: left;
-  font-size: 12px;
+  font-size: 11px;
   font-style: normal;
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--text-annotation);
 }
 
 .balance-cell {

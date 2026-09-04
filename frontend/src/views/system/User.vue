@@ -41,12 +41,12 @@
       <el-table-column min-width="112" align="right" header-align="right">
         <template #header>
           <span class="th">
-            {{ FIELD.socialSeniority.short }}
+            {{ FIELD.socialSeniority.short }}<i class="th-unit">年</i>
             <FieldHint :label="FIELD.socialSeniority.label" :text="FIELD.socialSeniority.hint" />
           </span>
         </template>
         <template #default="{ row }">
-          <span class="num">{{ row.socialSeniority ?? 0 }}<i class="cell-unit">年</i></span>
+          <span class="num">{{ row.socialSeniority ?? 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="角色" min-width="104">
@@ -500,15 +500,12 @@ onMounted(() => {
   gap: 4px;
 }
 
-.cell-unit {
-  display: inline-block;
-  width: 15px;
+.th-unit {
   margin-left: 3px;
-  text-align: left;
-  font-size: 12px;
+  font-size: 11px;
   font-style: normal;
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--text-annotation);
 }
 
 /* el-dropdown 的 vertical-align 是 top, el-button 是 middle, 并排会错开约 3px。
