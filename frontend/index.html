@@ -1,17 +1,339 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f8fa" />
   <title>年假管理</title>
+
+  <!--
+    首屏引导态。手机端限流时主包要下 20-30 秒, 在它到达之前页面是纯白的,
+    用户不知道是在加载还是已经挂了。
+
+    三条硬约束, 改这段之前先读:
+    1. 全部内联 —— 不能有任何外链(字体/图片/SVG/CSS), 否则它自己也要排队等限流。
+    2. 色值写死, 不引 theme.scss 的变量 —— 那个文件在主包里, 这时候还没到。
+       这里的值必须和 theme.scss 保持一致, 否则切换瞬间会闪一下色差。
+    3. 渲染阻塞 —— vite 注入的 <link rel="stylesheet"> 会把首帧按住,
+       vite.config.js 里的 boot-loader 插件把它改成了非阻塞。别把那个插件删了,
+       删了这段就白写了(CSS 到达前照样白屏)。
+  -->
+  <style>
+    html, body { margin: 0; height: 100%; }
+    body {
+      background: #f7f8fa;
+      -webkit-font-smoothing: antialiased;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    #boot {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; justify-content: center; align-items: center;
+      box-sizing: border-box;
+      background: #f7f8fa;
+      padding: 0 max(24px, env(safe-area-inset-right)) 0 max(24px, env(safe-area-inset-left));
+      transition: opacity 240ms ease;
+    }
+    #boot.is-done { opacity: 0; pointer-events: none; }
+
+    .boot-col { width: 100%; max-width: 272px; position: relative; }
+    /* 提示与按钮绝对定位挂在下方: 它们出现时不会把上面的字标和进度尺顶上去 */
+    .boot-extra { position: absolute; top: calc(100% + 20px); left: 0; right: 0; }
+
+    .boot-mark {
+      margin: 0 0 22px;
+      font-size: 19px; font-weight: 600; letter-spacing: -0.01em;
+      color: #212529;
+    }
+
+    /* 四段不等宽 = 四个真实里程碑的成本比例, 大头在「主程序」那段 */
+    .boot-track { display: flex; gap: 4px; height: 4px; }
+    .boot-seg { flex: 1; background: #e5e7eb; border-radius: 2px; overflow: hidden; }
+    .boot-seg > i {
+      display: block; height: 100%; width: 100%;
+      background: #3b5bdb; border-radius: 2px;
+      transform: scaleX(0); transform-origin: left;
+    }
+
+    /* 一行账目: 左边事由, 右边数字。等宽数字和年假天数用的是同一套排版 */
+    .boot-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-top: 12px; font-size: 13px; line-height: 1.5;
+    }
+    .boot-stage { color: #495057; }
+    .boot-pct {
+      color: #868e96; font-size: 12px;
+      font-family: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .boot-note {
+      margin: 0;
+      font-size: 13px; line-height: 1.65; color: #868e96;
+      opacity: 0; transition: opacity 320ms ease;
+    }
+    .boot-note.is-on { opacity: 1; }
+
+    .boot-retry {
+      margin-top: 16px; padding: 9px 16px;
+      font: inherit; font-size: 13px; color: #3b5bdb;
+      background: #fff; border: 1px solid #d3dafa; border-radius: 6px;
+      cursor: pointer; opacity: 0; transition: opacity 320ms ease;
+    }
+    .boot-retry.is-on { opacity: 1; }
+    .boot-retry:active { background: #edf0fd; }
+    .boot-retry:focus-visible { outline: 2px solid #3b5bdb; outline-offset: 2px; }
+
+    /* 失败: 进度褪成灰色并停住, 百分比隐去 —— 不能让它看着还在走。
+       按钮转实心, 因为这时它是唯一的出路 */
+    #boot.is-failed .boot-seg > i { background: #adb5bd; }
+    #boot.is-failed .boot-pct { visibility: hidden; }
+    #boot.is-failed .boot-retry {
+      color: #fff; background: #3b5bdb; border-color: #3b5bdb;
+    }
+    #boot.is-failed .boot-retry:active { background: #364fc7; }
+
+    @media (prefers-reduced-motion: reduce) {
+      #boot, .boot-note, .boot-retry, .boot-seg > i { transition: none; }
+    }
+  </style>
 </head>
 
 <body>
+  <div id="boot" aria-busy="true">
+    <div class="boot-col">
+      <p class="boot-mark">年假管理</p>
+      <div class="boot-track" aria-hidden="true">
+        <span class="boot-seg" style="flex:8"><i></i></span>
+        <span class="boot-seg" style="flex:22"><i></i></span>
+        <span class="boot-seg" style="flex:60"><i></i></span>
+        <span class="boot-seg" style="flex:10"><i></i></span>
+      </div>
+      <div class="boot-row">
+        <span class="boot-stage" role="status">正在加载</span>
+        <span class="boot-pct" aria-hidden="true">0%</span>
+      </div>
+      <div class="boot-extra">
+        <p class="boot-note">比平时更慢了，仍在加载</p>
+        <button class="boot-retry" type="button">重新加载</button>
+      </div>
+    </div>
+  </div>
+
   <div id="app"></div>
+
   <script type="module" src="/src/main.js"></script>
+
+  <!-- ES5 写法: 钉钉内置 webview 版本参差, 这段是唯一一段在主包到达前就要跑的代码,
+       它挂了整个引导态就没了, 所以不用任何新语法。 -->
+  <script>
+    (function () {
+      var boot = document.getElementById('boot');
+      if (!boot) return;
+
+      var segs    = boot.querySelectorAll('.boot-seg > i');
+      var elStage = boot.querySelector('.boot-stage');
+      var elPct   = boot.querySelector('.boot-pct');
+      var elNote  = boot.querySelector('.boot-note');
+      var elRetry = boot.querySelector('.boot-retry');
+
+      // 四段的累计刻度, 段宽 = 真实成本比例
+      var MARK = [0, 8, 30, 90, 100];
+      var TEXT = ['正在加载', '界面已就位', '就快好了', '已就绪'];
+      var GAP  = 2;          // 永远差这一点到下一个真实刻度, 不越位
+
+      // 限流后常态 20-30 秒: 这期间只让进度条和百分比说话,
+      // 35 秒才算反常(给重新加载), 60 秒才判失败
+      var T_RETRY = 35000, T_FAIL = 60000;
+      var NOTE_SLOW = '比平时更慢了，仍在加载';
+      var NOTE_FAIL = '网络一直没有响应，请检查网络后重试';
+
+      var phase = 0, p = 0, tau = 5000, last = 0, raf = 0, shown = -1;
+      var stopped = false, failed = false, finished = false;
+      var cssReady = false, onCssReady = null, waitingCss = false;
+      var tRetry, tFail;
+
+      function capOf(ph) {
+        var top = MARK[ph + 2];
+        return top === undefined ? 100 : top - GAP;
+      }
+
+      function paint() {
+        for (var i = 0; i < segs.length; i++) {
+          var f = (p - MARK[i]) / (MARK[i + 1] - MARK[i]);
+          segs[i].style.transform = 'scaleX(' + (f < 0 ? 0 : f > 1 ? 1 : f).toFixed(4) + ')';
+        }
+        var n = Math.floor(p);
+        if (n !== shown) { shown = n; elPct.textContent = n + '%'; }
+      }
+
+      function tick(now) {
+        if (stopped) return;
+        var dt = last ? now - last : 16; last = now;
+        var cap = capOf(phase);
+        if (p < cap) p += (cap - p) * (1 - Math.exp(-dt / tau));
+        // 「就快好了」不挂在主包的 load 事件上 —— 那个事件和挂载几乎同时发生,
+        // 文案一闪而过, 等于这 20-30 秒里从头到尾只有一句「界面已就位」。
+        // 挂到进度上, 至少中途还有一次「有进展」的信号。
+        if (phase === 1 && p >= 75 && elStage.textContent !== TEXT[2]) {
+          elStage.textContent = TEXT[2];
+        }
+        paint();
+        raf = requestAnimationFrame(tick);
+      }
+
+      // 真实里程碑到达: 吸附到该刻度, 并按新节奏走下一段。
+      // etaMs 是对下一段耗时的实测估算, 没有就退回经验值。
+      function advance(next, etaMs) {
+        if (finished || next <= phase) return;
+        phase = next;
+        if (p < MARK[phase + 1]) p = MARK[phase + 1];
+        tau = phase === 1 ? (etaMs ? Math.max(2000, etaMs * 0.5) : 12000)
+            : phase === 2 ? 800 : 400;
+        elStage.textContent = TEXT[phase];
+        paint();
+      }
+
+      function clearTimers() { clearTimeout(tRetry); clearTimeout(tFail); }
+
+      function escalate() {                  // 超出常态区间: 承认反常, 给出重新加载
+        if (finished || failed) return;
+        elNote.textContent = NOTE_SLOW;
+        elNote.className = 'boot-note is-on';
+        elRetry.className = 'boot-retry is-on';
+      }
+
+      function fail(msg) {
+        if (finished) return;
+        failed = true; stopped = true; cancelAnimationFrame(raf);
+        boot.classList.add('is-failed');
+        elStage.textContent = '加载失败';
+        elNote.textContent = msg || NOTE_FAIL;
+        elNote.className = 'boot-note is-on';
+        elRetry.className = 'boot-retry is-on';
+        clearTimers();
+      }
+
+      // 应用挂载好了。但样式表现在是非阻塞加载的(见 vite.config.js 的 boot-loader),
+      // 万一它比主包晚到, 这会儿收场就会闪一下没样式的页面 —— 所以等它一下。
+      // 最多等 1.5 秒: 样式表卡住不能变成一直压着应用不给看。
+      function done() {
+        if (finished || waitingCss) return;
+        if (!cssReady) {
+          waitingCss = true;
+          var give = setTimeout(function () { onCssReady = null; waitingCss = false; finish(); }, 1500);
+          onCssReady = function () { clearTimeout(give); waitingCss = false; finish(); };
+          return;
+        }
+        finish();
+      }
+
+      function finish() {
+        if (finished) return;
+        finished = true; clearTimers();
+        if (failed) {                        // 判过失败又自己回来了: 收回失败态
+          failed = false; boot.classList.remove('is-failed');
+          elNote.className = 'boot-note'; elRetry.className = 'boot-retry';
+        }
+        stopped = false; last = 0;
+        // 不走 advance(3): 它会把 p 直接吸到 100, 进度条一下跳满。
+        // 这里只换文案, 让下面那段把最后一截平滑走完。
+        phase = 3;
+        elStage.textContent = TEXT[3];
+        var t = setInterval(function () {
+          p += (100 - p) * 0.4;
+          if (p > 99.4) {
+            p = 100; paint(); clearInterval(t);
+            stopped = true; cancelAnimationFrame(raf);
+            boot.classList.add('is-done');
+            setTimeout(function () { if (boot.parentNode) boot.parentNode.removeChild(boot); }, 260);
+            return;
+          }
+          paint();
+        }, 16);
+      }
+
+      elRetry.onclick = function () { location.reload(); };
+
+      /* ---------- 真实里程碑的探测 ---------- */
+
+      function toArray(nodes) {
+        var a = [], i;
+        for (i = 0; i < nodes.length; i++) a.push(nodes[i]);
+        return a;
+      }
+
+      // 一组资源全部到齐后回调。load 和 error 都算到齐 ——
+      // 挂了也不能把进度条卡死, 交给 T_FAIL 兜底。
+      function whenAllLoaded(els, cb) {
+        var left = els.length;
+        if (!left) { cb(); return; }
+        for (var i = 0; i < els.length; i++) {
+          (function (el) {
+            var hit = false;
+            function done1() {
+              if (hit) return;
+              hit = true;
+              if (--left === 0) cb();
+            }
+            if (el.tagName === 'LINK' && el.sheet) { done1(); return; }   // 缓存命中
+            el.addEventListener('load', done1);
+            el.addEventListener('error', done1);
+          })(els[i]);
+        }
+      }
+
+      // 主包要下多少字节, 由构建插件写进 meta;
+      // 带宽拿已经下完的样式表实测。两者相除得到 ETA。
+      // 样式表和主包是并行下的, 所以测出来的带宽偏低、ETA 偏长,
+      // 结果是进度条走得比实际慢, 到里程碑时提前追上 —— 这是安全的方向。
+      function estimateBundleMs() {
+        var meta = document.querySelector('meta[name="boot-bytes"]');
+        var bytes = meta ? parseInt(meta.getAttribute('content'), 10) : 0;
+        if (!bytes || !window.performance || !performance.getEntriesByType) return 0;
+        var list = performance.getEntriesByType('resource'), bps = 0;
+        for (var i = 0; i < list.length; i++) {
+          var e = list[i];
+          if (e.initiatorType === 'link' && e.transferSize > 2048 && e.duration > 0) {
+            var v = e.transferSize / (e.duration / 1000);
+            if (v > bps) bps = v;
+          }
+        }
+        return bps ? (bytes / bps) * 1000 : 0;
+      }
+
+      var sheets = toArray(document.querySelectorAll('link[rel="stylesheet"]'));
+      var mods   = toArray(document.querySelectorAll('script[type="module"][src]'));
+
+      // 兜底: 构建插件把样式表改成了 media="print" 延迟生效,
+      // 万一那个内联 onload 没跑(比如被 CSP 拦了), 这里补一刀。
+      for (var s = 0; s < sheets.length; s++) {
+        if (sheets[s].media === 'print') {
+          (function (link) {
+            link.addEventListener('load', function () { link.media = 'all'; });
+          })(sheets[s]);
+        }
+      }
+
+      whenAllLoaded(sheets, function () {
+        cssReady = true;
+        if (onCssReady) { var f = onCssReady; onCssReady = null; f(); }
+        advance(1, estimateBundleMs());
+        whenAllLoaded(mods, function () { advance(2); });
+      });
+
+      tRetry = setTimeout(escalate, T_RETRY);
+      tFail  = setTimeout(function () { fail(NOTE_FAIL); }, T_FAIL);
+
+      window.__boot = { done: done, fail: fail };
+      raf = requestAnimationFrame(tick);
+      paint();
+    })();
+  </script>
 </body>
 
 </html>
