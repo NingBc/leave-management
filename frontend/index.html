@@ -50,13 +50,41 @@
       color: #212529;
     }
 
-    /* 四段不等宽 = 四个真实里程碑的成本比例, 大头在「主程序」那段 */
-    .boot-track { display: flex; gap: 4px; height: 4px; }
-    .boot-seg { flex: 1; background: #e5e7eb; border-radius: 2px; overflow: hidden; }
-    .boot-seg > i {
-      display: block; height: 100%; width: 100%;
-      background: #3b5bdb; border-radius: 2px;
-      transform: scaleX(0); transform-origin: left;
+    /* 进度尺: 24 个离散格子, 拉通一条, 不分组。
+       为什么不用连续填充: 限流时 25 秒才走完, 每帧只长 0.3 像素, 肉眼看不出在动,
+       像卡住了。改成一格一格点亮, 每次真实推进就是一个看得见的事件。
+       这也正好是年假自己的计量方式 —— 按天算, 本来就是离散的。
+       为什么不按里程碑分组(曾经分成 2/5/14/3): 用户不知道那几道缝是什么意思,
+       反而会读成「四个阶段」并默认阶段等长 —— 前两组 2-3 秒就填满, 第三组要爬 20 秒,
+       等于主动误导。阶段信息由下面那行文案承担, 它说得明白得多。 */
+    .boot-track { display: flex; gap: 3px; }
+    .boot-track > i {
+      flex: 1; height: 8px; border-radius: 2px;
+      background: #e5e7eb;
+    }
+
+    /* 锁定: 一格点亮 —— 落墨 260ms, 这是真实进展的节拍。
+       从左往右长而不是纵向长大: 横向才是进度的方向, 而且中途被看到时
+       就是「这一格填了一半」, 那是真实状态; 纵向长大中途是半高的一条,
+       在一排等高格子里读起来像渲染坏了。 */
+    .boot-track > i.on {
+      background: #3b5bdb;
+      transform-origin: left center;
+      animation: boot-ink 260ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    }
+    /* 前沿: 下一格呼吸 —— 持续的活性证明, 网络卡住时它也还在动 */
+    .boot-track > i.edge { animation: boot-breathe 1.4s ease-in-out infinite; }
+
+    @keyframes boot-ink {
+      from { transform: scaleX(0.35); opacity: 0.55; }
+      to   { transform: scaleX(1);    opacity: 1; }
+    }
+    /* 峰值比 #9fb0ef 再深一档: 手机上就一个 8px 的格子在呼吸,
+       它是这 20-30 秒里唯一的持续信号, 太浅根本看不见。
+       但要明显浅于已点亮的 #3b5bdb, 否则会被读成「这格已经好了」。 */
+    @keyframes boot-breathe {
+      0%, 100% { background: #e5e7eb; }
+      50%      { background: #8b9bea; }
     }
 
     /* 一行账目: 左边事由, 右边数字。等宽数字和年假天数用的是同一套排版 */
@@ -88,17 +116,22 @@
     .boot-retry:active { background: #edf0fd; }
     .boot-retry:focus-visible { outline: 2px solid #3b5bdb; outline-offset: 2px; }
 
-    /* 失败: 进度褪成灰色并停住, 百分比隐去 —— 不能让它看着还在走。
-       按钮转实心, 因为这时它是唯一的出路 */
-    #boot.is-failed .boot-seg > i { background: #adb5bd; }
+    /* 失败: 点亮的格子褪成灰色, 前沿停止呼吸, 百分比隐去 ——
+       不能让它看着还在走。按钮转实心, 因为这时它是唯一的出路 */
+    #boot.is-failed .boot-track > i.on { background: #adb5bd; animation: none; }
+    #boot.is-failed .boot-track > i.edge { animation: none; background: #e5e7eb; }
     #boot.is-failed .boot-pct { visibility: hidden; }
     #boot.is-failed .boot-retry {
       color: #fff; background: #3b5bdb; border-color: #3b5bdb;
     }
     #boot.is-failed .boot-retry:active { background: #364fc7; }
 
+    /* 减弱动效: 落墨和呼吸都停掉, 前沿改成静态的中间色 ——
+       格子该亮的还是亮, 信息不丢, 只是不动 */
     @media (prefers-reduced-motion: reduce) {
-      #boot, .boot-note, .boot-retry, .boot-seg > i { transition: none; }
+      #boot, .boot-note, .boot-retry { transition: none; }
+      .boot-track > i.on { animation: none; }
+      .boot-track > i.edge { animation: none; background: #c4cef4; }
     }
   </style>
 </head>
@@ -107,11 +140,11 @@
   <div id="boot" aria-busy="true">
     <div class="boot-col">
       <p class="boot-mark">年假管理</p>
+      <!-- 24 格。改格数的话 MARK 里的分母要跟着改 -->
       <div class="boot-track" aria-hidden="true">
-        <span class="boot-seg" style="flex:8"><i></i></span>
-        <span class="boot-seg" style="flex:22"><i></i></span>
-        <span class="boot-seg" style="flex:60"><i></i></span>
-        <span class="boot-seg" style="flex:10"><i></i></span>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
       </div>
       <div class="boot-row">
         <span class="boot-stage" role="status">正在加载</span>
@@ -135,14 +168,16 @@
       var boot = document.getElementById('boot');
       if (!boot) return;
 
-      var segs    = boot.querySelectorAll('.boot-seg > i');
+      var cells   = boot.querySelectorAll('.boot-track > i');
+      var CELLS   = cells.length;
       var elStage = boot.querySelector('.boot-stage');
       var elPct   = boot.querySelector('.boot-pct');
       var elNote  = boot.querySelector('.boot-note');
       var elRetry = boot.querySelector('.boot-retry');
 
-      // 四段的累计刻度, 段宽 = 真实成本比例
-      var MARK = [0, 8, 30, 90, 100];
+      // 四个里程碑的累计刻度, 刚好落在格子边界上(2/7/21/24 格),
+      // 这样里程碑到达时总是整格点亮, 不会出现半格
+      var MARK = [0, 100 * 2 / 24, 100 * 7 / 24, 100 * 21 / 24, 100];
       var TEXT = ['正在加载', '界面已就位', '就快好了', '已就绪'];
       var GAP  = 2;          // 永远差这一点到下一个真实刻度, 不越位
 
@@ -152,7 +187,7 @@
       var NOTE_SLOW = '比平时更慢了，仍在加载';
       var NOTE_FAIL = '网络一直没有响应，请检查网络后重试';
 
-      var phase = 0, p = 0, tau = 5000, last = 0, raf = 0, shown = -1;
+      var phase = 0, p = 0, tau = 5000, last = 0, raf = 0, shown = -1, lit = 0;
       var stopped = false, failed = false, finished = false;
       var cssReady = false, onCssReady = null, waitingCss = false;
       var tRetry, tFail;
@@ -162,10 +197,18 @@
         return top === undefined ? 100 : top - GAP;
       }
 
+      // 只在「点亮格数」变化时写 DOM, 不是每帧都写。
+      // 前沿(下一个待点亮的格)带 edge 类, 它在呼吸, 是持续的活性证明。
       function paint() {
-        for (var i = 0; i < segs.length; i++) {
-          var f = (p - MARK[i]) / (MARK[i + 1] - MARK[i]);
-          segs[i].style.transform = 'scaleX(' + (f < 0 ? 0 : f > 1 ? 1 : f).toFixed(4) + ')';
+        var on = Math.floor(p / 100 * CELLS);
+        if (on > CELLS) on = CELLS;
+        if (on !== lit) {
+          var i;
+          if (lit < CELLS) cells[lit].classList.remove('edge');
+          if (on > lit) { for (i = lit; i < on; i++) cells[i].classList.add('on'); }
+          else          { for (i = on; i < lit; i++) cells[i].classList.remove('on'); }
+          lit = on;
+          if (lit < CELLS) cells[lit].classList.add('edge');
         }
         var n = Math.floor(p);
         if (n !== shown) { shown = n; elPct.textContent = n + '%'; }
@@ -330,6 +373,7 @@
       tFail  = setTimeout(function () { fail(NOTE_FAIL); }, T_FAIL);
 
       window.__boot = { done: done, fail: fail };
+      if (CELLS) cells[0].classList.add('edge');   // 第一格先开始呼吸
       raf = requestAnimationFrame(tick);
       paint();
     })();
