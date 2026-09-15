@@ -27,3 +27,13 @@ app.use(ElementPlus, {
 
 setupFocusRing()
 app.mount('#app')
+
+// 收掉 index.html 里的首屏引导态。
+// __boot 不在时直接摘掉节点: 引导脚本万一没跑起来(老 webview 语法炸了之类),
+// 不能让用户永远停在加载页 —— 那时 #boot 是个盖住全屏的固定层。
+if (window.__boot) {
+    window.__boot.done()
+} else {
+    const boot = document.getElementById('boot')
+    if (boot && boot.parentNode) boot.parentNode.removeChild(boot)
+}
