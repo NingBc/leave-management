@@ -36,6 +36,12 @@ backend/logs/
 # 现在 pom 里已显式声明 annotationProcessorPaths, IDE 配置不再是构建的必要条件, 可以安全忽略。
 .idea/
 
+# Claude Code 的本地配置, 和 .idea/ .vscode/ 同一类。
+# settings.local.json 是本机的权限白名单, 每个人不一样, 提交了会给别人带来
+# 莫名其妙的权限差异; launch.json 是本地预览服务器的定义, 也常带机器相关的路径。
+# 以后若要在团队间共享配置, 放 .claude/settings.json 并在这里加一条 !.claude/settings.json。
+.claude/
+
 # --- 系统文件 ---
 .DS_Store
 Thumbs.db
