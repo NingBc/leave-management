@@ -57,11 +57,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="140" fixed="right">
+      <!-- 不在按钮上挂条数: 那是流水行数 (结转、透支拆分、归位都算一行), 不是请假次数,
+           系统管理员没请过假也显示 (1); 位数不同还会把「编辑」挤得参差不齐 -->
+      <el-table-column label="操作" width="120" fixed="right">
         <template #default="{ row }">
-          <el-button link type="primary" @click="openRecords(row)">
-            记录 ({{ row.records?.length || 0 }})
-          </el-button>
+          <el-button link type="primary" @click="openRecords(row)">记录</el-button>
           <el-button link type="primary" @click="handleEdit(row)">编辑</el-button>
         </template>
       </el-table-column>
@@ -92,9 +92,7 @@
         </dl>
 
         <footer class="acct-foot">
-          <el-button size="small" @click="openRecords(row)">
-            记录 ({{ row.records?.length || 0 }})
-          </el-button>
+          <el-button size="small" @click="openRecords(row)">记录</el-button>
           <el-button size="small" type="primary" @click="handleEdit(row)">编辑</el-button>
         </footer>
       </article>
