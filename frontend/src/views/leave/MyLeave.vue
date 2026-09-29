@@ -28,8 +28,8 @@
       </el-table-column>
       <el-table-column prop="type" label="类型" width="110">
         <template #default="{ row }">
-          <el-tag :type="recordTypeTag(row.type)" size="small" effect="light">
-            {{ formatRecordType(row.type) }}
+          <el-tag :type="recordTypeTag(row.type, row.remarks)" size="small" effect="light">
+            {{ formatRecordType(row.type, row.remarks) }}
           </el-tag>
         </template>
       </el-table-column>
@@ -44,8 +44,8 @@
       <div v-for="(item, i) in history" :key="item.id ?? i" class="hist-card surface">
         <div class="hist-top">
           <span class="hist-date num">{{ dateRange(item) }}</span>
-          <el-tag :type="recordTypeTag(item.type)" size="small" effect="light">
-            {{ formatRecordType(item.type) }}
+          <el-tag :type="recordTypeTag(item.type, item.remarks)" size="small" effect="light">
+            {{ formatRecordType(item.type, item.remarks) }}
           </el-tag>
         </div>
         <div class="hist-days num">{{ fmtDays(item.days) }} 天</div>

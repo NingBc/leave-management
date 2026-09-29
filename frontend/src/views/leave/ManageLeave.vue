@@ -130,8 +130,8 @@
         </el-table-column>
         <el-table-column prop="type" label="类型" width="110">
           <template #default="{ row }">
-            <el-tag :type="recordTypeTag(row.type)" size="small" effect="light">
-              {{ formatRecordType(row.type) }}
+            <el-tag :type="recordTypeTag(row.type, row.remarks)" size="small" effect="light">
+              {{ formatRecordType(row.type, row.remarks) }}
             </el-tag>
           </template>
         </el-table-column>
@@ -143,8 +143,8 @@
         <div v-for="(r, i) in viewing?.records || []" :key="r.id ?? i" class="rec-card">
           <div class="rec-top">
             <span class="num">{{ dateRange(r) }}</span>
-            <el-tag :type="recordTypeTag(r.type)" size="small" effect="light">
-              {{ formatRecordType(r.type) }}
+            <el-tag :type="recordTypeTag(r.type, r.remarks)" size="small" effect="light">
+              {{ formatRecordType(r.type, r.remarks) }}
             </el-tag>
           </div>
           <div class="rec-days num">{{ fmtDays(r.days) }} 天</div>
@@ -230,8 +230,8 @@
                 :key="opt.value" :label="opt.label" :value="opt.value"
               />
             </el-select>
-            <el-tag v-else :type="recordTypeTag(row.type)" size="small" effect="light">
-              {{ formatRecordType(row.type) }}
+            <el-tag v-else :type="recordTypeTag(row.type, row.remarks)" size="small" effect="light">
+              {{ formatRecordType(row.type, row.remarks) }}
             </el-tag>
           </template>
         </el-table-column>
@@ -253,8 +253,8 @@
                 :key="opt.value" :label="opt.label" :value="opt.value"
               />
             </el-select>
-            <el-tag v-else :type="recordTypeTag(row.type)" size="small" effect="light">
-              {{ formatRecordType(row.type) }}
+            <el-tag v-else :type="recordTypeTag(row.type, row.remarks)" size="small" effect="light">
+              {{ formatRecordType(row.type, row.remarks) }}
             </el-tag>
           </div>
           <div class="edit-rec-field">
