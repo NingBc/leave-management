@@ -41,9 +41,28 @@ export const RECORD_TYPE = {
   }
 }
 
-export const formatRecordType = (type) => RECORD_TYPE[type]?.label ?? type
-export const recordTypeTag = (type) => RECORD_TYPE[type]?.tag ?? 'info'
-export const recordTypeDesc = (type) => RECORD_TYPE[type]?.desc ?? ''
+/**
+ * 系统自动写入的透支归位流水。
+ *
+ * 后端复用 ADJUSTMENT_ADD / ADJUSTMENT_DEDUCT 成对写入 (LeaveServiceImpl#normalizeFloatingDebt,
+ * 以及年终结算 ScheduledTasks#cleanupUserForYear), 一加一扣净额为零, 不改变余额。
+ * 类型上和管理员手工调整没有区别, 只能靠备注前缀认 —— 按类型直接翻译会显示成
+ * 「手工加假 / 手工扣假」, 看账的人会以为有人动过账。
+ */
+const SETTLEMENT_REMARK = /^(透支归位|系统自动清理透支):/
+
+const SETTLEMENT = {
+  label: '透支归位',
+  tag: 'info',
+  desc: '系统把历史透支挪到有额度的批次上扣，一加一扣成对出现，不改变余额'
+}
+
+const resolveRecordType = (type, remarks) =>
+  type?.startsWith('ADJUSTMENT_') && SETTLEMENT_REMARK.test(remarks ?? '') ? SETTLEMENT : RECORD_TYPE[type]
+
+export const formatRecordType = (type, remarks) => resolveRecordType(type, remarks)?.label ?? type
+export const recordTypeTag = (type, remarks) => resolveRecordType(type, remarks)?.tag ?? 'info'
+export const recordTypeDesc = (type, remarks) => resolveRecordType(type, remarks)?.desc ?? ''
 
 /** 管理员手工新增流水时可选的类型(系统自动产生的 CARRY_OVER / EXPIRED 不给选) */
 export const MANUAL_RECORD_TYPES = [
