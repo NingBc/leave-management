@@ -220,6 +220,7 @@ public class ScheduledTasks {
                 BigDecimal extraCredits = userRecords.stream()
                         .filter(r -> !"CARRY_OVER".equals(r.getType()))
                         .filter(r -> !r.getCreateTime().isBefore(snapshotTime))
+                        .filter(r -> happenedInYear(r, cleanupYear))
                         .map(LeaveRecord::getDays)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -260,7 +261,12 @@ public class ScheduledTasks {
             // after the snapshot.
             List<LeaveRecord> usageRecords = recordMapper.selectUsageRecordsForExpiryCleanup(userId, targetExpiryDate,
                     anchorTime);
+            // 只算发生在本年度的使用。日期早于 1/1 的请假 (典型: 年终任务之后才补登的上年 12 月请假,
+            // 记在「上年额度桶」上, 到期日恰好等于本年结转桶) 已经体现在按上年账本算出的结转值里;
+            // 只按创建时间判断的话, 它们晚于结转快照, 会被当成本年度的消耗再扣一遍,
+            // 该作废的结转被算成 0, 作废流水漏写。
             BigDecimal totalUsed = usageRecords.stream()
+                    .filter(r -> happenedInYear(r, cleanupYear))
                     .map(LeaveRecord::getDays)
                     .map(BigDecimal::abs)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -342,6 +348,11 @@ public class ScheduledTasks {
             }
         }
         return BigDecimal.ZERO;
+    }
+
+    /** 流水的发生日期是否落在该年度 (缺日期时按「是」处理, 保持旧行为) */
+    private static boolean happenedInYear(LeaveRecord record, int year) {
+        return record.getStartDate() == null || !record.getStartDate().isBefore(LocalDate.of(year, 1, 1));
     }
 
     public void initAllAccounts() {

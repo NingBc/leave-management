@@ -159,6 +159,30 @@ class LeaveInvariantSimulationTest {
             assertTrue(db.sumRecords(USER, "EXPIRED").compareTo(expiredBefore) <= 0,
                     String.format("[seed %d] %d 年 EXPIRED 总额异常回升", seed, year));
 
+            // --- 年终任务之后才登记的年底请假 (钉钉周同步 / 1 月 26 日复跑) ---
+            // 这些假发生在 12/31 之前, 结转当时还有效: 守恒 / 幂等 / 欠账不作废 依然要成立。
+            // 唯一允许 EXPIRED 回升(变得不那么负)的地方就在这里 —— 补登的假把已作废的结转「还回去」了。
+            int lateLeaves = rnd.nextInt(3);
+            for (int i = 0; i < lateLeaves; i++) {
+                LocalDate day = LocalDate.of(year, 12, 20 + rnd.nextInt(12));
+                leaveService.applyLeave(USER, day, day, BigDecimal.valueOf((1 + rnd.nextInt(8)) * 0.5));
+            }
+            if (lateLeaves > 0) {
+                tasks.cleanupExpiredLeaveBalances(String.valueOf(year));
+                assertConservation(db, year, seed);
+                assertExpiryIsNeverPositive(db, seed);
+                assertBreakdownAddsUp(leaveService, year, seed);
+
+                BigDecimal carryAfterLate = db.account(USER, year + 1).getLastYearBalance();
+                int recordsAfterLate = db.recordCount(USER);
+                tasks.cleanupExpiredLeaveBalances(String.valueOf(year));
+                tasks.cleanupExpiredLeaveBalances(String.valueOf(year));
+                assertEquals(0, carryAfterLate.compareTo(db.account(USER, year + 1).getLastYearBalance()),
+                        String.format("[seed %d] %d 年补登年底请假后结算不幂等", seed, year));
+                assertEquals(recordsAfterLate, db.recordCount(USER),
+                        String.format("[seed %d] %d 年补登年底请假后重跑产生了新流水", seed, year));
+            }
+
             assertConservation(db, year, seed);
         }
     }

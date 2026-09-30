@@ -589,6 +589,23 @@ public class LeaveServiceImpl implements LeaveService {
         // 额度不足以完全覆盖的部分仍是浮动债务, 在内存里冲抵掉, 避免超发
         settleNegativeBuckets(buckets);
 
+        // 补录进已关账的年度: 年终清理可能已经把该年度结转桶的剩余写成了 EXPIRED 流水。
+        // 但请假发生那天 (不晚于 12/31) 这批额度还有效 —— 不能让清零的桶把它挡在门外,
+        // 否则补登的假会被记到当年额度, 员工白少天数, 而 1/26 的复跑也纠正不了。
+        // 做法: 分配前把作废「还回去」, 分配后按实际吃掉的部分等额缩减作废流水。
+        LocalDate carryExpiry = LocalDate.of(year, 12, 31);
+        List<LeaveRecord> expiredRecords = recordMapper.selectExpiredRecordsByDate(userId, carryExpiry);
+        BigDecimal reopened = expiredRecords.stream()
+                .map(r -> r.getDays().abs())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal realCarryRemaining = buckets.getOrDefault(carryExpiry, BigDecimal.ZERO).max(BigDecimal.ZERO);
+        if (reopened.signum() > 0) {
+            buckets.merge(carryExpiry, reopened, BigDecimal::add);
+            log.info("↩️  Reopening {} expired day(s) of bucket {} for a retroactive leave on {}",
+                    reopened, carryExpiry, startDate);
+        }
+        BigDecimal usedFromReopened = BigDecimal.ZERO;
+
         log.info("💰 Available balances by expiry: {}", buckets);
 
         BigDecimal remainingToAllocate = daysToDeduct;
@@ -605,6 +622,10 @@ public class LeaveServiceImpl implements LeaveService {
             }
 
             BigDecimal deduction = remainingToAllocate.min(available);
+            if (reopened.signum() > 0 && carryExpiry.equals(expiryDate)) {
+                // 桶里真实剩余的部分先用, 超出的才是从「还回去的作废」里拿的
+                usedFromReopened = deduction.subtract(realCarryRemaining).max(BigDecimal.ZERO);
+            }
 
             LeaveRecord usageRecord = new LeaveRecord();
             usageRecord.setUserId(userId);
@@ -620,6 +641,10 @@ public class LeaveServiceImpl implements LeaveService {
             log.info("  ✅ Allocated {} days from balance expiring on {}", deduction, expiryDate);
 
             remainingToAllocate = remainingToAllocate.subtract(deduction);
+        }
+
+        if (usedFromReopened.signum() > 0) {
+            shrinkExpiredRecords(expiredRecords, usedFromReopened, startDate);
         }
 
         // Check if we need to borrow (Overdraft)
@@ -644,6 +669,39 @@ public class LeaveServiceImpl implements LeaveService {
             recordMapper.insertRecord(borrowRecord);
 
             log.info("  ✅ Created OVERDRAFT record for {} days (no expiry)", remainingToAllocate);
+        }
+    }
+
+    /**
+     * 补录的请假吃掉了已作废的结转: 把对应天数从 EXPIRED 流水里扣回来。
+     *
+     * <p>
+     * 缩到 0 的流水软删除而不是留一条 0 天记录 (页面上会显示「过期作废 0 天」)。
+     * 备注里写明缘由, 这条流水的变化才查得到。
+     */
+    private void shrinkExpiredRecords(List<LeaveRecord> expiredRecords, BigDecimal days, LocalDate leaveDate) {
+        BigDecimal left = days;
+        for (LeaveRecord expired : expiredRecords) {
+            if (left.signum() <= 0) {
+                break;
+            }
+            BigDecimal size = expired.getDays().abs();
+            BigDecimal back = size.min(left);
+            BigDecimal remaining = size.subtract(back);
+
+            LeaveRecord update = new LeaveRecord();
+            update.setId(expired.getId());
+            update.setDays(remaining.negate());
+            update.setRemarks(String.format("%s; 补录 %s 的请假冲回 %s 天", expired.getRemarks(), leaveDate,
+                    back.stripTrailingZeros().toPlainString()));
+            if (remaining.signum() == 0) {
+                update.setDeleted(1);
+            }
+            recordMapper.updateRecord(update);
+
+            log.info("  ↩️  Expired record {} shrunk by {} day(s) (retroactive leave on {})",
+                    expired.getId(), back, leaveDate);
+            left = left.subtract(back);
         }
     }
 

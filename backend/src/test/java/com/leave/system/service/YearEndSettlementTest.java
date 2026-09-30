@@ -854,4 +854,127 @@ class YearEndSettlementTest {
             assertDays("4.0", db.account(DELAYED, 2025).getLastYearBalance());
         }
     }
+    // ==================================================================
+    @Nested
+    @DisplayName("年终任务之后才登记的年底请假 (钉钉周同步 / 1 月 26 日复跑)")
+    class LateFiledLeave {
+
+        /**
+         * 2023 请 4 天 → 2024 年初结转 6 → 2024 年 3 月用掉 3 天结转 → 年终任务:
+         * 结转桶剩 3 天被写成 EXPIRED, 2025 年初结转 10 (2024 年整年额度)。
+         */
+        private void givenRolledOver2024() {
+            givenVeteran();
+            leaveService.initYearlyAccount(USER, 2023);
+            takeLeave(2023, 3, 1, "4.0");
+            rollover(2023);
+            takeLeave(2024, 3, 1, "3.0");
+            rollover(2024);
+
+            assertDays("-3.0", db.sumRecords(USER, "EXPIRED"));
+            assertDays("10.0", carryOver(2025));
+        }
+
+        private List<LeaveRecord> annualOn(int year, int month, int day) {
+            return db.allRecords(USER).stream()
+                    .filter(r -> "ANNUAL".equals(r.getType()) && LocalDate.of(year, month, day).equals(r.getStartDate()))
+                    .toList();
+        }
+
+        @Test
+        @DisplayName("被作废的结转完全吸收: 假记在结转桶上, 作废相应减少, 2025 年初结转不变")
+        void absorbedByExpiredCarryOver() {
+            givenRolledOver2024();
+
+            // 12-29 的 1 天假到 1 月才同步进来 —— 那天 3 天结转还没作废
+            takeLeave(2024, 12, 29, "1.0");
+
+            List<LeaveRecord> late = annualOn(2024, 12, 29);
+            assertEquals(1, late.size());
+            assertEquals(LocalDate.of(2024, 12, 31), late.get(0).getExpiryDate(), "应记在结转桶上");
+            assertDays("-2.0", db.sumRecords(USER, "EXPIRED"));
+
+            // 1 月 26 日复跑: 结转不变, 也不会再写新的作废流水
+            rollover(2024);
+            assertDays("10.0", carryOver(2025));
+            assertDays("-2.0", db.sumRecords(USER, "EXPIRED"));
+            assertDays("20.0", balance(2025));
+            assertConservation(2024);
+
+            // 再跑两次: 幂等
+            int records = db.recordCount(USER);
+            rollover(2024);
+            rollover(2024);
+            assertEquals(records, db.recordCount(USER));
+            assertDays("10.0", carryOver(2025));
+        }
+
+        @Test
+        @DisplayName("补登的假多于被作废的结转: 作废流水清零, 超出部分才扣当年额度")
+        void overflowSpillsToQuota() {
+            givenRolledOver2024();
+
+            takeLeave(2024, 12, 30, "5.0");
+
+            List<LeaveRecord> late = annualOn(2024, 12, 30);
+            assertDays("-3.0", late.stream().filter(r -> LocalDate.of(2024, 12, 31).equals(r.getExpiryDate()))
+                    .map(LeaveRecord::getDays).reduce(BigDecimal.ZERO, BigDecimal::add));
+            assertDays("-2.0", late.stream().filter(r -> LocalDate.of(2025, 12, 31).equals(r.getExpiryDate()))
+                    .map(LeaveRecord::getDays).reduce(BigDecimal.ZERO, BigDecimal::add));
+            assertDays("0", db.sumRecords(USER, "EXPIRED"));
+
+            // 1 月 26 日复跑: 超出的 2 天从 2025 年初结转里扣掉
+            rollover(2024);
+            assertDays("8.0", carryOver(2025));
+            assertDays("0", db.sumRecords(USER, "EXPIRED"));
+            assertConservation(2024);
+        }
+
+        @Test
+        @DisplayName("先后补登两笔: 作废流水逐笔缩减")
+        void twoLateLeavesShrinkProgressively() {
+            givenRolledOver2024();
+
+            takeLeave(2024, 12, 28, "1.0");
+            takeLeave(2024, 12, 30, "1.5");
+            assertDays("-0.5", db.sumRecords(USER, "EXPIRED"));
+
+            rollover(2024);
+            assertDays("10.0", carryOver(2025));
+            assertDays("-0.5", db.sumRecords(USER, "EXPIRED"));
+            assertConservation(2024);
+        }
+
+        @Test
+        @DisplayName("结转本来就用完了 (没有作废): 补登的假扣当年额度, 2025 年初结转相应减少, 没有多余的「还回」")
+        void nothingExpiredNothingReopened() {
+            givenVeteran();
+            leaveService.initYearlyAccount(USER, 2023);
+            takeLeave(2023, 3, 1, "4.0");
+            rollover(2023);
+            takeLeave(2024, 3, 1, "6.0"); // 刚好用光 6 天结转
+            rollover(2024);
+            assertDays("0", db.sumRecords(USER, "EXPIRED"));
+
+            takeLeave(2024, 12, 29, "1.0");
+            assertEquals(LocalDate.of(2025, 12, 31), annualOn(2024, 12, 29).get(0).getExpiryDate());
+
+            rollover(2024);
+            assertDays("9.0", carryOver(2025));
+            assertConservation(2024);
+        }
+
+        @Test
+        @DisplayName("次年 1 月的假不会去「还回」上一年度的作废")
+        void nextYearLeaveDoesNotReopenLastYear() {
+            givenRolledOver2024();
+
+            takeLeave(2025, 1, 11, "1.0");
+
+            assertDays("-3.0", db.sumRecords(USER, "EXPIRED"));
+            assertEquals(LocalDate.of(2025, 12, 31), annualOn(2025, 1, 11).get(0).getExpiryDate());
+            assertDays("10.0", carryOver(2025));   // 2025 年初结转是 2024 年的事, 不因 2025 年的假而变
+            assertDays("19.0", balance(2025));      // 10 结转 + 10 额度 − 1
+        }
+    }
 }

@@ -106,6 +106,24 @@ class InMemoryLeaveDb {
         return copy(r);
     }
 
+    /**
+     * 原样装入一行 (保留 id / 备注 / 创建时间等全部字段), 给生产快照回放用。
+     * 上面的 seed* 只带几个关键字段, 够造场景, 但还原不了真实数据。
+     */
+    void load(SysUser user) {
+        users.add(copy(user));
+    }
+
+    void load(LeaveAccount account) {
+        accounts.add(copy(account));
+        accountSeq.accumulateAndGet(account.getId() + 1, Math::max);
+    }
+
+    void load(LeaveRecord record) {
+        records.add(copy(record));
+        recordSeq.accumulateAndGet(record.getId() + 1, Math::max);
+    }
+
     // ------------------------------------------------------------------
     // 查询快照 (给断言用)
     // ------------------------------------------------------------------
