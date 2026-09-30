@@ -1,6 +1,7 @@
 package com.leave.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.leave.system.dto.CarryOverExpiryDTO;
 import com.leave.system.dto.LeaveAccountDTO;
 import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
@@ -49,6 +50,16 @@ public interface LeaveService {
     List<LeaveAccountDTO> getAllAccounts(Integer year);
 
     Page<LeaveAccountDTO> getAllAccountsPage(Integer year, int current, int size);
+
+    /**
+     * @param expiringOnly true 时只列出上年结转还有剩余 (年底会作废) 的在职员工, 剩余多的排前面
+     */
+    Page<LeaveAccountDTO> getAllAccountsPage(Integer year, int current, int size, boolean expiringOnly);
+
+    /**
+     * 该年度上年结转的作废汇总 (全员口径, 不受分页影响)。
+     */
+    CarryOverExpiryDTO getCarryOverExpiry(Integer year);
 
     /**
      * Get leave history for a user, optionally filtered by year.

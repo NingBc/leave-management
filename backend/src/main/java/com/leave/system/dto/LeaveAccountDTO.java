@@ -24,6 +24,67 @@ public class LeaveAccountDTO extends LeaveAccount {
     /** 年假余额: 由桶账本实时汇总, 不落库 */
     private BigDecimal totalBalance;
 
+    /*
+     * 余额按来源拆开, 给页面讲清楚「结转用了多少、还剩多少、哪天作废」。
+     * 都取自冲抵欠账之后的桶账本, 不落库, 并且恒有:
+     * carryOverRemaining + currentQuotaRemaining + floatingDebt == totalBalance
+     */
+
+    /** 上年结转还剩多少 (>= 0), carryOverExpiry 当天过后作废 */
+    private BigDecimal carryOverRemaining;
+
+    /** 上年结转的作废日, 即该年度 12 月 31 日 */
+    private LocalDate carryOverExpiry;
+
+    /** 上年结转已被年终清理作废的天数 (>= 0), 只有年度结束后才会非零 */
+    private BigDecimal carryOverExpired;
+
+    /** 当年额度 (含手工加假) 还剩多少 (>= 0) */
+    private BigDecimal currentQuotaRemaining;
+
+    /** 额度抵不完的透支 (<= 0) */
+    private BigDecimal floatingDebt;
+
+    public BigDecimal getCarryOverRemaining() {
+        return carryOverRemaining;
+    }
+
+    public void setCarryOverRemaining(BigDecimal carryOverRemaining) {
+        this.carryOverRemaining = carryOverRemaining;
+    }
+
+    public LocalDate getCarryOverExpiry() {
+        return carryOverExpiry;
+    }
+
+    public void setCarryOverExpiry(LocalDate carryOverExpiry) {
+        this.carryOverExpiry = carryOverExpiry;
+    }
+
+    public BigDecimal getCarryOverExpired() {
+        return carryOverExpired;
+    }
+
+    public void setCarryOverExpired(BigDecimal carryOverExpired) {
+        this.carryOverExpired = carryOverExpired;
+    }
+
+    public BigDecimal getCurrentQuotaRemaining() {
+        return currentQuotaRemaining;
+    }
+
+    public void setCurrentQuotaRemaining(BigDecimal currentQuotaRemaining) {
+        this.currentQuotaRemaining = currentQuotaRemaining;
+    }
+
+    public BigDecimal getFloatingDebt() {
+        return floatingDebt;
+    }
+
+    public void setFloatingDebt(BigDecimal floatingDebt) {
+        this.floatingDebt = floatingDebt;
+    }
+
     public BigDecimal getCurrentYearUsed() {
         return currentYearUsed;
     }

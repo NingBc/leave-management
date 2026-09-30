@@ -1,4 +1,4 @@
-import { daysSince } from '../utils/date'
+import { daysSince, daysUntil } from '../utils/date'
 
 /**
  * 年假相关的字段文案与枚举。
@@ -115,7 +115,7 @@ export const FIELD = {
     short: '上年结转',
     label: '上年结转',
     unit: '天',
-    hint: '上一年度没休完、结转到今年的天数。'
+    hint: '上一年度没休完、结转到今年的天数，今年 12 月 31 日作废。请假时先扣它，快到期的先用。'
   },
   currentYearUsed: {
     short: '今年已休',
@@ -138,6 +138,92 @@ export const FIELD = {
     short: '首次参加工作',
     label: '首次参加工作时间',
     hint: '第一份工作的入职时间（含在其它公司的经历），决定累计工龄和年假档位。填错会算错年假。'
+  }
+}
+
+/** 上年结转离作废不到这么多天、并且还有剩余时, 标橙色提醒 */
+export const CARRY_OVER_WARN_DAYS = 90
+
+/**
+ * 把余额按来源拆成页面要画的样子: 上年结转、今年额度、透支三部分, 三部分的剩余相加就是「当前可休」。
+ *
+ * 数字全部来自后端的桶账本拆分 (LeaveServiceImpl#fillBalanceBreakdown), 这里只推导展示状态,
+ * 不拿流水自己加减 —— 透支归位、欠账冲抵、手工调整都会让自己算的数和余额对不上。
+ *
+ * carry.kind:
+ *   none     没有上年结转
+ *   debt     上年结转为负, 带着欠账进入今年, 已从今年额度里扣
+ *   expired  已过作废日, 没用完的已作废
+ *   usedUp   已用完
+ *   active   还有剩余
+ */
+export const balanceSources = (account) => {
+  const n = (v) => Number(v ?? 0)
+
+  const lastYear = n(account?.lastYearBalance)
+  const daysLeft = daysUntil(account?.carryOverExpiry)
+  const pastExpiry = daysLeft != null && daysLeft < 0
+  let remaining = n(account?.carryOverRemaining)
+  // 年终清理还没跑 (比如 1 月 1 日凌晨之前) 时, 过期的剩余还挂在桶里, 页面上一样算作废
+  const expired = n(account?.carryOverExpired) + (pastExpiry ? remaining : 0)
+  if (pastExpiry) remaining = 0
+  const total = Math.max(lastYear, remaining + expired)
+
+  let kind = 'active'
+  if (lastYear < 0) kind = 'debt'
+  else if (total === 0) kind = 'none'
+  else if (expired > 0) kind = 'expired'
+  else if (remaining === 0) kind = 'usedUp'
+
+  const carry = {
+    kind,
+    total,
+    remaining,
+    expired,
+    used: Math.max(0, total - remaining - expired),
+    debt: kind === 'debt' ? -lastYear : 0,
+    expiry: account?.carryOverExpiry,
+    daysLeft,
+    warn: kind === 'active' && daysLeft != null && daysLeft <= CARRY_OVER_WARN_DAYS
+  }
+
+  // 今年额度: 已用 = 已累积 − 剩余。手工加假会让剩余超过已累积, 此时已用记 0, 不画负数
+  const accrued = n(account?.actualQuota)
+  const full = n(account?.standardQuota)
+  const curRemaining = n(account?.currentQuotaRemaining)
+  const curUsed = Math.max(0, accrued - curRemaining)
+  const current = {
+    accrued,
+    full,
+    remaining: curRemaining,
+    used: curUsed,
+    // 进度条的满格: 通常是全年应享, 年底前「还没累积到」的部分留作空槽
+    scale: Math.max(full, accrued, curUsed + curRemaining)
+  }
+
+  return { carry, current, debt: n(account?.floatingDebt) }
+}
+
+/** 表格/卡片里「上年结转」一格的文案: 主数字、后缀、色调、悬停说明 */
+export const carryOverCell = (carry) => {
+  const f = fmtDays
+  switch (carry.kind) {
+    case 'none':
+      return { main: '0', rest: '', tone: 'muted', title: '没有上年结转' }
+    case 'debt':
+      return { main: f(-carry.debt), rest: '', tone: 'danger', title: `上年欠 ${f(carry.debt)} 天，已从今年额度中扣除` }
+    case 'expired':
+      return { main: '0', rest: ` / ${f(carry.total)}`, tone: 'muted',
+        title: `已用 ${f(carry.used)} 天，作废 ${f(carry.expired)} 天` }
+    case 'usedUp':
+      return { main: '0', rest: ` / ${f(carry.total)}`, tone: 'muted', title: `${f(carry.total)} 天已全部用完` }
+    default:
+      return {
+        main: f(carry.remaining),
+        rest: ` / ${f(carry.total)}`,
+        tone: carry.warn ? 'warn' : '',
+        title: `已用 ${f(carry.used)} 天，还剩 ${f(carry.remaining)} 天，${carry.expiry} 作废（还有 ${carry.daysLeft} 天）`
+      }
   }
 }
 
