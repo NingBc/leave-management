@@ -74,13 +74,15 @@
               </span>
               <span class="src-value num">剩 {{ fmtDays(src.current.remaining) }} 天</span>
             </div>
-            <!-- 满格是全年应享: 年底前还没累积到的部分留作空槽, 顶替了原来那条「年底满 N 天」的提示 -->
+            <!-- 满格是年底能累积到的数: 年底前还没累积到的部分留作空槽, 顶替了原来那条「年底满 N 天」的提示。
+                 文字里的数就是条上的位置: 灰段末端 = 已用, 蓝段末端 = 已累积, 满格 = 年底满。
+                 只写后两个的话, 灰段有多长没有出处 —— 员工得自己拿「已累积 − 剩」去减 -->
             <div class="src-bar" aria-hidden="true">
               <span class="seg seg-used" :style="segWidth(src.current.used, src.current.scale)" />
               <span class="seg seg-left" :style="segWidth(src.current.remaining, src.current.scale)" />
             </div>
             <div class="src-meta">
-              <span class="num">已累积 {{ fmtDays(src.current.accrued) }} · 年底满 {{ fmtDays(src.current.full) }}</span>
+              <span class="num">{{ currentMeta }}</span>
               <span class="num">{{ currentYear + 1 }}-12-31 到期</span>
             </div>
           </div>
@@ -174,6 +176,17 @@ const carryText = computed(() => {
     default:
       return { value: `剩 ${fmtDays(c.remaining)} 天`, left: usedOfTotal, right: `${c.expiry} 作废` }
   }
+})
+
+/**
+ * 今年额度一行的左侧文案。「年底满」只在之后还会继续累积时才写:
+ * 12/31 当天它和「已累积」是同一个数, 12 月才入职的人年底也累积不到半天, 写成「年底满 0」只会让人困惑。
+ */
+const currentMeta = computed(() => {
+  const c = src.value.current
+  const parts = [`已用 ${fmtDays(c.used)}`, `已累积 ${fmtDays(c.accrued)}`]
+  if (c.full > c.accrued) parts.push(`年底满 ${fmtDays(c.full)}`)
+  return parts.join(' · ')
 })
 
 const segWidth = (value, scale) => ({ width: scale > 0 ? `${(value / scale) * 100}%` : '0%' })
@@ -420,10 +433,12 @@ onMounted(async () => {
   background: var(--warning);
 }
 
+/* 窄屏放不下时让日期整体折到下一行, 别把「已用 … · 已累积 … · 年底满 …」和日期都挤成两截 */
 .src-meta {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 12px;
+  gap: 2px 12px;
   font-size: 12px;
   color: var(--text-muted);
 }

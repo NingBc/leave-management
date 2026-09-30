@@ -83,13 +83,13 @@ export const FIELD = {
     short: '累计工龄',
     label: '累计工龄',
     unit: '年',
-    hint: '含入职本公司之前的工作年限，按「首次参加工作时间」算。决定年假档位：满 1 年 5 天、10 年 10 天、20 年 15 天。'
+    hint: '含入职本公司之前的工作年限，按「首次参加工作时间」算。决定年假档位：不满 10 年 5 天、满 10 年 10 天、满 20 年 15 天。'
   },
   standardQuota: {
     short: '全年应享',
     label: '全年应享年假',
     unit: '天',
-    hint: '按累计工龄档位，整年在职可享的天数。'
+    hint: '按累计工龄档位，整年在职可享的天数。当年入职的按入职后的在职天数折算，年底能累积到多少看「今年额度」里的「年底满」（之后不再增长时不显示）。'
   },
   daysEmployed: {
     short: '今年在职',
@@ -109,7 +109,7 @@ export const FIELD = {
     short: '已累积',
     label: '截至今日已累积',
     unit: '天',
-    hint: '年假逐日累积，不是年初一次性到账。算法：全年应享 × 今年在职天数 ÷ 全年天数，按 0.5 天向下取整。12 月 31 日累积满。'
+    hint: '年假逐日累积，不是年初一次性到账。算法：全年应享 × 今年在职天数 ÷ 全年天数，按 0.5 天向下取整。累积到 12 月 31 日为止；当年入职的只算入职之后的天数，所以年底能累积到的数会比全年应享少。'
   },
   lastYearBalance: {
     short: '上年结转',
@@ -121,7 +121,7 @@ export const FIELD = {
     short: '今年已休',
     label: '今年已休',
     unit: '天',
-    hint: '本年度已休掉的年假，每周一从钉钉审批单同步。最近几天请的假可能还没同步进来，所以余额会偏大。'
+    hint: '本年度已休掉的年假，每周一从钉钉审批单同步。最近几天请的假可能还没同步进来，所以余额会偏大。请假先扣上年结转，所以这里可能比「今年额度」里的「已用」多。'
   },
   totalBalance: {
     short: '当前可休',
@@ -189,7 +189,10 @@ export const balanceSources = (account) => {
 
   // 今年额度: 已用 = 已累积 − 剩余。手工加假会让剩余超过已累积, 此时已用记 0, 不画负数
   const accrued = n(account?.actualQuota)
-  const full = n(account?.standardQuota)
+  // 年底能累积到多少, 由后端按年终结算的口径预告。不能用 standardQuota: 那是整年在职的档位额度,
+  // 年中入职的人到年底也满不了它 (7/1 入职的 5 天档, 年底是 2.5 不是 5)。
+  // 后端还没带这个字段时退回 standardQuota, 至少和以前一样, 不至于显示成 0
+  const full = n(account?.yearEndQuota ?? account?.standardQuota)
   const curRemaining = n(account?.currentQuotaRemaining)
   const curUsed = Math.max(0, accrued - curRemaining)
   const current = {
@@ -197,7 +200,7 @@ export const balanceSources = (account) => {
     full,
     remaining: curRemaining,
     used: curUsed,
-    // 进度条的满格: 通常是全年应享, 年底前「还没累积到」的部分留作空槽
+    // 进度条的满格: 年底能累积到的数, 年底前「还没累积到」的部分留作空槽
     scale: Math.max(full, accrued, curUsed + curRemaining)
   }
 
