@@ -23,7 +23,7 @@
             <p class="cutoff">
               <el-icon><Clock /></el-icon>
               <span v-if="sync.ok">
-                已同步至 <b>{{ sync.date }}</b><template v-if="sync.daysAgo > 0">（{{ sync.daysAgo }} 天前）</template>，之后请的假尚未扣减
+                已同步至 <b>{{ sync.dateShort }}</b><template v-if="sync.daysAgo > 0">（{{ sync.daysAgo }} 天前）</template>，之后请的假未扣减
               </span>
               <span v-else>休假记录尚未从钉钉同步，余额可能偏大</span>
             </p>
@@ -34,18 +34,23 @@
         </div>
 
         <!-- 余额按来源拆开, 各行的「剩」相加就是上面的大数字。
-             原来的「上年结转 + 已累积 − 今年已休」算式说得清总数, 说不清结转用了多少、哪天作废 -->
+             原来的「上年结转 + 已累积 − 今年已休」算式说得清总数, 说不清结转用了多少、哪天作废。
+             只写一行: 「请假先扣它」这条规则在下面「上年结转」的问号里, 这里不再重复 -->
         <el-alert
           v-if="src.carry.warn"
           class="expiry-alert"
           type="warning"
           :closable="false"
           show-icon
-          :title="src.carry.daysLeft === 0
-            ? `${fmtDays(src.carry.remaining)} 天上年结转今天作废`
-            : `${fmtDays(src.carry.remaining)} 天上年结转将在 ${formatMonthDay(src.carry.expiry)}作废`"
-          :description="src.carry.daysLeft === 0 ? '今天之内请的假会先扣它' : `还剩 ${src.carry.daysLeft} 天，请假会先扣它`"
-        />
+        >
+          <!-- 「（还剩 N 天）」不换行: 手机上折成两行时, 整段落到第二行, 别从括号中间拆开 -->
+          <template #title>
+            <template v-if="src.carry.daysLeft === 0">{{ fmtDays(src.carry.remaining) }} 天上年结转今天作废</template>
+            <template v-else>
+              {{ fmtDays(src.carry.remaining) }} 天上年结转将在 {{ formatMonthDay(src.carry.expiry) }}作废<span class="nowrap">（还剩 {{ src.carry.daysLeft }} 天）</span>
+            </template>
+          </template>
+        </el-alert>
 
         <div class="sources">
           <div v-if="src.carry.kind !== 'none'" class="src">
@@ -99,7 +104,6 @@
         <p class="src-foot">
           <span class="num">{{ FIELD.currentYearUsed.short }} {{ fmtDays(account.currentYearUsed) }} 天</span>
           <FieldHint :label="FIELD.currentYearUsed.label" :text="FIELD.currentYearUsed.hint" />
-          <span v-if="src.carry.kind === 'active'">· 请假先扣快到期的上年结转</span>
         </p>
       </section>
 
@@ -108,7 +112,7 @@
         <div v-for="row in detailRows" :key="row.key" class="row">
           <span class="row-label">
             {{ row.label }}
-            <FieldHint :label="row.label" :text="row.hint" />
+            <FieldHint v-if="row.hint" :label="row.label" :text="row.hint" />
           </span>
           <span class="row-value num">{{ row.value }}</span>
         </div>
@@ -220,7 +224,7 @@ const detailRows = computed(() => {
   return [
     // 前三项讲「我是谁」, 后两项讲「今年的假怎么算出来的」
     { key: 'seniority', label: FIELD.socialSeniority.label, hint: FIELD.socialSeniority.hint, value: `${a.socialSeniority ?? 0} 年` },
-    { key: 'entry', label: FIELD.entryDate.label, hint: FIELD.entryDate.hint, value: a.entryDate || '—' },
+    { key: 'entry', label: FIELD.entryDate.label, value: a.entryDate || '—' },
     { key: 'totalDays', label: FIELD.totalDaysEmployed.label, hint: FIELD.totalDaysEmployed.hint,
       value: totalDays == null ? '—' : `${totalDays} 天 (${humanizeDuration(totalDays)})` },
     { key: 'standard', label: FIELD.standardQuota.label, hint: FIELD.standardQuota.hint, value: `${fmtDays(a.standardQuota)} 天` },
@@ -361,6 +365,10 @@ onMounted(async () => {
 
 .expiry-alert {
   margin-top: 16px;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 .sources {

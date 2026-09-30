@@ -62,7 +62,7 @@ import { User, Lock, Calendar, Loading } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import request from '../utils/request'
 import { useUserStore } from '../stores/user'
-import * as dd from 'dingtalk-jsapi'
+import { isDingTalk, dingtalkLogin } from '../utils/dingtalk'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -75,26 +75,13 @@ const form = ref({
   password: ''
 })
 
-const isDingTalk = () => /DingTalk/i.test(navigator.userAgent)
-
 const handleDingTalkLogin = async () => {
   if (!isDingTalk()) return
 
   try {
     ddLoggingIn.value = true
 
-    const config = await request.get('/auth/config/dingtalk')
-    const corpId = config.corpId
-    if (!corpId) {
-      throw new Error('后端未配置钉钉 CorpId')
-    }
-
-    const { code } = await dd.runtime.permission.requestAuthCode({ corpId })
-    if (!code) {
-      throw new Error('获取授权码失败')
-    }
-
-    const res = await request.post('/auth/dingtalk/login', { code })
+    const res = await dingtalkLogin(request)
     userStore.setLoginState(res.token, res.userId, res.username)
     router.push('/')
   } catch (e) {
@@ -114,12 +101,16 @@ const handleLogin = async () => {
 
   try {
     loading.value = true
-    const res = await request.post('/auth/login', form.value)
+    // 密码错是业务错误 (HTTP 200 + code≠200, message 是 Spring 的原话), 拦截器不弹, 由下面说一句人话
+    const res = await request.post('/auth/login', form.value, { silentBusinessError: true })
     userStore.setLoginState(res.token, res.userId, res.username)
     router.push('/')
   } catch (e) {
     console.error(e)
-    ElMessage.error('用户名或密码不正确')
+    // 网络断了、服务器 5xx 这类 HTTP 层的错误拦截器已经提示过了, 再说「用户名或密码不正确」既重复又不对
+    if (!e?.isAxiosError) {
+      ElMessage.error('用户名或密码不正确')
+    }
   } finally {
     loading.value = false
   }

@@ -16,10 +16,7 @@
     <h3 class="section-title">我的档案</h3>
     <section class="list surface">
       <div class="row">
-        <span class="row-label">
-          入职本公司
-          <FieldHint :text="FIELD.entryDate.hint" />
-        </span>
+        <span class="row-label">入职本公司</span>
         <span class="row-value num">{{ user.entryDate || '—' }}</span>
       </div>
       <div class="row">

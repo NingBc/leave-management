@@ -1,15 +1,10 @@
 <template>
   <div class="manage">
     <div class="toolbar">
-      <div class="year-picker">
-        <span class="year-label">年度</span>
-        <el-select v-model="selectedYear" style="width: 120px" @change="onYearChange">
-          <el-option v-for="year in yearOptions" :key="year" :label="`${year} 年`" :value="year" />
-        </el-select>
-      </div>
-      <span class="count num">
-        <template v-if="hiddenColumnNote">{{ hiddenColumnNote }} · </template>{{ expiringOnly ? `筛出 ${total} 名员工` : `共 ${total} 名员工` }}
-      </span>
+      <!-- 选项本身写着「2026 年」, 不需要再配一个「年度」标签; 读屏时靠 aria-label 说明 -->
+      <el-select v-model="selectedYear" aria-label="年度" style="width: 120px" @change="onYearChange">
+        <el-option v-for="year in yearOptions" :key="year" :label="`${year} 年`" :value="year" />
+      </el-select>
     </div>
 
     <!-- 新年度账户由年初的定时任务统一生成; 生成之前列表里全是 0, 不说明的话像是全员额度被清空了 -->
@@ -28,7 +23,7 @@
     <p class="cutoff">
       <el-icon><Clock /></el-icon>
       <span v-if="sync.ok">
-        已同步至 <b>{{ sync.date }}</b><template v-if="sync.daysAgo > 0">（{{ sync.daysAgo }} 天前）</template>，之后请的假尚未扣减
+        已同步至 <b>{{ sync.dateShort }}</b><template v-if="sync.daysAgo > 0">（{{ sync.daysAgo }} 天前）</template>，之后请的假未扣减
       </span>
       <span v-else>休假记录尚未从钉钉同步，余额可能偏大</span>
     </p>
@@ -173,7 +168,9 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="remarks" label="备注" min-width="150" show-overflow-tooltip />
+        <el-table-column label="备注" min-width="150" show-overflow-tooltip>
+          <template #default="{ row }">{{ remarkOf(row) }}</template>
+        </el-table-column>
         <template #empty><span class="empty-text">暂无记录</span></template>
       </el-table>
 
@@ -186,7 +183,7 @@
             </el-tag>
           </div>
           <div class="rec-days num">{{ fmtDays(r.days) }} 天</div>
-          <div v-if="r.remarks" class="rec-remarks">{{ r.remarks }}</div>
+          <div v-if="remarkOf(r)" class="rec-remarks">{{ remarkOf(r) }}</div>
         </div>
         <p v-if="!viewing?.records?.length" class="empty-text">暂无记录</p>
       </div>
@@ -208,15 +205,12 @@
           <span>以下由系统按档案自动计算，不可修改</span>
         </div>
         <dl class="readonly-grid">
+          <!-- 各项的口径说明在列表表头的问号里, 弹窗里不再各挂一个 -->
           <div v-for="col in readonlyFields" :key="col.key">
-            <dt>
-              {{ col.short }}
-              <FieldHint :label="col.label" :text="col.hint" />
-            </dt>
+            <dt>{{ col.short }}</dt>
             <dd class="num">{{ col.raw ? (form[col.key] ?? 0) : fmtDays(form[col.key]) }}{{ col.unit }}</dd>
           </div>
         </dl>
-        <p class="readonly-note">调整余额请在下方添加记录，改动才不被重算覆盖</p>
       </section>
 
       <el-form :model="form" :label-position="isMobile ? 'top' : 'right'" label-width="110px">
@@ -227,7 +221,7 @@
           </template>
           <el-input-number v-model="form.lastYearBalance" :precision="1" :step="0.5" />
           <!-- 回放验证过: 管理员改成 99, 1 月 26 日的复算(以及任何一次重新初始化)会把它改回系统算出的值 -->
-          <span class="field-note">自动结转。重新初始化和每年 1 月 26 日的复算会覆盖这里的修改，要长期保留请用下方「添加记录」</span>
+          <span class="field-note">重新初始化和 1 月 26 日复算会覆盖此值；长期调整请用「添加记录」</span>
         </el-form-item>
       </el-form>
 
@@ -336,8 +330,8 @@ import request from '../../utils/request'
 import { formatMonthDay } from '../../utils/date'
 import { useBreakpoint } from '../../composables/useBreakpoint'
 import {
-  FIELD, MANUAL_RECORD_TYPES, CARRY_OVER_WARN_DAYS, fmtDays, formatRecordType, recordTypeTag, parseSyncTime,
-  balanceSources, carryOverCell
+  FIELD, MANUAL_RECORD_TYPES, CARRY_OVER_WARN_DAYS, fmtDays, formatRecordType, recordTypeTag, formatRemarks,
+  parseSyncTime, balanceSources, carryOverCell
 } from '../../constants/leave'
 import FieldHint from '../../components/FieldHint.vue'
 
@@ -372,12 +366,6 @@ const numericColumns = [
 /** 桌面表格实际渲染的列: 较窄的窗口收起参考信息列, 免得「当前可休」被挤出首屏 */
 const tableColumns = computed(() => numericColumns.filter(c => !(isNarrow.value && c.narrowHide)))
 
-const hiddenColumnNote = computed(() => {
-  if (isMobile.value || !isNarrow.value) return ''
-  const names = numericColumns.filter(c => c.narrowHide).map(c => c.short)
-  return `窗口较窄，已收起${names.join('、')}`
-})
-
 /** 编辑弹窗里的只读项: 上年结转可改, 所以不在其中 */
 const readonlyFields = numericColumns.filter(c => c.key !== 'lastYearBalance')
 
@@ -385,6 +373,9 @@ const dateRange = (r) => {
   if (!r.endDate || r.endDate === r.startDate) return r.startDate
   return `${r.startDate} ~ ${r.endDate}`
 }
+
+/** 只读记录里的备注: 后端模板收敛后再显示。编辑弹窗绑的是原文, 不走这里 */
+const remarkOf = (r) => formatRemarks(r.type, r.remarks)
 
 /* ---------- 列表 ---------- */
 
@@ -562,20 +553,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.year-picker {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.year-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.count {
-  font-size: 13px;
-  color: var(--text-muted);
+/* 工具栏里只有年度选择器: 全局的 space-between 会把它留在左边, 和其它管理页的操作区一样放右边 */
+.toolbar {
+  justify-content: flex-end;
 }
 
 .account-table {
@@ -802,19 +782,6 @@ onMounted(() => {
   font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
-}
-
-.readonly-note {
-  margin: 14px 0 0;
-  padding-top: 10px;
-  border-top: 1px dashed var(--border-strong);
-  font-size: 12px;
-  line-height: 1.7;
-  color: var(--text-muted);
-}
-
-.readonly-note strong {
-  color: var(--text-secondary);
 }
 
 .field-note {
