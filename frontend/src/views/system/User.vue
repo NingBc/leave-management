@@ -1,7 +1,6 @@
 <template>
   <div class="user-page">
     <div class="toolbar">
-      <span class="count num">共 {{ total }} 人</span>
       <div class="toolbar-actions">
         <el-button @click="showImportDialog">
           <el-icon><Upload /></el-icon>批量导入
@@ -166,16 +165,12 @@
             value-format="YYYY-MM-DD" style="width: 100%"
           />
         </el-form-item>
-        <el-form-item>
-          <template #label>
-            首次参加工作
-            <FieldHint :label="FIELD.firstWorkDate.label" :text="FIELD.firstWorkDate.hint" />
-          </template>
+        <el-form-item label="首次参加工作">
           <el-date-picker
             v-model="form.firstWorkDate" type="date" placeholder="选择日期"
             value-format="YYYY-MM-DD" style="width: 100%"
           />
-          <div class="field-note">决定年假档位，填错会算错年假</div>
+          <div class="field-note">第一份工作的入职时间（含其它公司），填错会算错年假</div>
         </el-form-item>
         <el-form-item label="钉钉 UserId">
           <el-input v-model="form.dingtalkUserId" placeholder="用于免密登录和同步休假" />
@@ -478,9 +473,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.count {
-  font-size: 13px;
-  color: var(--text-muted);
+/* 总数在分页里, 工具栏只剩操作按钮: 全局的 space-between 会把它甩到左边 */
+.toolbar {
+  justify-content: flex-end;
 }
 
 .toolbar-actions {

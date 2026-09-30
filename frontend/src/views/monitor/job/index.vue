@@ -1,7 +1,6 @@
 <template>
   <div class="job-page">
     <div class="toolbar">
-      <span class="hint-text">后台自动任务</span>
       <el-button type="primary" @click="handleAdd">
         <el-icon><Plus /></el-icon>添加任务
       </el-button>
@@ -267,9 +266,9 @@ onMounted(loadJobs)
 </script>
 
 <style scoped>
-.hint-text {
-  font-size: 13px;
-  color: var(--text-muted);
+/* 工具栏只剩「添加任务」一个按钮, 全局的 space-between 会把它甩到左边 */
+.toolbar {
+  justify-content: flex-end;
 }
 
 .job-table {

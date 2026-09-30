@@ -1,7 +1,6 @@
 <template>
   <div class="menu-page">
     <div class="toolbar">
-      <span class="hint-text">改动后用户需重新登录才生效</span>
       <el-button type="primary" @click="openDialog('add')">
         <el-icon><Plus /></el-icon>添加菜单
       </el-button>
@@ -84,14 +83,14 @@
             页面路径
             <FieldHint label="页面路径" text="前端路由地址，须与代码里注册的路径完全一致（如 /leave/my），写错菜单点开是空白页。分组菜单留空。" />
           </template>
-          <el-input v-model="form.path" placeholder="如 /leave/my，分组留空" />
+          <el-input v-model="form.path" placeholder="如 /leave/my" />
         </el-form-item>
         <el-form-item>
           <template #label>
             图标
             <FieldHint label="图标" text="Element Plus 图标名，区分大小写，如 User、Calendar。填错不报错，只是不显示。" />
           </template>
-          <el-input v-model="form.icon" placeholder="如 Calendar，可留空" />
+          <el-input v-model="form.icon" placeholder="如 Calendar" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -201,9 +200,9 @@ onMounted(loadData)
 </script>
 
 <style scoped>
-.hint-text {
-  font-size: 13px;
-  color: var(--text-muted);
+/* 工具栏只剩「添加菜单」一个按钮: 全局的 space-between 会把它甩到左边 */
+.toolbar {
+  justify-content: flex-end;
 }
 
 /* 树形表格拆成卡片会丢掉层级关系, 移动端保留表格让它横向滚动 */

@@ -14,15 +14,18 @@
       </el-select>
     </div>
 
+    <!-- 没有内容时也占一行高度, 同步时间晚于列表到达时表格不会往下跳 -->
     <p class="sync-note">
-      每周一从钉钉同步<span v-if="sync.ok"> · 上次 {{ sync.full }}</span>
-      <span v-else-if="sync.note"> · {{ sync.note }}</span>
+      <template v-if="sync.ok">上次同步 {{ sync.timeShort }}</template>
+      <template v-else>{{ sync.note }}</template>
     </p>
 
     <!-- 桌面: 表格 -->
-    <el-table v-if="!isMobile" :data="history" v-loading="loading" class="surface history-table">
-      <el-table-column prop="startDate" label="开始日期" min-width="110" />
-      <el-table-column prop="endDate" label="结束日期" min-width="110" />
+    <el-table v-if="!isMobile" :data="rows" v-loading="loading" class="surface history-table">
+      <!-- 单日假不用把同一个日期写两遍, 和手机卡片一个写法 -->
+      <el-table-column label="日期" min-width="190">
+        <template #default="{ row }"><span class="num">{{ dateRange(row) }}</span></template>
+      </el-table-column>
       <el-table-column prop="days" label="天数" width="80">
         <template #default="{ row }">{{ fmtDays(row.days) }}</template>
       </el-table-column>
@@ -33,7 +36,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="remarks" label="备注" min-width="160" show-overflow-tooltip />
+      <el-table-column prop="remarkText" label="备注" min-width="160" show-overflow-tooltip />
       <template #empty>
         <span class="empty-text">没有记录</span>
       </template>
@@ -41,7 +44,7 @@
 
     <!-- 移动: 卡片流 -->
     <div v-else v-loading="loading" class="history-list">
-      <div v-for="(item, i) in history" :key="item.id ?? i" class="hist-card surface">
+      <div v-for="(item, i) in rows" :key="item.id ?? i" class="hist-card surface">
         <div class="hist-top">
           <span class="hist-date num">{{ dateRange(item) }}</span>
           <el-tag :type="recordTypeTag(item.type, item.remarks)" size="small" effect="light">
@@ -49,7 +52,7 @@
           </el-tag>
         </div>
         <div class="hist-days num">{{ fmtDays(item.days) }} 天</div>
-        <div v-if="item.remarks" class="hist-remarks">{{ item.remarks }}</div>
+        <div v-if="item.remarkText" class="hist-remarks">{{ item.remarkText }}</div>
       </div>
       <p v-if="!loading && !history.length" class="empty-text list-empty">没有记录</p>
     </div>
@@ -57,18 +60,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import request from '../../utils/request'
 import { useUserStore } from '../../stores/user'
 import { useBreakpoint } from '../../composables/useBreakpoint'
-import { fmtDays, formatRecordType, recordTypeTag, parseSyncTime } from '../../constants/leave'
+import { fmtDays, formatRecordType, recordTypeTag, formatRemarks, parseSyncTime } from '../../constants/leave'
 
 const userStore = useUserStore()
 const { isMobile } = useBreakpoint()
 const currentYear = new Date().getFullYear()
 
 const history = ref([])
+/** 备注是后端拼的模板, 展示前收敛一遍 (见 formatRemarks); 类型标签仍按原始备注判断, 所以原字段不动 */
+const rows = computed(() => history.value.map(r => ({ ...r, remarkText: formatRemarks(r.type, r.remarks) })))
 const availableYears = ref([])
 const selectedHistoryYear = ref(currentYear)
 const sync = ref(parseSyncTime(null))
@@ -135,6 +140,7 @@ onMounted(async () => {
 }
 
 .sync-note {
+  min-height: 1.6em;
   margin: 0 0 12px;
   font-size: 12px;
   line-height: 1.6;

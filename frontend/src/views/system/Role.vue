@@ -1,7 +1,6 @@
 <template>
   <div class="role-page">
     <div class="toolbar">
-      <span class="count num">共 {{ tableData.length }} 个角色</span>
       <el-button type="primary" @click="openDialog('add')">
         <el-icon><Plus /></el-icon>添加角色
       </el-button>
@@ -245,9 +244,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.count {
-  font-size: 13px;
-  color: var(--text-muted);
+/* 总数在分页里, 工具栏只剩「添加角色」: 全局的 space-between 会把它甩到左边 */
+.toolbar {
+  justify-content: flex-end;
 }
 
 .role-table {

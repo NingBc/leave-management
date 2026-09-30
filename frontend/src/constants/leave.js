@@ -64,6 +64,35 @@ export const formatRecordType = (type, remarks) => resolveRecordType(type, remar
 export const recordTypeTag = (type, remarks) => resolveRecordType(type, remarks)?.tag ?? 'info'
 export const recordTypeDesc = (type, remarks) => resolveRecordType(type, remarks)?.desc ?? ''
 
+/**
+ * 备注列的展示文案。
+ *
+ * 后端给每条扣减流水拼的备注是固定模板 (LeaveServiceImpl#buildRemarks / upsertCarryOverRecord):
+ *   员工请假 (来自当年额度, 过期: 2027-12-31)
+ *   员工请假 (额度透支)
+ *   上年结余年假结转 (过期: 2026-12-31)
+ * 「员工请假」和类型标签「年假」重复, 「过期: …」对已经休掉的假没有用, 桌面表格里还会被省略号
+ * 截在最有用的「来自…额度」之前; 结转那条整句都是类型标签「上年结转」的复述。
+ *
+ * 只收敛展示, 库里的原文不动, 「透支归位」等按备注前缀识别类型的逻辑照旧读原文。
+ * 匹配不上的 (管理员手填的原因、旧格式) 原样返回; 编辑框绑的是原文, 不要经过这里。
+ */
+const BOILERPLATE_NOTE = new Set(['员工请假', '额度扣除'])
+const SOURCE_REMARK = /^(.*?) ?\(来自(结转|当年)额度, 过期: \d{4}-\d{2}-\d{2}\)$/
+const OVERDRAFT_REMARK = /^(?:员工请假|额度扣除) \(额度透支\)$/
+const CARRY_REMARK = /^上年结余年假结转 \(过期: \d{4}-\d{2}-\d{2}\)$/
+
+export const formatRemarks = (type, remarks) => {
+  const text = remarks ?? ''
+  if (type === 'CARRY_OVER' && CARRY_REMARK.test(text)) return ''
+  if (OVERDRAFT_REMARK.test(text)) return '额度透支'
+  const m = SOURCE_REMARK.exec(text)
+  if (!m) return text
+  const source = `来自${m[2]}额度`
+  // 手填的原因(如「补录: 3 月病假转年假」)是有用信息, 留着, 只去掉过期日
+  return !m[1] || BOILERPLATE_NOTE.has(m[1]) ? source : `${m[1]} (${source})`
+}
+
 /** 管理员手工新增流水时可选的类型(系统自动产生的 CARRY_OVER / EXPIRED 不给选) */
 export const MANUAL_RECORD_TYPES = [
   { value: 'ANNUAL', label: '年假（补录）' },
@@ -83,13 +112,13 @@ export const FIELD = {
     short: '累计工龄',
     label: '累计工龄',
     unit: '年',
-    hint: '含入职本公司之前的工作年限，按「首次参加工作时间」算。决定年假档位：不满 10 年 5 天、满 10 年 10 天、满 20 年 15 天。'
+    hint: '自首次参加工作起算。档位：不满 10 年 5 天、满 10 年 10 天、满 20 年 15 天。'
   },
   standardQuota: {
     short: '全年应享',
     label: '全年应享年假',
     unit: '天',
-    hint: '按累计工龄档位，整年在职可享的天数。当年入职的按入职后的在职天数折算，年底能累积到多少看「今年额度」里的「年底满」（之后不再增长时不显示）。'
+    hint: '按累计工龄档位，整年在职可享的天数。当年入职的按在职天数折算，年底实际能累积到的更少。'
   },
   daysEmployed: {
     short: '今年在职',
@@ -103,13 +132,13 @@ export const FIELD = {
     short: '总共在职',
     label: '总共在职天数',
     unit: '天',
-    hint: '从入职本公司到今天的总天数，跨年累计。与「今年在职天数」不同，后者只算本年度、用于折算今年的年假。'
+    hint: '入职本公司至今的总天数，跨年累计。「今年在职天数」只算本年度，用来折算年假。'
   },
   actualQuota: {
     short: '已累积',
     label: '截至今日已累积',
     unit: '天',
-    hint: '年假逐日累积，不是年初一次性到账。算法：全年应享 × 今年在职天数 ÷ 全年天数，按 0.5 天向下取整。累积到 12 月 31 日为止；当年入职的只算入职之后的天数，所以年底能累积到的数会比全年应享少。'
+    hint: '逐日累积，非年初一次性到账：全年应享 × 今年在职天数 ÷ 全年天数，按 0.5 天向下取整。'
   },
   lastYearBalance: {
     short: '上年结转',
@@ -121,23 +150,24 @@ export const FIELD = {
     short: '今年已休',
     label: '今年已休',
     unit: '天',
-    hint: '本年度已休掉的年假，每周一从钉钉审批单同步。最近几天请的假可能还没同步进来，所以余额会偏大。请假先扣上年结转，所以这里可能比「今年额度」里的「已用」多。'
+    hint: '本年度已休的年假（含用掉的上年结转），每周一从钉钉同步。'
   },
   totalBalance: {
     short: '当前可休',
     label: '当前可休',
     unit: '天',
-    hint: '此刻还能休的天数 = 上年结转 + 已累积 − 今年已休 ± 手工调整。其中「今年已休」来自钉钉同步，同步之后请的假还没扣减。'
+    hint: '此刻还能休的天数 = 上年结转 + 已累积 − 今年已休 ± 手工调整。'
   },
+  // 不带 hint: 「决定今年在职天数」这一句配不上一个问号
   entryDate: {
     short: '入职日期',
-    label: '入职本公司日期',
-    hint: '决定今年在职天数。'
+    label: '入职本公司日期'
   },
+  // 「填错会算错年假」是写给录入的 HR 看的, 只在用户表单里提示, 员工只读的页面不带这句
   firstWorkDate: {
     short: '首次参加工作',
     label: '首次参加工作时间',
-    hint: '第一份工作的入职时间（含在其它公司的经历），决定累计工龄和年假档位。填错会算错年假。'
+    hint: '第一份工作的入职时间（含其它公司的经历），决定累计工龄和年假档位。'
   }
 }
 
@@ -253,13 +283,19 @@ export const fmtDays = (v) => {
 const SYNC_TS = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/
 
 export function parseSyncTime(raw) {
-  if (!raw) return { ok: false, date: '', full: '', note: '', daysAgo: null }
+  const none = { ok: false, date: '', dateShort: '', full: '', timeShort: '', note: '', daysAgo: null }
+  if (!raw) return none
   const text = String(raw).trim()
   if (SYNC_TS.test(text)) {
     const date = text.slice(0, 10)
+    // dateShort / timeShort 去掉年份和秒: 页面上是一行小字, 「2026-09-28 02:00:00」多出来的部分没人看,
+    // 跨年时「（N 天前）」也足够消歧。
     // 「已同步至 08-31」还得自己数几天前, 直接把天数算出来更有感知
-    return { ok: true, date, full: text, note: '', daysAgo: daysSince(date) ?? 0 }
+    return {
+      ok: true, date, dateShort: text.slice(5, 10), full: text, timeShort: text.slice(5, 16),
+      note: '', daysAgo: daysSince(date) ?? 0
+    }
   }
   // 后端给的是说明性文案, 原样透出, 不要套进时间的句式里
-  return { ok: false, date: '', full: '', note: text, daysAgo: null }
+  return { ...none, note: text }
 }
