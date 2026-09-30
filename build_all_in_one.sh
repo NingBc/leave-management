@@ -20,6 +20,14 @@ cd $FRONTEND_DIR
 # ci 严格按 lock 安装, 从不回写, 跨机器产物一致。
 npm ci
 if [ $? -ne 0 ]; then
+    echo "Error: Frontend dependency install failed."
+    exit 1
+fi
+# 构建这一步不能省: npm ci 只装依赖, 不产出 dist。改用 npm ci 时(c8c09bb)曾顺手删掉
+# npm run build, 之后打出的 jar 里, 后端是新的, 前端却是 frontend/dist 里上一次
+# 手工构建留下的旧产物 —— 部署后页面还是旧的。
+npm run build
+if [ $? -ne 0 ] || [ ! -f dist/index.html ]; then
     echo "Error: Frontend build failed."
     exit 1
 fi
