@@ -24,6 +24,12 @@ public class LeaveAccountDTO extends LeaveAccount {
     /** 年假余额: 由桶账本实时汇总, 不落库 */
     private BigDecimal totalBalance;
 
+    /**
+     * 年底 (12 月 31 日, 已离职则到离职日) 能累积到的额度, 不落库。
+     * 不等于 standardQuota: 那是整年在职的档位额度, 年中入职的人到年底累积不到它。
+     */
+    private BigDecimal yearEndQuota;
+
     /*
      * 余额按来源拆开, 给页面讲清楚「结转用了多少、还剩多少、哪天作废」。
      * 都取自冲抵欠账之后的桶账本, 不落库, 并且恒有:
@@ -99,6 +105,14 @@ public class LeaveAccountDTO extends LeaveAccount {
 
     public void setTotalBalance(BigDecimal totalBalance) {
         this.totalBalance = totalBalance;
+    }
+
+    public BigDecimal getYearEndQuota() {
+        return yearEndQuota;
+    }
+
+    public void setYearEndQuota(BigDecimal yearEndQuota) {
+        this.yearEndQuota = yearEndQuota;
     }
 
     public String getLastSyncTime() {

@@ -130,13 +130,23 @@ public class LeaveServiceImpl implements LeaveService {
     }
 
     /**
-     * 累计工作年限 (社会工龄), 以 {@link #quotaReferenceDate} 为准。
+     * 离职之后的日子不再计入: 截止日取参照日与离职日中较早的一个。
+     *
+     * <p>
+     * 在职天数一直是这样截的, 工龄档位却曾一路判到参照日 —— 8/31 离职、11/3 才满 10 年的人,
+     * 离职当天算定的是 5 天档, 年终任务重新结算时按 12/31 判成 10 天档, 额度被改大。
      */
-    private int calculateSeniority(LocalDate firstWorkDate, int year) {
+    private LocalDate cappedAtResignation(LocalDate reference, LocalDate resignationDate) {
+        return resignationDate != null && resignationDate.isBefore(reference) ? resignationDate : reference;
+    }
+
+    /**
+     * 累计工作年限 (社会工龄), 算到 {@code reference} 这一天。
+     */
+    private int calculateSeniority(LocalDate firstWorkDate, LocalDate reference) {
         if (firstWorkDate == null) {
             return 0;
         }
-        LocalDate reference = quotaReferenceDate(year);
         if (firstWorkDate.isAfter(reference)) {
             return 0;
         }
@@ -147,25 +157,22 @@ public class LeaveServiceImpl implements LeaveService {
      * Calculate days employed in a specific year.
      *
      * <p>
-     * 区间为 [max(入职日, 1/1), min(离职日, 12/31, 今天)]。
+     * 区间为 [max(入职日, 1/1), min(离职日, reference)], reference 通常是 {@link #quotaReferenceDate}
+     * (12/31 与今天取早); 预告年底额度时传 12/31。
      * <ul>
      * <li>离职日纳入计算: 离职之后不再累计额度 (旧实现完全忽略 resignation_date)。</li>
      * <li>入职日为空时不再直接按整年算: 当年度同样截到今天, 否则新员工 1 月 1 日就拿满额度,
      * 与有入职日的分支自相矛盾。</li>
      * </ul>
      */
-    private int calculateDaysEmployed(LocalDate entryDate, LocalDate resignationDate, int year) {
+    private int calculateDaysEmployed(LocalDate entryDate, LocalDate resignationDate, int year, LocalDate reference) {
         LocalDate today = LocalDate.now();
         if (year > today.getYear()) {
             return 0;
         }
 
         LocalDate startOfYear = LocalDate.of(year, 1, 1);
-        LocalDate endOfPeriod = quotaReferenceDate(year);
-
-        if (resignationDate != null && resignationDate.isBefore(endOfPeriod)) {
-            endOfPeriod = resignationDate;
-        }
+        LocalDate endOfPeriod = cappedAtResignation(reference, resignationDate);
         if (endOfPeriod.isBefore(startOfYear)) {
             return 0;
         }
@@ -191,9 +198,18 @@ public class LeaveServiceImpl implements LeaveService {
      * @return 是否有字段发生变化
      */
     private boolean recalcQuotaFields(LeaveAccount account, SysUser user, int year) {
-        int seniority = calculateSeniority(user.getFirstWorkDate(), year);
+        return recalcQuotaFields(account, user, year, quotaReferenceDate(year));
+    }
+
+    /**
+     * @param reference 工龄和在职天数算到哪一天 (已离职的算到离职日为止)。当前额度用
+     *                  {@link #quotaReferenceDate} (今天封顶), 预告年底额度用 12/31 —— 同一个公式, 只是换了截止日。
+     */
+    private boolean recalcQuotaFields(LeaveAccount account, SysUser user, int year, LocalDate reference) {
+        int seniority = calculateSeniority(user.getFirstWorkDate(),
+                cappedAtResignation(reference, user.getResignationDate()));
         BigDecimal standardQuota = getQuotaBySeniority(seniority);
-        int daysEmployed = calculateDaysEmployed(user.getEntryDate(), user.getResignationDate(), year);
+        int daysEmployed = calculateDaysEmployed(user.getEntryDate(), user.getResignationDate(), year, reference);
 
         // 实际额度 = 标准额度 × 在职天数 / 全年天数, 向下取整到 0.5
         BigDecimal daysInYear = new BigDecimal(LocalDate.of(year, 12, 31).getDayOfYear());
@@ -216,6 +232,24 @@ public class LeaveServiceImpl implements LeaveService {
         account.setDaysEmployed(daysEmployed);
         account.setActualQuota(actualQuota);
         return changed;
+    }
+
+    /**
+     * 年底 (12/31, 已离职则到离职日) 能累积到的额度 —— 首页「年底满 N 天」的 N。
+     *
+     * <p>
+     * 不能拿 {@code standardQuota} 当这个数: 它是「整年在职」的档位额度, 只对 1 月 1 日之前入职的人成立;
+     * 年中入职的人按入职后的天数折算, 年底也满不了它 (7 月 1 日入职的 5 天档, 年底是 2.5 而不是 5)。
+     * 这里用与年终结算 ({@link #settleYearQuota}) 相同的公式和相同的截止日, 页面预告的数就是年终会算定的数。
+     * 当年以外的年度已经算定, 直接取账户上的实际额度。
+     */
+    private BigDecimal projectYearEndQuota(LeaveAccount account, SysUser user, int year) {
+        if (year != LocalDate.now().getYear()) {
+            return account.getActualQuota();
+        }
+        LeaveAccount atYearEnd = new LeaveAccount();
+        recalcQuotaFields(atYearEnd, user, year, LocalDate.of(year, 12, 31));
+        return atYearEnd.getActualQuota();
     }
 
     @Override
@@ -996,6 +1030,7 @@ public class LeaveServiceImpl implements LeaveService {
             dto.setSocialSeniority(account.getSocialSeniority());
             dto.setStandardQuota(account.getStandardQuota());
             dto.setActualQuota(account.getActualQuota());
+            dto.setYearEndQuota(projectYearEndQuota(account, user, year));
             dto.setLastYearBalance(account.getLastYearBalance());
             dto.setDaysEmployed(account.getDaysEmployed());
 
@@ -1026,6 +1061,7 @@ public class LeaveServiceImpl implements LeaveService {
             dto.setSocialSeniority(0);
             dto.setStandardQuota(BigDecimal.ZERO);
             dto.setActualQuota(BigDecimal.ZERO);
+            dto.setYearEndQuota(BigDecimal.ZERO);
             dto.setLastYearBalance(BigDecimal.ZERO);
             dto.setCurrentYearUsed(BigDecimal.ZERO);
             dto.setDaysEmployed(0);
