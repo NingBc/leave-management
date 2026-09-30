@@ -1,6 +1,7 @@
 package com.leave.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.leave.system.dto.CarryOverExpiryDTO;
 import com.leave.system.dto.LeaveAccountDTO;
 import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
@@ -538,7 +539,8 @@ public class LeaveServiceImpl implements LeaveService {
             }
         }
 
-        buckets.put(null, debt.negate());
+        // 累加而不是覆盖: null 桶里若有没配对的正数流水 (无到期日的加假), 覆盖会把它整个吞掉
+        buckets.merge(null, debt.negate(), BigDecimal::add);
     }
 
     /**
@@ -587,6 +589,23 @@ public class LeaveServiceImpl implements LeaveService {
         // 额度不足以完全覆盖的部分仍是浮动债务, 在内存里冲抵掉, 避免超发
         settleNegativeBuckets(buckets);
 
+        // 补录进已关账的年度: 年终清理可能已经把该年度结转桶的剩余写成了 EXPIRED 流水。
+        // 但请假发生那天 (不晚于 12/31) 这批额度还有效 —— 不能让清零的桶把它挡在门外,
+        // 否则补登的假会被记到当年额度, 员工白少天数, 而 1/26 的复跑也纠正不了。
+        // 做法: 分配前把作废「还回去」, 分配后按实际吃掉的部分等额缩减作废流水。
+        LocalDate carryExpiry = LocalDate.of(year, 12, 31);
+        List<LeaveRecord> expiredRecords = recordMapper.selectExpiredRecordsByDate(userId, carryExpiry);
+        BigDecimal reopened = expiredRecords.stream()
+                .map(r -> r.getDays().abs())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal realCarryRemaining = buckets.getOrDefault(carryExpiry, BigDecimal.ZERO).max(BigDecimal.ZERO);
+        if (reopened.signum() > 0) {
+            buckets.merge(carryExpiry, reopened, BigDecimal::add);
+            log.info("↩️  Reopening {} expired day(s) of bucket {} for a retroactive leave on {}",
+                    reopened, carryExpiry, startDate);
+        }
+        BigDecimal usedFromReopened = BigDecimal.ZERO;
+
         log.info("💰 Available balances by expiry: {}", buckets);
 
         BigDecimal remainingToAllocate = daysToDeduct;
@@ -603,6 +622,10 @@ public class LeaveServiceImpl implements LeaveService {
             }
 
             BigDecimal deduction = remainingToAllocate.min(available);
+            if (reopened.signum() > 0 && carryExpiry.equals(expiryDate)) {
+                // 桶里真实剩余的部分先用, 超出的才是从「还回去的作废」里拿的
+                usedFromReopened = deduction.subtract(realCarryRemaining).max(BigDecimal.ZERO);
+            }
 
             LeaveRecord usageRecord = new LeaveRecord();
             usageRecord.setUserId(userId);
@@ -618,6 +641,10 @@ public class LeaveServiceImpl implements LeaveService {
             log.info("  ✅ Allocated {} days from balance expiring on {}", deduction, expiryDate);
 
             remainingToAllocate = remainingToAllocate.subtract(deduction);
+        }
+
+        if (usedFromReopened.signum() > 0) {
+            shrinkExpiredRecords(expiredRecords, usedFromReopened, startDate);
         }
 
         // Check if we need to borrow (Overdraft)
@@ -642,6 +669,39 @@ public class LeaveServiceImpl implements LeaveService {
             recordMapper.insertRecord(borrowRecord);
 
             log.info("  ✅ Created OVERDRAFT record for {} days (no expiry)", remainingToAllocate);
+        }
+    }
+
+    /**
+     * 补录的请假吃掉了已作废的结转: 把对应天数从 EXPIRED 流水里扣回来。
+     *
+     * <p>
+     * 缩到 0 的流水软删除而不是留一条 0 天记录 (页面上会显示「过期作废 0 天」)。
+     * 备注里写明缘由, 这条流水的变化才查得到。
+     */
+    private void shrinkExpiredRecords(List<LeaveRecord> expiredRecords, BigDecimal days, LocalDate leaveDate) {
+        BigDecimal left = days;
+        for (LeaveRecord expired : expiredRecords) {
+            if (left.signum() <= 0) {
+                break;
+            }
+            BigDecimal size = expired.getDays().abs();
+            BigDecimal back = size.min(left);
+            BigDecimal remaining = size.subtract(back);
+
+            LeaveRecord update = new LeaveRecord();
+            update.setId(expired.getId());
+            update.setDays(remaining.negate());
+            update.setRemarks(String.format("%s; 补录 %s 的请假冲回 %s 天", expired.getRemarks(), leaveDate,
+                    back.stripTrailingZeros().toPlainString()));
+            if (remaining.signum() == 0) {
+                update.setDeleted(1);
+            }
+            recordMapper.updateRecord(update);
+
+            log.info("  ↩️  Expired record {} shrunk by {} day(s) (retroactive leave on {})",
+                    expired.getId(), back, leaveDate);
+            left = left.subtract(back);
         }
     }
 
@@ -793,6 +853,14 @@ public class LeaveServiceImpl implements LeaveService {
 
     @Override
     public Page<LeaveAccountDTO> getAllAccountsPage(Integer year, int current, int size) {
+        return getAllAccountsPage(year, current, size, false);
+    }
+
+    @Override
+    public Page<LeaveAccountDTO> getAllAccountsPage(Integer year, int current, int size, boolean expiringOnly) {
+        if (expiringOnly) {
+            return expiringAccountsPage(year, current, size);
+        }
         // Filter out resigned users by default (implemented in XML)
         Page<SysUser> userPage = userMapper.selectActiveUsersPage(new Page<>(current, size));
         Page<LeaveAccountDTO> resultPage = new Page<>(current, size);
@@ -805,6 +873,71 @@ public class LeaveServiceImpl implements LeaveService {
 
         resultPage.setRecords(dtoList);
         return resultPage;
+    }
+
+    /**
+     * 「只看结转将作废的人」。这个条件取决于桶账本, 写不进 SQL, 只能先全员算一遍再在内存里分页。
+     * 在职员工几十人的规模下开销可以接受: 筛选时每人只查账本流水, 明细只给当前页的人查。
+     */
+    private Page<LeaveAccountDTO> expiringAccountsPage(int year, int current, int size) {
+        List<Long> userIds = new ArrayList<>(expiringCarryOver(year).keySet());
+        // 分页参数来自请求: size <= 0 会让 subList 的下标倒挂, 页码乘以很大的 size 还会溢出 int
+        int pageSize = Math.max(size, 1);
+        Page<LeaveAccountDTO> page = new Page<>(current, pageSize);
+        page.setTotal(userIds.size());
+
+        long offset = (long) Math.max(current - 1, 0) * pageSize;
+        int from = (int) Math.min(offset, userIds.size());
+        int to = (int) Math.min((long) from + pageSize, userIds.size());
+        String lastSyncTime = resolveLastSyncTime();
+        page.setRecords(userIds.subList(from, to).stream()
+                .map(id -> fillAccountDTO(new LeaveAccountDTO(), id, year, lastSyncTime))
+                .collect(Collectors.toList()));
+        return page;
+    }
+
+    @Override
+    public CarryOverExpiryDTO getCarryOverExpiry(Integer year) {
+        LocalDate expiry = LocalDate.of(year, 12, 31);
+        Map<Long, BigDecimal> expiring = expiringCarryOver(year);
+
+        CarryOverExpiryDTO dto = new CarryOverExpiryDTO();
+        dto.setExpiryDate(expiry);
+        dto.setDaysLeft(ChronoUnit.DAYS.between(LocalDate.now(), expiry));
+        dto.setUserCount(expiring.size());
+        dto.setTotalDays(expiring.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add));
+        return dto;
+    }
+
+    /**
+     * 在职员工里上年结转还有剩余的人: userId -> 剩余天数, 剩余多的排前面。
+     *
+     * <p>
+     * 与 fillAccountDTO 共用 {@link #displayBuckets}, 所以页面上逐行显示的剩余加起来就是汇总数。
+     * 这里不刷新当年额度: 欠账先吃最早到期的结转桶, 结转还剩多少与当年额度无关。
+     */
+    private LinkedHashMap<Long, BigDecimal> expiringCarryOver(int year) {
+        Map<Long, LeaveAccount> accounts = accountMapper.selectAccountsByYear(year).stream()
+                .collect(Collectors.toMap(LeaveAccount::getUserId, a -> a, (a, b) -> a));
+        LocalDate carryOverExpiry = LocalDate.of(year, 12, 31);
+
+        List<Map.Entry<Long, BigDecimal>> expiring = new ArrayList<>();
+        for (SysUser user : userMapper.selectActiveUsers()) {
+            LeaveAccount account = accounts.get(user.getId());
+            if (account == null) {
+                continue;
+            }
+            BigDecimal carry = displayBuckets(account, year).getOrDefault(carryOverExpiry, BigDecimal.ZERO);
+            if (carry.compareTo(BigDecimal.ZERO) > 0) {
+                expiring.add(Map.entry(user.getId(), carry));
+            }
+        }
+        expiring.sort(Map.Entry.<Long, BigDecimal>comparingByValue().reversed()
+                .thenComparing(Map.Entry.comparingByKey()));
+
+        LinkedHashMap<Long, BigDecimal> result = new LinkedHashMap<>();
+        expiring.forEach(e -> result.put(e.getKey(), e.getValue()));
+        return result;
     }
 
     /**
@@ -884,7 +1017,9 @@ public class LeaveServiceImpl implements LeaveService {
             // 余额 = 桶账本各桶之和 (含浮动债务这个负数桶)。
             // 与 deductLeaveDays 共用 buildBuckets, 保证「页面显示的余额」和
             // 「扣减时判定的可用额度」永远是同一个数 —— 旧实现两边各算各的, 会对不上。
-            dto.setTotalBalance(sumBuckets(buildBuckets(account, year, LocalDate.of(year, 1, 1))));
+            TreeMap<LocalDate, BigDecimal> buckets = displayBuckets(account, year);
+            dto.setTotalBalance(sumBuckets(buckets));
+            fillBalanceBreakdown(dto, buckets, yearRecords, year);
 
         } else {
             // Account does not exist - return empty DTO instead of auto-creating
@@ -895,10 +1030,56 @@ public class LeaveServiceImpl implements LeaveService {
             dto.setCurrentYearUsed(BigDecimal.ZERO);
             dto.setDaysEmployed(0);
             dto.setTotalBalance(BigDecimal.ZERO);
+            dto.setCarryOverRemaining(BigDecimal.ZERO);
+            dto.setCarryOverExpiry(LocalDate.of(year, 12, 31));
+            dto.setCarryOverExpired(BigDecimal.ZERO);
+            dto.setCurrentQuotaRemaining(BigDecimal.ZERO);
+            dto.setFloatingDebt(BigDecimal.ZERO);
             dto.setRecords(java.util.Collections.emptyList());
         }
 
         return dto;
+    }
+
+    /**
+     * 页面展示口径的桶账本: 冲抵欠账之后的各批次余额。
+     *
+     * <p>
+     * 冲抵不改变总额, 但各桶的值变成了「此刻真正能用的」, 与扣减时的判定一致: 欠账先吃最早到期的桶。
+     * 不冲抵的话, 还挂着透支的人会同时显示「结转有剩余」和「欠账」, 两个数都不是他此刻能休的。
+     */
+    private TreeMap<LocalDate, BigDecimal> displayBuckets(LeaveAccount account, int year) {
+        TreeMap<LocalDate, BigDecimal> buckets = buildBuckets(account, year, LocalDate.of(year, 1, 1));
+        settleNegativeBuckets(buckets);
+        return buckets;
+    }
+
+    /**
+     * 把余额按来源拆开: 上年结转剩多少、哪天作废、作废了多少, 今年额度剩多少, 还欠多少。
+     *
+     * <p>
+     * 前端不要拿流水自己加减 —— 透支归位、欠账冲抵、手工调整都会让算出来的数和余额对不上。
+     */
+    private void fillBalanceBreakdown(LeaveAccountDTO dto, TreeMap<LocalDate, BigDecimal> buckets,
+            List<LeaveRecord> yearRecords, int year) {
+        LocalDate carryOverExpiry = LocalDate.of(year, 12, 31);
+        BigDecimal carry = buckets.getOrDefault(carryOverExpiry, BigDecimal.ZERO);
+        // 只有负数才是透支; null 桶里没配对的正数当作今年额度的一部分 (下面用减法得出, 三项之和不变)
+        BigDecimal debt = buckets.getOrDefault(null, BigDecimal.ZERO).min(BigDecimal.ZERO);
+        BigDecimal expired = yearRecords.stream()
+                .filter(r -> "EXPIRED".equals(r.getType()) && carryOverExpiry.equals(r.getExpiryDate()))
+                .map(LeaveRecord::getDays)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .negate();
+
+        dto.setCarryOverExpiry(carryOverExpiry);
+        dto.setCarryOverRemaining(carry);
+        dto.setCarryOverExpired(expired.max(BigDecimal.ZERO));
+        dto.setFloatingDebt(debt);
+        // 其余的桶都归「今年额度」: 当年额度桶, 以及手工加假落在别的到期日上的零星批次。
+        // 用减法得出, 保证三项相加恒等于 totalBalance。
+        dto.setCurrentQuotaRemaining(sumBuckets(buckets).subtract(carry).subtract(debt));
     }
 
     @Override

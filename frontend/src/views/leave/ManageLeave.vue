@@ -7,8 +7,21 @@
           <el-option v-for="year in yearOptions" :key="year" :label="`${year} 年`" :value="year" />
         </el-select>
       </div>
-      <span class="count num">共 {{ total }} 名员工</span>
+      <span class="count num">
+        <template v-if="hiddenColumnNote">{{ hiddenColumnNote }} · </template>{{ expiringOnly ? `筛出 ${total} 名员工` : `共 ${total} 名员工` }}
+      </span>
     </div>
+
+    <!-- 新年度账户由年初的定时任务统一生成; 生成之前列表里全是 0, 不说明的话像是全员额度被清空了 -->
+    <el-alert
+      v-if="yearNotGenerated"
+      class="year-alert"
+      type="info"
+      :closable="false"
+      show-icon
+      :title="`${selectedYear} 年的年假账户还没有生成`"
+      description="由「年假过期清理」定时任务在年初统一生成，下面显示的 0 不是实际余额。"
+    />
 
     <!-- 整表的口径说明: 「今年已休」「当前可休」都只算到上次同步为止。
          表格每行都有余额, 没法逐行标注, 所以放在这里管整张表。 -->
@@ -20,6 +33,22 @@
       <span v-else>休假记录尚未从钉钉同步，余额可能偏大</span>
     </p>
 
+    <!-- 结转作废提醒。人数和天数由后端按全员统计: 列表是分页的, 这里只有一页数据, 自己汇总会漏人 -->
+    <div v-if="showExpiryBar" class="expiry-bar">
+      <el-icon class="expiry-icon"><WarningFilled /></el-icon>
+      <span v-if="!expiringOnly" class="expiry-text">
+        {{ expiry.daysLeft === 0 ? '今天' : formatMonthDay(expiry.expiryDate) }}将有
+        <b class="num">{{ expiry.userCount }} 人共 {{ fmtDays(expiry.totalDays) }} 天</b>上年结转作废<template
+          v-if="expiry.daysLeft > 0">，还剩 <span class="num">{{ expiry.daysLeft }}</span> 天</template>
+      </span>
+      <span v-else class="expiry-text">
+        只看 {{ formatMonthDay(expiry?.expiryDate) }}结转将作废的员工，剩余多的排在前面
+      </span>
+      <el-button link type="warning" @click="toggleExpiringOnly">
+        {{ expiringOnly ? '显示全部' : '只看这些人' }}
+      </el-button>
+    </div>
+
     <!-- ===== 桌面: 表格 ===== -->
     <el-table v-if="!isMobile" :data="accounts" v-loading="loading" class="surface account-table">
       <el-table-column prop="employeeNumber" label="工号" min-width="104" />
@@ -27,7 +56,7 @@
 
       <!-- 单位放列头, 单元格只留数字并右对齐: 一列数字右边缘对齐才好上下比对 -->
       <el-table-column
-        v-for="col in numericColumns"
+        v-for="col in tableColumns"
         :key="col.key"
         :prop="col.key"
         :min-width="col.colWidth"
@@ -36,16 +65,26 @@
       >
         <template #header>
           <span class="th">
-            {{ col.short }}<i class="th-unit">{{ col.unit.trim() }}</i>
+            {{ col.short }}<i class="th-unit">{{ col.headUnit ?? col.unit.trim() }}</i>
             <FieldHint :label="col.label" :text="col.hint" />
           </span>
         </template>
         <template #default="{ row }">
-          <span class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}</span>
+          <el-tooltip
+            v-if="col.key === 'lastYearBalance'"
+            :content="carryCellOf(row).title"
+            placement="top"
+            :show-after="200"
+          >
+            <span class="num carry-cell" :class="carryCellOf(row).tone">
+              <span class="carry-main">{{ carryCellOf(row).main }}</span><span class="carry-rest">{{ carryCellOf(row).rest }}</span>
+            </span>
+          </el-tooltip>
+          <span v-else class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="112" align="right" header-align="right">
+      <el-table-column min-width="112" align="right" header-align="right" fixed="right">
         <template #header>
           <span class="th">
             {{ FIELD.totalBalance.short }}<i class="th-unit">天</i>
@@ -67,7 +106,7 @@
       </el-table-column>
 
       <template #empty>
-        <span class="empty-text">{{ selectedYear }} 年没有年假账户</span>
+        <span class="empty-text">{{ emptyText }}</span>
       </template>
     </el-table>
 
@@ -87,7 +126,10 @@
         <dl class="acct-grid">
           <div v-for="col in numericColumns" :key="col.key">
             <dt>{{ col.short }}</dt>
-            <dd class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}{{ col.unit }}</dd>
+            <dd v-if="col.key === 'lastYearBalance'" class="num carry-cell" :class="carryCellOf(row).tone">
+              <span class="carry-main">{{ carryCellOf(row).main }}</span><span class="carry-rest">{{ carryCellOf(row).rest }}</span>{{ col.unit }}
+            </dd>
+            <dd v-else class="num">{{ col.raw ? (row[col.key] ?? 0) : fmtDays(row[col.key]) }}{{ col.unit }}</dd>
           </div>
         </dl>
 
@@ -97,9 +139,7 @@
         </footer>
       </article>
 
-      <p v-if="!loading && !accounts.length" class="empty-text list-empty">
-        {{ selectedYear }} 年没有年假账户
-      </p>
+      <p v-if="!loading && !accounts.length" class="empty-text list-empty">{{ emptyText }}</p>
     </div>
 
     <el-pagination
@@ -186,7 +226,8 @@
             <FieldHint :label="FIELD.lastYearBalance.label" :text="FIELD.lastYearBalance.hint" />
           </template>
           <el-input-number v-model="form.lastYearBalance" :precision="1" :step="0.5" />
-          <span class="field-note">自动结转，可手工更正</span>
+          <!-- 回放验证过: 管理员改成 99, 1 月 26 日的复算(以及任何一次重新初始化)会把它改回系统算出的值 -->
+          <span class="field-note">自动结转。重新初始化和每年 1 月 26 日的复算会覆盖这里的修改，要长期保留请用下方「添加记录」</span>
         </el-form-item>
       </el-form>
 
@@ -286,19 +327,21 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Lock, Plus, Clock } from '@element-plus/icons-vue'
+import { Lock, Plus, Clock, WarningFilled } from '@element-plus/icons-vue'
 import {
-  getAllAccounts, updateAccount,
+  getAllAccounts, getCarryOverExpiry, updateAccount,
   addRecord as addLeaveRecordApi, updateRecord as updateLeaveRecordApi
 } from '../../api/leave'
 import request from '../../utils/request'
+import { formatMonthDay } from '../../utils/date'
 import { useBreakpoint } from '../../composables/useBreakpoint'
 import {
-  FIELD, MANUAL_RECORD_TYPES, fmtDays, formatRecordType, recordTypeTag, parseSyncTime
+  FIELD, MANUAL_RECORD_TYPES, CARRY_OVER_WARN_DAYS, fmtDays, formatRecordType, recordTypeTag, parseSyncTime,
+  balanceSources, carryOverCell
 } from '../../constants/leave'
 import FieldHint from '../../components/FieldHint.vue'
 
-const { isMobile } = useBreakpoint()
+const { isMobile, isNarrow } = useBreakpoint()
 const currentYear = new Date().getFullYear()
 
 const accounts = ref([])
@@ -313,13 +356,27 @@ const total = ref(0)
 
 /** 表格数值列 / 编辑弹窗只读区共用一份定义, 保证两处口径和叫法一致 */
 const numericColumns = [
-  { key: 'socialSeniority', ...FIELD.socialSeniority, raw: true, unit: ' 年', colWidth: 106 },
-  { key: 'standardQuota', ...FIELD.standardQuota, unit: ' 天', colWidth: 106 },
-  { key: 'daysEmployed', ...FIELD.daysEmployed, raw: true, unit: ' 天', colWidth: 106 },
-  { key: 'actualQuota', ...FIELD.actualQuota, unit: ' 天', colWidth: 100 },
-  { key: 'lastYearBalance', ...FIELD.lastYearBalance, unit: ' 天', colWidth: 106 },
-  { key: 'currentYearUsed', ...FIELD.currentYearUsed, unit: ' 天', colWidth: 106 }
+  // narrowHide: 只是参考信息, 窗口较窄时先让位 (编辑弹窗的只读区和手机卡片里仍然有)
+  { key: 'socialSeniority', ...FIELD.socialSeniority, raw: true, unit: ' 年', colWidth: 118, narrowHide: true },
+  { key: 'standardQuota', ...FIELD.standardQuota, unit: ' 天', colWidth: 118 },
+  { key: 'daysEmployed', ...FIELD.daysEmployed, raw: true, unit: ' 天', colWidth: 118, narrowHide: true },
+  { key: 'actualQuota', ...FIELD.actualQuota, unit: ' 天', colWidth: 106 },
+  // 单元格显示「还剩 / 结转总数」, 列头单位跟着改, 不然「7 / 10」没人看得懂
+  {
+    key: 'lastYearBalance', ...FIELD.lastYearBalance, unit: ' 天', headUnit: '剩/共', colWidth: 136,
+    hint: `${FIELD.lastYearBalance.hint}表格里显示为「还剩 / 结转总数」，离作废不到 ${CARRY_OVER_WARN_DAYS} 天还有剩余的标橙色。`
+  },
+  { key: 'currentYearUsed', ...FIELD.currentYearUsed, unit: ' 天', colWidth: 118 }
 ]
+
+/** 桌面表格实际渲染的列: 较窄的窗口收起参考信息列, 免得「当前可休」被挤出首屏 */
+const tableColumns = computed(() => numericColumns.filter(c => !(isNarrow.value && c.narrowHide)))
+
+const hiddenColumnNote = computed(() => {
+  if (isMobile.value || !isNarrow.value) return ''
+  const names = numericColumns.filter(c => c.narrowHide).map(c => c.short)
+  return `窗口较窄，已收起${names.join('、')}`
+})
 
 /** 编辑弹窗里的只读项: 上年结转可改, 所以不在其中 */
 const readonlyFields = numericColumns.filter(c => c.key !== 'lastYearBalance')
@@ -347,10 +404,51 @@ const loadAvailableYears = async () => {
 /** 列表每行都带同一个 lastSyncTime(后端在循环外查一次), 取第一行即可 */
 const sync = computed(() => parseSyncTime(accounts.value[0]?.lastSyncTime))
 
+/* ---------- 上年结转 ---------- */
+
+/** 每行「上年结转」一格的文案 */
+const carryCellOf = (row) => carryOverCell(balanceSources(row).carry)
+
+const expiry = ref(null)
+const expiringOnly = ref(false)
+
+/** 筛选时列表为空是「没有符合条件的人」, 不是「没有账户」 */
+const emptyText = computed(() =>
+  expiringOnly.value ? '没有上年结转即将作废的员工' : `${selectedYear.value} 年没有年假账户`
+)
+
+/** getAccount 对不存在的账户返回 id 为空的零值对象, 整页都没有 id 说明这一年的账户还没生成 */
+const yearNotGenerated = computed(() =>
+  !loading.value && accounts.value.length > 0 && accounts.value.every(a => a.id == null)
+)
+
+/** 只在当年、临近作废且确实有人没用完时提醒; 已经在筛选状态时一直显示, 好让人点回「显示全部」 */
+const showExpiryBar = computed(() => {
+  if (expiringOnly.value) return true
+  const e = expiry.value
+  return !!e && selectedYear.value === currentYear && e.userCount > 0
+    && e.daysLeft >= 0 && e.daysLeft <= CARRY_OVER_WARN_DAYS
+})
+
+const loadExpiry = async () => {
+  try {
+    expiry.value = await getCarryOverExpiry(selectedYear.value)
+  } catch (e) {
+    console.error('Failed to load carry-over expiry', e)
+    expiry.value = null
+  }
+}
+
+const toggleExpiringOnly = () => {
+  expiringOnly.value = !expiringOnly.value
+  currentPage.value = 1
+  loadAccounts()
+}
+
 const loadAccounts = async () => {
   try {
     loading.value = true
-    const res = await getAllAccounts(selectedYear.value, currentPage.value, pageSize.value)
+    const res = await getAllAccounts(selectedYear.value, currentPage.value, pageSize.value, expiringOnly.value)
     accounts.value = res.records || []
     total.value = res.total || 0
   } catch (e) {
@@ -363,7 +461,9 @@ const loadAccounts = async () => {
 
 const onYearChange = () => {
   currentPage.value = 1
+  expiringOnly.value = false
   loadAccounts()
+  loadExpiry()
 }
 
 const handleSizeChange = (newSize) => {
@@ -445,6 +545,7 @@ const handleSave = async () => {
     ElMessage.success('保存成功')
     editDialogVisible.value = false
     loadAccounts()
+    loadExpiry()
   } catch (e) {
     console.error(e)
     ElMessage.error(e?.message || '保存失败')
@@ -456,6 +557,7 @@ const handleSave = async () => {
 onMounted(() => {
   loadAvailableYears()
   loadAccounts()
+  loadExpiry()
 })
 </script>
 
@@ -492,10 +594,66 @@ onMounted(() => {
   color: var(--text-annotation);
 }
 
+.year-alert {
+  margin: 0 0 12px;
+}
+
+/* ---- 结转作废提醒 ---- */
+
+.expiry-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--warning-subtle);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.expiry-icon {
+  color: var(--warning);
+  font-size: 16px;
+}
+
+.expiry-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.expiry-text b {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 「还剩 / 结转总数」: 剩余是这一格的主角, 总数退后 */
+.carry-rest {
+  color: var(--text-muted);
+}
+
+.carry-cell.warn .carry-main {
+  font-weight: 600;
+  color: var(--warning);
+}
+
+.carry-cell.muted,
+.carry-cell.muted .carry-rest {
+  color: var(--text-muted);
+}
+
+.carry-cell.danger {
+  color: var(--danger);
+}
+
 .th {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  /* 词中间不断行: 折成「累计工/龄」比整体溢出更难读 */
+  white-space: nowrap;
 }
 
 /* 单位只在列头出现一次。小一号 + 弱化字重, 免得像两个并列的词, 也不至于把列头撑折行 */
@@ -505,6 +663,7 @@ onMounted(() => {
   font-style: normal;
   font-weight: 400;
   color: var(--text-annotation);
+  white-space: nowrap;
 }
 
 .balance-cell {

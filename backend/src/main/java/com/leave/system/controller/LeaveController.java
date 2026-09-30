@@ -2,6 +2,7 @@ package com.leave.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.leave.system.common.Result;
+import com.leave.system.dto.CarryOverExpiryDTO;
 import com.leave.system.dto.LeaveAccountDTO;
 import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
@@ -103,13 +104,24 @@ public class LeaveController {
     public Result<Page<LeaveAccountDTO>> list(
             @RequestParam(required = false) Integer year,
             @RequestParam(defaultValue = "1") int current,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "false") boolean expiringOnly) {
         if (year == null) {
             year = LocalDate.now().getYear();
         }
 
-        Page<LeaveAccountDTO> page = leaveService.getAllAccountsPage(year, current, size);
+        Page<LeaveAccountDTO> page = leaveService.getAllAccountsPage(year, current, size, expiringOnly);
         return Result.success(page);
+    }
+
+    /** 上年结转作废汇总: 管理页表格上方的「N 人共 M 天将作废」提醒 */
+    @GetMapping("/carry-over-expiry")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Result<CarryOverExpiryDTO> carryOverExpiry(@RequestParam(required = false) Integer year) {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+        }
+        return Result.success(leaveService.getCarryOverExpiry(year));
     }
 
     @PostMapping("/update-record")

@@ -5,7 +5,7 @@
       <p>{{ todayText }}</p>
     </div>
 
-    <template v-if="account">
+    <template v-if="hasAccount">
       <!-- 员工进来最想知道的就一件事: 还剩几天假 -->
       <section class="balance surface">
         <div class="balance-head">
@@ -33,38 +33,73 @@
           </el-button>
         </div>
 
-        <div class="breakdown">
-          <div class="bd-item">
-            <span class="bd-label">
-              {{ FIELD.lastYearBalance.short }}
-              <FieldHint :label="FIELD.lastYearBalance.label" :text="FIELD.lastYearBalance.hint" />
-            </span>
-            <span class="bd-value num">{{ fmtDays(account.lastYearBalance) }}</span>
+        <!-- 余额按来源拆开, 各行的「剩」相加就是上面的大数字。
+             原来的「上年结转 + 已累积 − 今年已休」算式说得清总数, 说不清结转用了多少、哪天作废 -->
+        <el-alert
+          v-if="src.carry.warn"
+          class="expiry-alert"
+          type="warning"
+          :closable="false"
+          show-icon
+          :title="src.carry.daysLeft === 0
+            ? `${fmtDays(src.carry.remaining)} 天上年结转今天作废`
+            : `${fmtDays(src.carry.remaining)} 天上年结转将在 ${formatMonthDay(src.carry.expiry)}作废`"
+          :description="src.carry.daysLeft === 0 ? '今天之内请的假会先扣它' : `还剩 ${src.carry.daysLeft} 天，请假会先扣它`"
+        />
+
+        <div class="sources">
+          <div v-if="src.carry.kind !== 'none'" class="src">
+            <div class="src-head">
+              <span class="src-label">
+                {{ FIELD.lastYearBalance.short }}
+                <FieldHint :label="FIELD.lastYearBalance.label" :text="FIELD.lastYearBalance.hint" />
+              </span>
+              <span class="src-value num" :class="`is-${src.carry.kind}`">{{ carryText.value }}</span>
+            </div>
+            <div v-if="src.carry.kind !== 'debt'" class="src-bar" aria-hidden="true">
+              <span class="seg seg-used" :style="segWidth(src.carry.used, src.carry.total)" />
+              <span class="seg seg-left" :class="{ warn: src.carry.warn }" :style="segWidth(src.carry.remaining, src.carry.total)" />
+            </div>
+            <div class="src-meta">
+              <span class="num">{{ carryText.left }}</span>
+              <span class="num" :class="{ warn: src.carry.warn }">{{ carryText.right }}</span>
+            </div>
           </div>
-          <div class="bd-op">+</div>
-          <div class="bd-item">
-            <span class="bd-label">
-              {{ FIELD.actualQuota.short }}
-              <FieldHint :label="FIELD.actualQuota.label" :text="FIELD.actualQuota.hint" />
-            </span>
-            <span class="bd-value num">{{ fmtDays(account.actualQuota) }}</span>
+
+          <div class="src">
+            <div class="src-head">
+              <span class="src-label">
+                今年额度
+                <FieldHint :label="FIELD.actualQuota.label" :text="FIELD.actualQuota.hint" />
+              </span>
+              <span class="src-value num">剩 {{ fmtDays(src.current.remaining) }} 天</span>
+            </div>
+            <!-- 满格是全年应享: 年底前还没累积到的部分留作空槽, 顶替了原来那条「年底满 N 天」的提示 -->
+            <div class="src-bar" aria-hidden="true">
+              <span class="seg seg-used" :style="segWidth(src.current.used, src.current.scale)" />
+              <span class="seg seg-left" :style="segWidth(src.current.remaining, src.current.scale)" />
+            </div>
+            <div class="src-meta">
+              <span class="num">已累积 {{ fmtDays(src.current.accrued) }} · 年底满 {{ fmtDays(src.current.full) }}</span>
+              <span class="num">{{ currentYear + 1 }}-12-31 到期</span>
+            </div>
           </div>
-          <div class="bd-op">−</div>
-          <div class="bd-item">
-            <span class="bd-label">
-              {{ FIELD.currentYearUsed.short }}
-              <FieldHint :label="FIELD.currentYearUsed.label" :text="FIELD.currentYearUsed.hint" />
-            </span>
-            <span class="bd-value num">{{ fmtDays(account.currentYearUsed) }}</span>
+
+          <div v-if="src.debt < 0" class="src">
+            <div class="src-head">
+              <span class="src-label">透支</span>
+              <span class="src-value num is-debt">{{ fmtDays(src.debt) }} 天</span>
+            </div>
+            <div class="src-meta"><span>额度不够抵扣的部分，之后累积的额度会先抵扣</span></div>
           </div>
         </div>
-      </section>
 
-      <!-- 「已累积」比「全年应享」少不是被扣了假, 这条提示就是为了消除这个误会 -->
-      <div class="accrual-tip">
-        <el-icon><InfoFilled /></el-icon>
-        <p>年假逐日累积，年底满 <b class="num">{{ fmtDays(account.standardQuota) }}</b> 天</p>
-      </div>
+        <p class="src-foot">
+          <span class="num">{{ FIELD.currentYearUsed.short }} {{ fmtDays(account.currentYearUsed) }} 天</span>
+          <FieldHint :label="FIELD.currentYearUsed.label" :text="FIELD.currentYearUsed.hint" />
+          <span v-if="src.carry.kind === 'active'">· 请假先扣快到期的上年结转</span>
+        </p>
+      </section>
 
       <h3 class="section-title">{{ currentYear }} 年明细</h3>
       <section class="detail surface">
@@ -98,8 +133,8 @@ import { ArrowRight, InfoFilled, Clock } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import request from '../utils/request'
 import { useUserStore } from '../stores/user'
-import { FIELD, fmtDays, parseSyncTime } from '../constants/leave'
-import { daysInclusive, humanizeDuration } from '../utils/date'
+import { FIELD, fmtDays, parseSyncTime, balanceSources } from '../constants/leave'
+import { daysInclusive, humanizeDuration, formatMonthDay } from '../utils/date'
 import FieldHint from '../components/FieldHint.vue'
 
 const router = useRouter()
@@ -114,7 +149,36 @@ const creating = ref(false)
 
 const sync = computed(() => parseSyncTime(account.value?.lastSyncTime))
 
-const displayName = computed(() => userInfo.value.realName || userStore.username || '同事')
+/**
+ * 账户是否真的存在。后端 getAccount 对不存在的账户不返回 null, 而是 id 为空、各项为 0 的空对象,
+ * 只判断 account 真假的话「建立账户」这一支永远进不去: 新年度账户生成之前
+ * (1 月 1 日凌晨任务跑完前, 或那天任务没跑成), 员工看到的是一张全 0 的余额卡, 没有任何说明。
+ */
+const hasAccount = computed(() => account.value?.id != null)
+
+/* ---------- 余额来源 ---------- */
+
+const src = computed(() => balanceSources(account.value))
+
+/** 上年结转一行的三段文案: 右上角的值, 进度条下的左右两侧 */
+const carryText = computed(() => {
+  const c = src.value.carry
+  const usedOfTotal = `已用 ${fmtDays(c.used)} · 共 ${fmtDays(c.total)}`
+  switch (c.kind) {
+    case 'debt':
+      return { value: `欠 ${fmtDays(c.debt)} 天`, left: '已从今年额度中扣除', right: '' }
+    case 'expired':
+      return { value: `作废 ${fmtDays(c.expired)} 天`, left: usedOfTotal, right: `${c.expiry} 已作废` }
+    case 'usedUp':
+      return { value: '已用完', left: usedOfTotal, right: '' }
+    default:
+      return { value: `剩 ${fmtDays(c.remaining)} 天`, left: usedOfTotal, right: `${c.expiry} 作废` }
+  }
+})
+
+const segWidth = (value, scale) => ({ width: scale > 0 ? `${(value / scale) * 100}%` : '0%' })
+
+const displayName = computed(() => userInfo.value?.realName || userStore.username || '同事')
 
 const greetingText = computed(() => {
   const h = new Date().getHours()
@@ -245,6 +309,7 @@ onMounted(async () => {
 /* ---- 余额 ---- */
 
 .balance {
+  margin-bottom: 28px;
   padding: 20px;
 }
 
@@ -279,45 +344,105 @@ onMounted(async () => {
   color: var(--text-muted);
 }
 
-.breakdown {
-  display: flex;
-  gap: 10px;
-  margin-top: 18px;
-  padding-top: 16px;
+/* ---- 余额来源 ---- */
+
+.expiry-alert {
+  margin-top: 16px;
+}
+
+.sources {
+  margin-top: 16px;
   border-top: 1px solid var(--border);
 }
 
-.bd-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 0;
+.src {
+  padding: 12px 0;
 }
 
-.bd-label {
+.src + .src {
+  border-top: 1px solid var(--border);
+}
+
+.src-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.src-label {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 12px;
-  color: var(--text-muted);
-  white-space: nowrap;
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
-.bd-value {
-  font-size: 17px;
+.src-value {
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
 }
 
-/* 对齐到数值那一行, 不然运算符会浮在数字左上角, 看着像正负号 */
-.bd-op {
+.src-value.is-usedUp,
+.src-value.is-expired {
+  color: var(--text-muted);
+}
+
+.src-value.is-debt {
+  color: var(--danger);
+}
+
+/* 空槽是底色, 灰段是已用, 主色段是还剩的 —— 快作废时换成警示色 */
+.src-bar {
   display: flex;
-  align-items: flex-end;
-  padding-bottom: 2px;
-  flex-shrink: 0;
-  font-size: 14px;
-  color: var(--text-placeholder);
+  height: 6px;
+  margin: 8px 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-sunken);
+  overflow: hidden;
+}
+
+.seg {
+  height: 100%;
+  transition: width var(--ease);
+}
+
+.seg-used {
+  background: var(--text-placeholder);
+}
+
+.seg-left {
+  background: var(--brand);
+}
+
+.seg-left.warn {
+  background: var(--warning);
+}
+
+.src-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.src-meta .warn {
+  color: var(--warning);
+  font-weight: 500;
+}
+
+.src-foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 4px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .cutoff {
@@ -334,29 +459,6 @@ onMounted(async () => {
 .cutoff b {
   font-weight: 600;
   color: var(--text-secondary);
-}
-
-/* ---- 累积说明 ---- */
-
-.accrual-tip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 12px 0 28px;
-  padding: 10px 14px;
-  border-radius: var(--radius);
-  background: var(--brand-subtle);
-  color: var(--brand);
-}
-
-.accrual-tip p {
-  margin: 0;
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.accrual-tip b {
-  color: var(--brand);
 }
 
 /* ---- 明细 ---- */
@@ -432,12 +534,8 @@ onMounted(async () => {
     font-size: 36px;
   }
 
-  .bd-label {
+  .src-meta {
     font-size: 11px;
-  }
-
-  .bd-value {
-    font-size: 16px;
   }
 }
 </style>

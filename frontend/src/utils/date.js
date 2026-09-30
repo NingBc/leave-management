@@ -23,6 +23,21 @@ export const daysSince = (dateStr) => {
   return days >= 0 ? days : null
 }
 
+/** 从今天到某天还有几天 (当天为 0, 已过去为负数); 日期缺失返回 null */
+export const daysUntil = (dateStr) => {
+  const to = parseLocalDate(dateStr)
+  if (!to) return null
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  return Math.round((to - today) / 86400000)
+}
+
+/** '2026-12-31' -> '12 月 31 日'; 日期缺失返回空串 */
+export const formatMonthDay = (dateStr) => {
+  const d = parseLocalDate(dateStr)
+  return d ? `${d.getMonth() + 1} 月 ${d.getDate()} 日` : ''
+}
+
 /**
  * 从某天到今天的在职天数, 含首尾两端。
  *

@@ -9,7 +9,7 @@
         style="width: 118px"
         @change="loadHistory"
       >
-        <el-option label="全部年份" :value="null" />
+        <el-option label="全部年份" value="" />
         <el-option v-for="year in availableYears" :key="year" :label="`${year} 年`" :value="year" />
       </el-select>
     </div>
@@ -94,7 +94,8 @@ const loadHistory = async () => {
 
 const loadAvailableYears = async () => {
   try {
-    availableYears.value = await request.get('/leave/available-years')
+    const years = (await request.get('/leave/available-years')) || []
+    availableYears.value = years.includes(currentYear) ? years : [currentYear, ...years]
   } catch (e) {
     console.error(e)
   }

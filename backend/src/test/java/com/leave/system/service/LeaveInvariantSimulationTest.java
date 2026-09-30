@@ -1,5 +1,6 @@
 package com.leave.system.service;
 
+import com.leave.system.dto.LeaveAccountDTO;
 import com.leave.system.entity.LeaveAccount;
 import com.leave.system.entity.LeaveRecord;
 import com.leave.system.scheduled.ScheduledTasks;
@@ -130,6 +131,8 @@ class LeaveInvariantSimulationTest {
                 }
             }
 
+            assertBreakdownAddsUp(leaveService, year, seed);
+
             BigDecimal expiredBefore = db.sumRecords(USER, "EXPIRED");
 
             // --- 年终结算 ---
@@ -137,6 +140,7 @@ class LeaveInvariantSimulationTest {
 
             assertConservation(db, year, seed);
             assertExpiryIsNeverPositive(db, seed);
+            assertBreakdownAddsUp(leaveService, year, seed);
 
             // --- 幂等: 重跑两次, 结转值与流水条数都不能变 ---
             BigDecimal carryAfterFirst = db.account(USER, year + 1).getLastYearBalance();
@@ -154,6 +158,30 @@ class LeaveInvariantSimulationTest {
             // 作废只会增加, 不会回退
             assertTrue(db.sumRecords(USER, "EXPIRED").compareTo(expiredBefore) <= 0,
                     String.format("[seed %d] %d 年 EXPIRED 总额异常回升", seed, year));
+
+            // --- 年终任务之后才登记的年底请假 (钉钉周同步 / 1 月 26 日复跑) ---
+            // 这些假发生在 12/31 之前, 结转当时还有效: 守恒 / 幂等 / 欠账不作废 依然要成立。
+            // 唯一允许 EXPIRED 回升(变得不那么负)的地方就在这里 —— 补登的假把已作废的结转「还回去」了。
+            int lateLeaves = rnd.nextInt(3);
+            for (int i = 0; i < lateLeaves; i++) {
+                LocalDate day = LocalDate.of(year, 12, 20 + rnd.nextInt(12));
+                leaveService.applyLeave(USER, day, day, BigDecimal.valueOf((1 + rnd.nextInt(8)) * 0.5));
+            }
+            if (lateLeaves > 0) {
+                tasks.cleanupExpiredLeaveBalances(String.valueOf(year));
+                assertConservation(db, year, seed);
+                assertExpiryIsNeverPositive(db, seed);
+                assertBreakdownAddsUp(leaveService, year, seed);
+
+                BigDecimal carryAfterLate = db.account(USER, year + 1).getLastYearBalance();
+                int recordsAfterLate = db.recordCount(USER);
+                tasks.cleanupExpiredLeaveBalances(String.valueOf(year));
+                tasks.cleanupExpiredLeaveBalances(String.valueOf(year));
+                assertEquals(0, carryAfterLate.compareTo(db.account(USER, year + 1).getLastYearBalance()),
+                        String.format("[seed %d] %d 年补登年底请假后结算不幂等", seed, year));
+                assertEquals(recordsAfterLate, db.recordCount(USER),
+                        String.format("[seed %d] %d 年补登年底请假后重跑产生了新流水", seed, year));
+            }
 
             assertConservation(db, year, seed);
         }
@@ -202,6 +230,23 @@ class LeaveInvariantSimulationTest {
         assertEquals(0, expected.compareTo(actual),
                 () -> String.format("[seed %d] 守恒失败 (截至 %d 年底): 发放 %s + 流水净额 %s = %s, 结转值 %s%n%s",
                         seed, throughYear, granted, movements, expected, actual, dump(db)));
+    }
+
+    /**
+     * 页面上的余额拆分: 结转剩余 + 今年剩余 + 透支 == 当前可休,
+     * 且两项剩余不为负、透支不为正 —— 否则进度条会画出负长度。
+     */
+    private void assertBreakdownAddsUp(LeaveServiceImpl service, int year, long seed) {
+        LeaveAccountDTO dto = service.getAccount(USER, year);
+        BigDecimal carry = dto.getCarryOverRemaining();
+        BigDecimal current = dto.getCurrentQuotaRemaining();
+        BigDecimal debt = dto.getFloatingDebt();
+        assertEquals(0, dto.getTotalBalance().compareTo(carry.add(current).add(debt)),
+                () -> String.format("[seed %d] %d 年拆分对不上余额: 结转 %s + 今年 %s + 透支 %s ≠ %s",
+                        seed, year, carry, current, debt, dto.getTotalBalance()));
+        assertTrue(carry.signum() >= 0 && current.signum() >= 0 && debt.signum() <= 0,
+                () -> String.format("[seed %d] %d 年拆分出现越界: 结转 %s, 今年 %s, 透支 %s",
+                        seed, year, carry, current, debt));
     }
 
     /** 作废流水永远是负数(扣减), 不可能出现"过期反而加天数" */
